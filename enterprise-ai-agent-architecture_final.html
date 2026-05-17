@@ -1,0 +1,1065 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Enterprise AI Agent · Directory Structure &amp; Execution Flow</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg-0:#06070d;
+  --bg-1:#0d1020;
+  --bg-2:#161a2e;
+  --line:#1f2542;
+  --line-2:#2a3258;
+  --text:#e4e8f5;
+  --text-dim:#8590b8;
+  --text-fade:#5a6390;
+  --accent:#f7b955;
+  --cyan:#3fd9d0;
+  --blue:#5b8fd9;
+  --purple:#a78ef0;
+  --teal:#3fd9b8;
+  --coral:#ef8b5f;
+  --green:#5cd97a;
+  --red:#e96868;
+  --amber:#f5b04a;
+  --grid:rgba(120,180,255,0.05);
+}
+html,body{background:var(--bg-0);color:var(--text);font-family:'Space Grotesk',sans-serif;min-height:100vh;overflow-x:hidden}
+body{
+  background-image:
+    radial-gradient(ellipse 80% 50% at 50% 0%,rgba(91,143,217,0.12) 0%,transparent 60%),
+    radial-gradient(ellipse 60% 40% at 80% 30%,rgba(167,142,240,0.08) 0%,transparent 60%),
+    radial-gradient(ellipse 70% 50% at 20% 70%,rgba(63,217,184,0.06) 0%,transparent 60%),
+    linear-gradient(var(--grid) 1px,transparent 1px),
+    linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  background-size:auto,auto,auto,44px 44px,44px 44px;
+}
+
+/* Header */
+.hero{padding:56px 32px 32px;text-align:center;position:relative}
+.hero h1{font-size:clamp(28px,4vw,46px);font-weight:700;letter-spacing:-1px;line-height:1.15;margin:0;background:linear-gradient(135deg,#fff 0%,#a8b8de 60%,#5b8fd9 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;opacity:0;animation:fadeUp .8s ease-out .15s forwards}
+.hero h1 em{font-style:italic;color:var(--accent);-webkit-text-fill-color:var(--accent);font-weight:500}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+
+/* Section heading */
+.section{max-width:1280px;margin:0 auto;padding:32px 24px}
+.section-head{display:flex;align-items:baseline;gap:14px;margin-bottom:24px;padding-bottom:14px;border-bottom:1px dashed var(--line-2)}
+.section-num{font-family:'JetBrains Mono',monospace;color:var(--accent);font-size:14px;font-weight:500}
+.section-title{font-size:22px;font-weight:600;letter-spacing:-0.3px}
+.section-sub{margin-left:auto;color:var(--text-fade);font-size:12px;font-family:'JetBrains Mono',monospace}
+
+/* Architecture canvas */
+.arch-wrap{position:relative;background:linear-gradient(180deg,rgba(13,16,32,0.6) 0%,rgba(6,7,13,0.6) 100%);border:1px solid var(--line);border-radius:18px;padding:28px;backdrop-filter:blur(8px)}
+.arch-svg{width:100%;height:auto;display:block}
+.tier-label{font-family:'JetBrains Mono',monospace;fill:var(--text-fade);font-size:10px;letter-spacing:2px;text-transform:uppercase}
+.iv-node{cursor:pointer;transition:transform .3s cubic-bezier(0.2,0.8,0.2,1)}
+.iv-node:hover{transform:translateY(-3px)}
+.iv-node rect{transition:filter .3s,stroke-width .3s}
+.iv-node:hover rect{filter:brightness(1.4) drop-shadow(0 0 12px currentColor);stroke-width:2}
+.node-icon{font-size:15px;pointer-events:none}
+.node-title{font-size:13px;font-weight:600;pointer-events:none;font-family:'Space Grotesk',sans-serif}
+.node-sub{font-size:10px;pointer-events:none;font-family:'JetBrains Mono',monospace;letter-spacing:0.5px}
+.node-badge{font-size:9px;font-family:'JetBrains Mono',monospace;letter-spacing:0.5px;pointer-events:none}
+
+@keyframes dash{to{stroke-dashoffset:-40}}
+@keyframes pulse{0%,100%{opacity:0.5;transform:scale(1)}50%{opacity:1;transform:scale(1.06)}}
+@keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+@keyframes spinRev{from{transform:rotate(360deg)}to{transform:rotate(0deg)}}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+@keyframes streamPulse{0%{opacity:0.3}50%{opacity:1}100%{opacity:0.3}}
+
+@media (prefers-reduced-motion:no-preference){
+  .flow{stroke-dasharray:5 8;animation:dash 1.8s linear infinite}
+  .flow-slow{stroke-dasharray:4 10;animation:dash 3s linear infinite}
+  .flow-fast{stroke-dasharray:3 5;animation:dash 1.2s linear infinite}
+  .core-pulse{animation:pulse 2.4s ease-in-out infinite;transform-origin:center;transform-box:fill-box}
+  .ring-cw{animation:spin 22s linear infinite;transform-origin:center;transform-box:fill-box}
+  .ring-ccw{animation:spinRev 30s linear infinite;transform-origin:center;transform-box:fill-box}
+  .float-1{animation:float 3s ease-in-out infinite}
+  .float-2{animation:float 3.4s ease-in-out infinite .3s}
+  .float-3{animation:float 3.8s ease-in-out infinite .6s}
+  .stream{animation:streamPulse 2s ease-in-out infinite}
+}
+
+/* Loading sequence */
+.sequence{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:24px}
+.step{position:relative;background:linear-gradient(180deg,rgba(22,26,46,0.8) 0%,rgba(13,16,32,0.8) 100%);border:1px solid var(--line-2);border-radius:12px;padding:18px 16px;transition:all .3s;cursor:pointer;overflow:hidden}
+.step::before{content:"";position:absolute;top:0;left:0;width:3px;height:100%;background:var(--col,var(--accent));opacity:0.7}
+.step:hover{border-color:var(--col,var(--accent));transform:translateY(-3px);box-shadow:0 8px 24px rgba(0,0,0,0.4)}
+.step-num{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--col,var(--accent));letter-spacing:1.5px;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.step-num::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,var(--col,var(--accent)),transparent);opacity:0.4}
+.step-title{font-size:14px;font-weight:600;margin-bottom:6px;color:var(--text)}
+.step-desc{font-size:11.5px;color:var(--text-dim);line-height:1.5;font-family:'JetBrains Mono',monospace}
+.step-arrow{position:absolute;right:-7px;top:50%;transform:translateY(-50%);color:var(--line-2);font-size:18px;z-index:2;display:none}
+@media(min-width:900px){.sequence{grid-template-columns:repeat(4,1fr)}.step:not(:last-child) .step-arrow{display:block}}
+
+/* Expandable panels */
+.panel-wrap{margin-top:28px}
+.panel{background:linear-gradient(180deg,rgba(22,26,46,0.7) 0%,rgba(13,16,32,0.7) 100%);border:1px solid var(--line-2);border-radius:14px;margin-bottom:14px;overflow:hidden;transition:border-color .3s}
+.panel.open{border-color:var(--col,var(--accent))}
+.panel-head{display:flex;align-items:center;gap:14px;padding:18px 22px;cursor:pointer;user-select:none;transition:background .2s}
+.panel-head:hover{background:rgba(255,255,255,0.02)}
+.panel-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;background:rgba(255,255,255,0.04);border:1px solid var(--col,var(--line-2))}
+.panel-titles{flex:1;min-width:0}
+.panel-title{font-size:16px;font-weight:600;letter-spacing:-0.2px}
+.panel-subtitle{font-size:11.5px;color:var(--text-dim);font-family:'JetBrains Mono',monospace;margin-top:2px}
+.panel-toggle{width:28px;height:28px;border-radius:50%;border:1px solid var(--line-2);display:flex;align-items:center;justify-content:center;color:var(--text-dim);transition:all .3s;flex-shrink:0}
+.panel.open .panel-toggle{transform:rotate(135deg);color:var(--col,var(--accent));border-color:var(--col,var(--accent))}
+.panel-body{max-height:0;overflow:hidden;transition:max-height .5s cubic-bezier(0.2,0.8,0.2,1)}
+.panel.open .panel-body{max-height:3200px}
+.panel-inner{padding:0 22px 24px;border-top:1px dashed var(--line-2);margin-top:0;padding-top:22px}
+.panel-grid{display:grid;grid-template-columns:1fr;gap:22px;min-width:0}
+.panel-grid > *{min-width:0}
+@media(min-width:780px){.panel-grid{grid-template-columns:1.3fr 1fr}}
+
+/* File tree */
+.tree{font-family:'JetBrains Mono','Courier New',monospace;font-size:12px;line-height:1.7;color:var(--text-dim);background:rgba(6,7,13,0.85);border:1px solid var(--line);border-radius:10px;padding:18px 20px;overflow-x:auto;white-space:pre;tab-size:2;margin:0}
+.tree-head{font-family:'Space Grotesk',sans-serif;font-size:10px;letter-spacing:2px;color:var(--accent);text-transform:uppercase;margin-bottom:12px;padding-bottom:8px;border-bottom:1px dashed var(--line-2);white-space:normal;display:block}
+.tree-head:not(:first-child){margin-top:18px}
+.tree .d{color:var(--cyan)}
+.tree .f{color:var(--text)}
+.tree .c{color:var(--text-fade);font-style:italic}
+.tree .a{color:var(--accent)}
+.tree .g{color:var(--green)}
+.tree .p{color:var(--purple)}
+
+/* Detail panel */
+.detail h4{font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--col,var(--accent));margin-bottom:10px;font-family:'JetBrains Mono',monospace;font-weight:500}
+.detail h4:not(:first-child){margin-top:20px}
+.detail p{font-size:13.5px;line-height:1.65;color:var(--text);margin-bottom:8px}
+.detail ul{list-style:none;padding-left:0}
+.detail li{font-size:13px;line-height:1.7;color:var(--text-dim);position:relative;padding-left:18px}
+.detail li::before{content:"▸";position:absolute;left:0;color:var(--col,var(--accent));font-size:10px;top:4px}
+.detail li strong{color:var(--text);font-weight:600}
+.detail .kbd{font-family:'JetBrains Mono',monospace;font-size:11.5px;background:rgba(247,185,85,0.1);color:var(--accent);padding:2px 7px;border-radius:4px;border:1px solid rgba(247,185,85,0.2)}
+
+/* Footer / download */
+.cta{text-align:center;padding:32px 24px 56px;max-width:1280px;margin:0 auto;display:flex;justify-content:center;gap:12px;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:8px;font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:500;padding:12px 24px;border-radius:10px;border:1px solid var(--accent);background:var(--accent);color:#0d1020;cursor:pointer;transition:all .25s;text-decoration:none;letter-spacing:0.5px}
+.btn:hover{background:transparent;color:var(--accent);box-shadow:0 0 24px rgba(247,185,85,0.4);transform:translateY(-2px)}
+.btn.ghost{background:transparent;color:var(--text);border-color:var(--line-2)}
+.btn.ghost:hover{border-color:var(--cyan);color:var(--cyan);box-shadow:0 0 24px rgba(63,217,208,0.3)}
+
+/* Tooltip */
+.tip{position:fixed;background:linear-gradient(180deg,#1a2342 0%,#0d1428 100%);border:1px solid var(--line-2);border-radius:10px;padding:12px 14px;width:260px;color:var(--text);font-size:12px;line-height:1.5;box-shadow:0 8px 32px rgba(0,0,0,0.7);pointer-events:none;opacity:0;transition:opacity .2s;z-index:1000;font-family:'Space Grotesk',sans-serif}
+.tip.show{opacity:1}
+.tip strong{display:block;font-size:13px;color:var(--col,var(--accent));margin-bottom:4px;font-weight:600}
+.tip small{display:block;margin-top:6px;color:var(--text-fade);font-family:'JetBrains Mono',monospace;font-size:10px}
+
+/* Footer */
+.foot{text-align:center;color:var(--text-fade);font-size:11px;padding:24px;font-family:'JetBrains Mono',monospace;border-top:1px solid var(--line)}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <h1>Enterprise AI Agent<br><em>Directory structure &amp; execution flow</em></h1>
+</div>
+
+<!-- ARCHITECTURE -->
+<div class="section">
+  <div class="section-head">
+    <span class="section-num">01 ▸</span>
+    <span class="section-title">Architecture map</span>
+    <span class="section-sub">hover · click to drill in</span>
+  </div>
+
+  <div class="arch-wrap">
+    <svg class="arch-svg" viewBox="0 0 1200 760" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Architecture map">
+      <defs>
+        <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+          <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </marker>
+        <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+          <feGaussianBlur stdDeviation="3" result="b"/>
+          <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+        <filter id="coreGlow" x="-50%" y="-50%" width="200%" height="200%">
+          <feGaussianBlur stdDeviation="8" result="b"/>
+          <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+        <linearGradient id="gBlue" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#1e3a6d"/><stop offset="100%" stop-color="#15264a"/></linearGradient>
+        <linearGradient id="gPurple" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#3a2d7a"/><stop offset="100%" stop-color="#241d54"/></linearGradient>
+        <linearGradient id="gTeal" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#0d5a52"/><stop offset="100%" stop-color="#083c37"/></linearGradient>
+        <linearGradient id="gAmber" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#a86b1a"/><stop offset="100%" stop-color="#6e4410"/></linearGradient>
+        <linearGradient id="gCoral" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#7a3520"/><stop offset="100%" stop-color="#4f2214"/></linearGradient>
+        <linearGradient id="gGreen" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#1d6e3a"/><stop offset="100%" stop-color="#114724"/></linearGradient>
+        <radialGradient id="coreGrad" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#ffd06b"/><stop offset="50%" stop-color="#e8843a"/><stop offset="100%" stop-color="#8a3a18"/></radialGradient>
+      </defs>
+
+      <!-- TIER A: Sources on disk -->
+      <text class="tier-label" x="40" y="34">A ▸ Filesystem sources (on disk)</text>
+      <line x1="40" y1="42" x2="1160" y2="42" stroke="#2a3258" stroke-width="0.5" stroke-dasharray="3 4"/>
+
+      <!-- Project scope panel -->
+      <rect x="40" y="56" width="555" height="160" rx="12" fill="rgba(91,143,217,0.04)" stroke="#5b8fd9" stroke-width="0.5" stroke-dasharray="4 4"/>
+      <text x="56" y="78" fill="#9ec5ff" style="font-size:10px;font-family:'JetBrains Mono',monospace;letter-spacing:1.5px">PROJECT SCOPE · committed to repo</text>
+
+      <g class="iv-node float-1" data-key="proj-instructions" style="color:#5b8fd9">
+        <rect x="56" y="92" width="170" height="54" rx="9" fill="url(#gBlue)" stroke="#5b8fd9" stroke-width="1" filter="url(#glow)"/>
+        <text class="node-icon" x="70" y="115" fill="#9ec5ff">📘</text>
+        <text class="node-title" x="92" y="116" fill="#d4e4ff">Instructions</text>
+        <text class="node-sub" x="92" y="132" fill="#8eb0e6">.github/instructions/</text>
+      </g>
+      <g class="iv-node float-2" data-key="proj-skills" style="color:#5b8fd9">
+        <rect x="236" y="92" width="170" height="54" rx="9" fill="url(#gBlue)" stroke="#5b8fd9" stroke-width="1" filter="url(#glow)"/>
+        <text class="node-icon" x="250" y="115" fill="#9ec5ff">🛠</text>
+        <text class="node-title" x="272" y="116" fill="#d4e4ff">Skills</text>
+        <text class="node-sub" x="272" y="132" fill="#8eb0e6">.github/skills/</text>
+      </g>
+      <g class="iv-node float-3" data-key="proj-tools" style="color:#5b8fd9">
+        <rect x="416" y="92" width="170" height="54" rx="9" fill="url(#gBlue)" stroke="#5b8fd9" stroke-width="1" filter="url(#glow)"/>
+        <text class="node-icon" x="430" y="115" fill="#9ec5ff">🔌</text>
+        <text class="node-title" x="452" y="116" fill="#d4e4ff">Tool configs</text>
+        <text class="node-sub" x="452" y="132" fill="#8eb0e6">.agents/tools/</text>
+      </g>
+      <g class="iv-node float-1" data-key="proj-specs" style="color:#5b8fd9">
+        <rect x="56" y="152" width="260" height="50" rx="9" fill="url(#gBlue)" stroke="#5b8fd9" stroke-width="1" filter="url(#glow)"/>
+        <text class="node-icon" x="70" y="174" fill="#9ec5ff">📋</text>
+        <text class="node-title" x="92" y="174" fill="#d4e4ff">Specs &amp; schemas</text>
+        <text class="node-sub" x="92" y="190" fill="#8eb0e6">specs/*.schema.json</text>
+      </g>
+      <g class="iv-node float-2" data-key="proj-prompts" style="color:#5b8fd9">
+        <rect x="326" y="152" width="260" height="50" rx="9" fill="url(#gBlue)" stroke="#5b8fd9" stroke-width="1" filter="url(#glow)"/>
+        <text class="node-icon" x="340" y="174" fill="#9ec5ff">💬</text>
+        <text class="node-title" x="362" y="174" fill="#d4e4ff">Prompts</text>
+        <text class="node-sub" x="362" y="190" fill="#8eb0e6">prompts/*.md</text>
+      </g>
+
+      <!-- Personal scope panel -->
+      <rect x="615" y="56" width="545" height="160" rx="12" fill="rgba(167,142,240,0.04)" stroke="#a78ef0" stroke-width="0.5" stroke-dasharray="4 4"/>
+      <text x="631" y="78" fill="#cabaff" style="font-size:10px;font-family:'JetBrains Mono',monospace;letter-spacing:1.5px">PERSONAL SCOPE · user profile</text>
+
+      <g class="iv-node float-2" data-key="pers-instructions" style="color:#a78ef0">
+        <rect x="631" y="92" width="170" height="54" rx="9" fill="url(#gPurple)" stroke="#a78ef0" stroke-width="1" filter="url(#glow)"/>
+        <text class="node-icon" x="645" y="115" fill="#cabaff">📘</text>
+        <text class="node-title" x="667" y="116" fill="#e0d4ff">Instructions</text>
+        <text class="node-sub" x="667" y="132" fill="#b09ee6">~/.copilot/instructions/</text>
+      </g>
+      <g class="iv-node float-3" data-key="pers-skills" style="color:#a78ef0">
+        <rect x="811" y="92" width="170" height="54" rx="9" fill="url(#gPurple)" stroke="#a78ef0" stroke-width="1" filter="url(#glow)"/>
+        <text class="node-icon" x="825" y="115" fill="#cabaff">🛠</text>
+        <text class="node-title" x="847" y="116" fill="#e0d4ff">Skills</text>
+        <text class="node-sub" x="847" y="132" fill="#b09ee6">~/.github/skills/</text>
+      </g>
+      <g class="iv-node float-1" data-key="pers-tools" style="color:#a78ef0">
+        <rect x="991" y="92" width="170" height="54" rx="9" fill="url(#gPurple)" stroke="#a78ef0" stroke-width="1" filter="url(#glow)"/>
+        <text class="node-icon" x="1005" y="115" fill="#cabaff">🔌</text>
+        <text class="node-title" x="1027" y="116" fill="#e0d4ff">Tool configs</text>
+        <text class="node-sub" x="1027" y="132" fill="#b09ee6">~/.agents/tools/</text>
+      </g>
+      <g class="iv-node float-3" data-key="pers-mcp" style="color:#a78ef0">
+        <rect x="631" y="152" width="260" height="50" rx="9" fill="url(#gPurple)" stroke="#a78ef0" stroke-width="1" filter="url(#glow)"/>
+        <text class="node-icon" x="645" y="174" fill="#cabaff">🌐</text>
+        <text class="node-title" x="667" y="174" fill="#e0d4ff">MCP servers</text>
+        <text class="node-sub" x="667" y="190" fill="#b09ee6">~/.github/mcp.json</text>
+      </g>
+      <g class="iv-node float-1" data-key="pers-memory" style="color:#a78ef0">
+        <rect x="901" y="152" width="260" height="50" rx="9" fill="url(#gPurple)" stroke="#a78ef0" stroke-width="1" filter="url(#glow)"/>
+        <text class="node-icon" x="915" y="174" fill="#cabaff">🧠</text>
+        <text class="node-title" x="937" y="174" fill="#e0d4ff">Memory</text>
+        <text class="node-sub" x="937" y="190" fill="#b09ee6">~/.github/memory/</text>
+      </g>
+
+      <!-- TIER B: Loader -->
+      <text class="tier-label" x="40" y="252">B ▸ Loader · merge &amp; resolve (project overrides personal)</text>
+      <line x1="40" y1="260" x2="1160" y2="260" stroke="#2a3258" stroke-width="0.5" stroke-dasharray="3 4"/>
+
+      <g class="iv-node" data-key="loader" style="color:#3fd9d0">
+        <rect x="280" y="278" width="640" height="56" rx="10" fill="url(#gTeal)" stroke="#3fd9d0" stroke-width="1.2" filter="url(#glow)"/>
+        <text class="node-icon" x="298" y="304" fill="#7af0d2">⚡</text>
+        <text class="node-title" x="320" y="306" fill="#c4f5e6" style="font-size:14px">Discovery &amp; resolution loader</text>
+        <text class="node-sub" x="320" y="322" fill="#7fd6bc">scan → parse frontmatter → resolve overrides → register handlers</text>
+      </g>
+
+      <!-- Flows from sources into loader -->
+      <g fill="none">
+        <path class="flow" d="M141 146 Q200 220 400 278" stroke="#5b8fd9" stroke-width="1.2" opacity="0.7"/>
+        <path class="flow" d="M321 146 Q380 220 480 278" stroke="#5b8fd9" stroke-width="1.2" opacity="0.7"/>
+        <path class="flow" d="M501 146 Q540 220 560 278" stroke="#5b8fd9" stroke-width="1.2" opacity="0.7"/>
+        <path class="flow" d="M186 202 Q260 240 420 278" stroke="#5b8fd9" stroke-width="1.2" opacity="0.7"/>
+        <path class="flow" d="M456 202 Q500 240 520 278" stroke="#5b8fd9" stroke-width="1.2" opacity="0.7"/>
+        <path class="flow-slow" d="M716 146 Q700 220 660 278" stroke="#a78ef0" stroke-width="1.2" opacity="0.7"/>
+        <path class="flow-slow" d="M896 146 Q820 220 720 278" stroke="#a78ef0" stroke-width="1.2" opacity="0.7"/>
+        <path class="flow-slow" d="M1076 146 Q900 220 800 278" stroke="#a78ef0" stroke-width="1.2" opacity="0.7"/>
+        <path class="flow-slow" d="M761 202 Q740 240 680 278" stroke="#a78ef0" stroke-width="1.2" opacity="0.7"/>
+        <path class="flow-slow" d="M1031 202 Q900 240 780 278" stroke="#a78ef0" stroke-width="1.2" opacity="0.7"/>
+      </g>
+
+      <!-- TIER C: Context assembly -->
+      <text class="tier-label" x="40" y="372">C ▸ Context assembly &amp; routing</text>
+      <line x1="40" y1="380" x2="1160" y2="380" stroke="#2a3258" stroke-width="0.5" stroke-dasharray="3 4"/>
+
+      <g class="iv-node" data-key="userconv" style="color:#ef8b5f">
+        <rect x="40" y="398" width="200" height="52" rx="9" fill="url(#gCoral)" stroke="#ef8b5f" stroke-width="1" filter="url(#glow)"/>
+        <text class="node-icon" x="54" y="420" fill="#ffb591">👤</text>
+        <text class="node-title" x="76" y="420" fill="#ffd7c2">User conversation</text>
+        <text class="node-sub" x="76" y="436" fill="#e6a386">live turn + history</text>
+      </g>
+      <g class="iv-node" data-key="rag" style="color:#ef8b5f">
+        <rect x="252" y="398" width="200" height="52" rx="9" fill="url(#gCoral)" stroke="#ef8b5f" stroke-width="1" filter="url(#glow)"/>
+        <text class="node-icon" x="266" y="420" fill="#ffb591">📚</text>
+        <text class="node-title" x="288" y="420" fill="#ffd7c2">RAG retrieval</text>
+        <text class="node-sub" x="288" y="436" fill="#e6a386">vectors + hybrid</text>
+      </g>
+      <g class="iv-node" data-key="codebase" style="color:#ef8b5f">
+        <rect x="464" y="398" width="200" height="52" rx="9" fill="url(#gCoral)" stroke="#ef8b5f" stroke-width="1" filter="url(#glow)"/>
+        <text class="node-icon" x="478" y="420" fill="#ffb591">📂</text>
+        <text class="node-title" x="500" y="420" fill="#ffd7c2">Codebase knowledge</text>
+        <text class="node-sub" x="500" y="436" fill="#e6a386">repo · AST · symbols</text>
+      </g>
+      <g class="iv-node" data-key="ctxwindow" style="color:#ef8b5f">
+        <rect x="676" y="398" width="200" height="52" rx="9" fill="url(#gCoral)" stroke="#ef8b5f" stroke-width="1" filter="url(#glow)"/>
+        <text class="node-icon" x="690" y="420" fill="#ffb591">🪟</text>
+        <text class="node-title" x="712" y="420" fill="#ffd7c2">Context window</text>
+        <text class="node-sub" x="712" y="436" fill="#e6a386">assembled payload</text>
+      </g>
+      <g class="iv-node" data-key="guardrails" style="color:#e96868">
+        <rect x="888" y="398" width="270" height="52" rx="9" fill="rgba(233,104,104,0.1)" stroke="#e96868" stroke-width="1" stroke-dasharray="5 3" filter="url(#glow)"/>
+        <text class="node-icon" x="902" y="420" fill="#ff8a8a">🛡</text>
+        <text class="node-title" x="924" y="420" fill="#ffb8b8">Guardrails</text>
+        <text class="node-sub" x="924" y="436" fill="#e69999">PII · injection · policy</text>
+      </g>
+
+      <!-- Flow from loader to context tier -->
+      <g fill="none">
+        <path class="flow-fast" d="M460 334 Q300 360 140 398" stroke="#3fd9d0" stroke-width="1.2" opacity="0.7"/>
+        <path class="flow-fast" d="M520 334 Q400 360 352 398" stroke="#3fd9d0" stroke-width="1.2" opacity="0.7"/>
+        <path class="flow-fast" d="M600 334 Q580 360 564 398" stroke="#3fd9d0" stroke-width="1.2" opacity="0.7"/>
+        <path class="flow-fast" d="M680 334 Q740 360 776 398" stroke="#3fd9d0" stroke-width="1.2" opacity="0.7"/>
+        <path class="flow-fast" d="M780 334 Q900 360 1023 398" stroke="#3fd9d0" stroke-width="1.2" opacity="0.7"/>
+      </g>
+
+      <!-- TIER D: Agent core -->
+      <text class="tier-label" x="40" y="490">D ▸ Reasoning core · plan act observe refine</text>
+      <line x1="40" y1="498" x2="1160" y2="498" stroke="#2a3258" stroke-width="0.5" stroke-dasharray="3 4"/>
+
+      <g class="iv-node" data-key="planner" style="color:#f5b04a">
+        <rect x="220" y="552" width="190" height="60" rx="11" fill="url(#gAmber)" stroke="#f5b04a" stroke-width="1.2" filter="url(#glow)"/>
+        <text class="node-icon" x="238" y="578" fill="#ffd98a">⚡</text>
+        <text class="node-title" x="260" y="578" fill="#ffe7b8">Execution plan</text>
+        <text class="node-sub" x="260" y="594" fill="#e6c084">decompose · route</text>
+      </g>
+      <g class="iv-node" data-key="agentcore" style="color:#f5b04a">
+        <g class="core-pulse">
+          <circle cx="600" cy="582" r="58" fill="url(#coreGrad)" filter="url(#coreGlow)" opacity="0.95"/>
+        </g>
+        <circle class="ring-cw" cx="600" cy="582" r="75" fill="none" stroke="#ffb84d" stroke-width="1.5" stroke-dasharray="8 6" opacity="0.6"/>
+        <circle class="ring-ccw" cx="600" cy="582" r="92" fill="none" stroke="#ff8a3a" stroke-width="1.5" stroke-dasharray="3 9" opacity="0.4"/>
+        <circle cx="600" cy="582" r="58" fill="transparent"/>
+        <text x="600" y="578" text-anchor="middle" fill="#1a0a02" style="font-size:13px;font-weight:700;pointer-events:none;font-family:'Space Grotesk',sans-serif">AGENT</text>
+        <text x="600" y="596" text-anchor="middle" fill="#1a0a02" style="font-size:11px;pointer-events:none;font-family:'JetBrains Mono',monospace">reasoning core</text>
+      </g>
+      <g class="iv-node" data-key="selfcheck" style="color:#f5b04a">
+        <rect x="790" y="552" width="190" height="60" rx="11" fill="url(#gAmber)" stroke="#f5b04a" stroke-width="1.2" filter="url(#glow)"/>
+        <text class="node-icon" x="808" y="578" fill="#ffd98a">✓</text>
+        <text class="node-title" x="830" y="578" fill="#ffe7b8">Self-check</text>
+        <text class="node-sub" x="830" y="594" fill="#e6c084">specs · guardrails</text>
+      </g>
+
+      <!-- Flows into agent -->
+      <g fill="none">
+        <path class="flow" d="M140 450 Q180 510 308 552" stroke="#ef8b5f" stroke-width="1.2" opacity="0.7"/>
+        <path class="flow" d="M352 450 Q330 510 320 552" stroke="#ef8b5f" stroke-width="1.2" opacity="0.7"/>
+        <path class="flow" d="M564 450 Q500 510 380 552" stroke="#ef8b5f" stroke-width="1.2" opacity="0.7"/>
+        <path class="flow" d="M776 450 Q700 510 600 524" stroke="#ef8b5f" stroke-width="1.5" opacity="0.8"/>
+        <path class="flow" d="M1023 450 Q900 510 790 580" stroke="#e96868" stroke-width="1.2" opacity="0.6"/>
+        <!-- planner to core and core to selfcheck -->
+        <path class="flow-fast" d="M410 582 L540 582" stroke="#f5b04a" stroke-width="1.5" opacity="0.9" marker-end="url(#arrow)"/>
+        <path class="flow-fast" d="M660 582 L790 582" stroke="#f5b04a" stroke-width="1.5" opacity="0.9" marker-end="url(#arrow)"/>
+        <!-- loop back -->
+        <path class="flow-slow" d="M885 612 Q885 665 600 665 Q315 665 315 612" stroke="#f5b04a" stroke-width="1" opacity="0.5" marker-end="url(#arrow)"/>
+      </g>
+      <text x="600" y="685" text-anchor="middle" fill="#e6a374" style="font-size:11px;font-style:italic;font-family:'Space Grotesk',sans-serif">iterate until specs satisfied</text>
+
+      <!-- Final output -->
+      <g class="iv-node" data-key="response" style="color:#5cd97a">
+        <rect x="370" y="704" width="460" height="44" rx="10" fill="url(#gGreen)" stroke="#5cd97a" stroke-width="1.2" filter="url(#glow)"/>
+        <text class="node-icon" x="394" y="730" fill="#9ff5b3" style="font-size:16px">✦</text>
+        <text x="600" y="724" text-anchor="middle" fill="#d4ffd9" style="font-size:13px;font-weight:700;font-family:'Space Grotesk',sans-serif">Reliable response</text>
+        <text x="600" y="740" text-anchor="middle" fill="#a8e6b5" style="font-size:10px;font-family:'JetBrains Mono',monospace">grounded · cited · spec-conformant</text>
+      </g>
+      <path class="flow-fast" d="M600 705 L600 704 L600 612" stroke="#5cd97a" stroke-width="1.5" opacity="0" fill="none"/>
+      <path class="flow-fast" d="M885 605 Q940 660 700 700" stroke="#5cd97a" stroke-width="1.5" opacity="0.8" fill="none" marker-end="url(#arrow)"/>
+    </svg>
+  </div>
+</div>
+
+<!-- LOADING SEQUENCE -->
+<div class="section">
+  <div class="section-head">
+    <span class="section-num">02 ▸</span>
+    <span class="section-title">How the agent loads everything · in sequence</span>
+    <span class="section-sub">click any step to expand below</span>
+  </div>
+
+  <div class="sequence">
+    <div class="step" data-jump="seq-1" style="--col:#5b8fd9">
+      <div class="step-num">STEP 01</div>
+      <div class="step-title">Discover</div>
+      <div class="step-desc">Scan project (.github/) then user home (~/.github/) for skills, instructions, tools.</div>
+      <span class="step-arrow">›</span>
+    </div>
+    <div class="step" data-jump="seq-2" style="--col:#a78ef0">
+      <div class="step-num">STEP 02</div>
+      <div class="step-title">Resolve &amp; merge</div>
+      <div class="step-desc">Project scope overrides personal. Parse frontmatter, register triggers.</div>
+      <span class="step-arrow">›</span>
+    </div>
+    <div class="step" data-jump="seq-3" style="--col:#3fd9d0">
+      <div class="step-num">STEP 03</div>
+      <div class="step-title">Assemble context</div>
+      <div class="step-desc">Inject system prompt + selected skills + RAG chunks into the context window.</div>
+      <span class="step-arrow">›</span>
+    </div>
+    <div class="step" data-jump="seq-4" style="--col:#f5b04a">
+      <div class="step-num">STEP 04</div>
+      <div class="step-title">Plan → act → verify</div>
+      <div class="step-desc">Decompose, call tools, run self-check against specs, emit response.</div>
+    </div>
+  </div>
+</div>
+
+<!-- EXPANDABLE DETAILS -->
+<div class="section">
+  <div class="section-head">
+    <span class="section-num">03 ▸</span>
+    <span class="section-title">Click to explore · directory structures &amp; flows</span>
+    <span class="section-sub">8 expandable panels</span>
+  </div>
+
+  <div class="panel-wrap">
+
+    <!-- SKILLS -->
+    <div class="panel" data-id="skills" style="--col:#a78ef0">
+      <div class="panel-head">
+        <div class="panel-icon">🛠</div>
+        <div class="panel-titles">
+          <div class="panel-title">Skills · directory structure</div>
+          <div class="panel-subtitle">project scope · .github/skills/  &nbsp;·&nbsp;  personal scope · ~/.github/skills/</div>
+        </div>
+        <div class="panel-toggle">+</div>
+      </div>
+      <div class="panel-body"><div class="panel-inner"><div class="panel-grid">
+        <pre class="tree">
+<div class="tree-head">▣ Project skill (committed to repo)</div>
+<span class="d">my-repo/</span>
+├─ <span class="d">.github/</span>
+│  └─ <span class="d">skills/</span>
+│     ├─ <span class="d">pyspark-job-scaffold/</span>
+│     │  ├─ <span class="a">SKILL.md</span>        <span class="c"># frontmatter + procedure</span>
+│     │  ├─ <span class="d">reference/</span>
+│     │  │  ├─ <span class="f">job_template.py</span>
+│     │  │  ├─ <span class="f">test_template.py</span>
+│     │  │  └─ <span class="f">delta_patterns.md</span>
+│     │  ├─ <span class="d">scripts/</span>
+│     │  │  └─ <span class="g">validate.py</span>
+│     │  └─ <span class="d">examples/</span>
+│     │     └─ <span class="f">sales_etl_full.py</span>
+│     ├─ <span class="d">pyspark-code-review/</span>
+│     │  ├─ <span class="a">SKILL.md</span>
+│     │  └─ <span class="d">reference/</span>
+│     │     └─ <span class="f">checklist.md</span>
+│     └─ <span class="d">confluence-pipeline-page/</span>
+│        ├─ <span class="a">SKILL.md</span>
+│        └─ <span class="d">reference/</span>
+│           └─ <span class="f">example_page.xhtml</span>
+└─ <span class="d">.github/</span>
+   └─ <span class="d">skills/</span>          <span class="c"># Copilot equivalent</span>
+      └─ <span class="d">spark-review/</span>
+         └─ <span class="a">SKILL.md</span>
+
+<div class="tree-head" style="margin-top:18px">▣ Personal skill (user profile)</div>
+<span class="d">~/</span>
+├─ <span class="d">.github/skills/</span>      <span class="c"># GitHub agents</span>
+│  └─ <span class="d">my-pyspark-style/</span>
+│     └─ <span class="a">SKILL.md</span>
+├─ <span class="d">.copilot/skills/</span>     <span class="c"># GitHub Copilot</span>
+│  └─ <span class="d">my-java-style/</span>
+│     └─ <span class="a">SKILL.md</span>
+└─ <span class="d">.agents/skills/</span>      <span class="c"># Generic agents</span>
+   └─ <span class="d">my-reviewer/</span>
+      └─ <span class="a">SKILL.md</span>
+</pre>
+        <div class="detail">
+          <h4>What is a skill</h4>
+          <p>A folder containing a <span class="kbd">SKILL.md</span> with YAML frontmatter (<strong>name</strong>, <strong>description</strong>) plus instructions, templates, and helper scripts. The agent loads it only when the description matches the user's request.</p>
+          <h4>Frontmatter that triggers loading</h4>
+          <ul>
+            <li><strong>name</strong> · unique identifier</li>
+            <li><strong>description</strong> · the trigger sentence — keep it specific</li>
+            <li><strong>license</strong> · optional</li>
+          </ul>
+          <h4>Resolution order</h4>
+          <ul>
+            <li>Project skills <strong>override</strong> personal skills with the same name</li>
+            <li>Commit project skills to share with your team</li>
+            <li>Keep personal skills for individual style preferences</li>
+          </ul>
+          <h4>Why this gives determinism</h4>
+          <p>Same trigger → same SKILL.md → same procedure → same shape of output. Templates and schemas inside the skill folder act as a hard contract.</p>
+        </div>
+      </div></div></div>
+    </div>
+
+    <!-- INSTRUCTIONS -->
+    <div class="panel" data-id="instructions" style="--col:#5b8fd9">
+      <div class="panel-head">
+        <div class="panel-icon">📘</div>
+        <div class="panel-titles">
+          <div class="panel-title">Instructions · directory structure</div>
+          <div class="panel-subtitle">project · .github/instructions/  &nbsp;·&nbsp;  personal · ~/.copilot/instructions/</div>
+        </div>
+        <div class="panel-toggle">+</div>
+      </div>
+      <div class="panel-body"><div class="panel-inner"><div class="panel-grid">
+        <pre class="tree">
+<div class="tree-head">▣ Project instructions</div>
+<span class="d">my-repo/</span>
+├─ <span class="d">.github/</span>
+│  ├─ <span class="a">copilot-instructions.md</span>   <span class="c"># global rules</span>
+│  └─ <span class="d">instructions/</span>
+│     ├─ <span class="f">*.py.instructions.md</span>    <span class="c"># path-scoped</span>
+│     ├─ <span class="f">spark.instructions.md</span>
+│     └─ <span class="f">tests.instructions.md</span>
+├─ <span class="d">.github/</span>
+│  └─ <span class="a">AGENT.md</span>                  <span class="c"># project rules</span>
+└─ <span class="d">.agents/</span>
+   └─ <span class="d">instructions/</span>
+      ├─ <span class="f">global.md</span>
+      └─ <span class="f">code-style.md</span>
+
+<div class="tree-head" style="margin-top:18px">▣ Personal instructions</div>
+<span class="d">~/</span>
+├─ <span class="d">.copilot/</span>
+│  └─ <span class="a">instructions.md</span>            <span class="c"># your defaults</span>
+├─ <span class="d">.github/</span>
+│  └─ <span class="a">AGENT.md</span>                  <span class="c"># global agent rules</span>
+└─ <span class="d">.agents/</span>
+   └─ <span class="a">instructions.md</span>
+</pre>
+        <div class="detail">
+          <h4>What are instructions</h4>
+          <p>Plain markdown rules layered on top of the system prompt. They constrain behavior for a task or a path glob — narrower than the system prompt, broader than a skill.</p>
+          <h4>Scoping patterns</h4>
+          <ul>
+            <li><strong>Global</strong> · applies to every turn in the project</li>
+            <li><strong>Path-scoped</strong> · e.g. <span class="kbd">*.py</span> or <span class="kbd">spark/**</span></li>
+            <li><strong>Task-scoped</strong> · loaded only for review, test, or doc tasks</li>
+          </ul>
+          <h4>Typical contents</h4>
+          <ul>
+            <li>Coding conventions (no UDFs without justification, explicit schemas)</li>
+            <li>Output format (always emit a markdown table for reviews)</li>
+            <li>Forbidden patterns (no <span class="kbd">.collect()</span> on large DataFrames)</li>
+            <li>Domain glossary (your team's terms for pipelines, jobs, runs)</li>
+          </ul>
+          <h4>Loading order</h4>
+          <p>System prompt → personal instructions → project instructions → path-scoped instructions → user message. <strong>Later wins on conflict</strong>.</p>
+        </div>
+      </div></div></div>
+    </div>
+
+    <!-- TOOLS -->
+    <div class="panel" data-id="tools" style="--col:#3fd9d0">
+      <div class="panel-head">
+        <div class="panel-icon">🔌</div>
+        <div class="panel-titles">
+          <div class="panel-title">Tools &amp; tool configurations · directory structure</div>
+          <div class="panel-subtitle">project · .agents/tools/  &nbsp;·&nbsp;  personal · ~/.github/mcp.json</div>
+        </div>
+        <div class="panel-toggle">+</div>
+      </div>
+      <div class="panel-body"><div class="panel-inner"><div class="panel-grid">
+        <pre class="tree">
+<div class="tree-head">▣ Project tool configs</div>
+<span class="d">my-repo/</span>
+├─ <span class="d">.github/</span>
+│  └─ <span class="a">settings.json</span>          <span class="c"># tool allowlist</span>
+├─ <span class="d">.agents/</span>
+│  └─ <span class="d">tools/</span>
+│     ├─ <span class="f">databricks.json</span>     <span class="c"># MCP server</span>
+│     ├─ <span class="f">confluence.json</span>
+│     ├─ <span class="f">jira.json</span>
+│     └─ <span class="f">github.json</span>
+└─ <span class="a">.mcp.json</span>                 <span class="c"># MCP manifest</span>
+
+<div class="tree-head" style="margin-top:18px">▣ Personal tool configs</div>
+<span class="d">~/</span>
+├─ <span class="d">.github/</span>
+│  ├─ <span class="a">mcp.json</span>              <span class="c"># your MCP servers</span>
+│  └─ <span class="a">settings.json</span>
+└─ <span class="d">.agents/</span>
+   └─ <span class="d">tools/</span>
+      └─ <span class="f">my-local-tool.json</span>
+
+<div class="tree-head" style="margin-top:18px">▣ Tool schema (example)</div>
+<span class="p">{</span>
+  "name": <span class="g">"databricks_run_job"</span>,
+  "description": <span class="g">"Trigger a job run"</span>,
+  "parameters": <span class="p">{</span>
+    "job_id": <span class="g">"string"</span>,
+    "params": <span class="g">"object"</span>
+  <span class="p">}</span>,
+  "auth": <span class="g">"oauth"</span>
+<span class="p">}</span>
+</pre>
+        <div class="detail">
+          <h4>What is a tool</h4>
+          <p>A function the agent can call with structured arguments to do something in the real world — query Databricks, post to Confluence, open a PR, run code.</p>
+          <h4>How tools are registered</h4>
+          <ul>
+            <li><strong>MCP servers</strong> · external processes exposing tools over the Model Context Protocol</li>
+            <li><strong>Built-in</strong> · file operations, web search, code execution</li>
+            <li><strong>Custom</strong> · your own functions registered in the SDK</li>
+          </ul>
+          <h4>Tool config files hold</h4>
+          <ul>
+            <li>Connection details (URL, auth method)</li>
+            <li>Tool schema (name, parameters, return type)</li>
+            <li>Allowlist/denylist of which tools are exposed</li>
+            <li>Rate limits and side-effect classification</li>
+          </ul>
+          <h4>Security note</h4>
+          <p>Project <span class="kbd">.mcp.json</span> requires explicit approval before tools execute. Personal configs run with your standing permissions.</p>
+        </div>
+      </div></div></div>
+    </div>
+
+    <!-- SPECS -->
+    <div class="panel" data-id="specs" style="--col:#3fd9b8">
+      <div class="panel-head">
+        <div class="panel-icon">📋</div>
+        <div class="panel-titles">
+          <div class="panel-title">Specs · directory structure</div>
+          <div class="panel-subtitle">project · specs/  &nbsp;·&nbsp;  JSON Schema, Pydantic, OpenAPI</div>
+        </div>
+        <div class="panel-toggle">+</div>
+      </div>
+      <div class="panel-body"><div class="panel-inner"><div class="panel-grid">
+        <pre class="tree">
+<div class="tree-head">▣ Spec directory</div>
+<span class="d">my-repo/</span>
+├─ <span class="d">specs/</span>
+│  ├─ <span class="d">pipeline-profile/</span>
+│  │  ├─ <span class="f">profile.schema.json</span>     <span class="c"># JSON Schema</span>
+│  │  ├─ <span class="f">profile.example.json</span>
+│  │  └─ <span class="f">README.md</span>
+│  ├─ <span class="d">code-review/</span>
+│  │  └─ <span class="f">review.schema.json</span>
+│  ├─ <span class="d">runbook/</span>
+│  │  └─ <span class="f">runbook.schema.json</span>
+│  └─ <span class="d">incident-rca/</span>
+│     └─ <span class="f">rca.schema.json</span>
+├─ <span class="d">.github/</span>
+│  └─ <span class="d">skills/</span>
+│     └─ <span class="d">pipeline-json-profile/</span>
+│        └─ <span class="d">reference/</span>
+│           └─ <span class="a">profile.schema.json</span>  <span class="c"># symlink</span>
+└─ <span class="d">tests/</span>
+   └─ <span class="d">specs/</span>
+      └─ <span class="g">test_profiles_valid.py</span>
+
+<div class="tree-head" style="margin-top:18px">▣ JSON Schema (snippet)</div>
+<span class="p">{</span>
+  "$schema": <span class="g">"https://json-schema.org/..."</span>,
+  "type": <span class="g">"object"</span>,
+  "required": [<span class="g">"pipeline_id"</span>, <span class="g">"owner"</span>],
+  "properties": <span class="p">{</span>
+    "pipeline_id": <span class="p">{</span> "pattern": <span class="g">"^pl_"</span> <span class="p">}</span>,
+    "sla_minutes": <span class="p">{</span> "minimum": <span class="g">5</span> <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre>
+        <div class="detail">
+          <h4>What is a spec</h4>
+          <p>A machine-verifiable contract for the output shape. The agent's self-check step validates against it before responding — and retries if validation fails.</p>
+          <h4>What lives in a spec</h4>
+          <ul>
+            <li>Required fields and types</li>
+            <li>Value constraints (patterns, enums, ranges)</li>
+            <li>Cross-field rules (if X then Y is required)</li>
+            <li>Worked examples that also serve as fixtures</li>
+          </ul>
+          <h4>Wiring specs into skills</h4>
+          <p>Reference the schema from a skill's <span class="kbd">reference/</span> folder so The agent validates output against the same file your CI uses. Single source of truth.</p>
+          <h4>Why this matters for you</h4>
+          <p>For your JSON pipeline profiles, the spec is what makes the agent's output drop-in usable in your existing pipeline. No spec → variable shape → manual cleanup every time.</p>
+        </div>
+      </div></div></div>
+    </div>
+
+    <!-- PROMPTS -->
+    <div class="panel" data-id="prompts" style="--col:#5b8fd9">
+      <div class="panel-head">
+        <div class="panel-icon">💬</div>
+        <div class="panel-titles">
+          <div class="panel-title">Prompts · directory structure</div>
+          <div class="panel-subtitle">reusable prompt templates · project &amp; personal</div>
+        </div>
+        <div class="panel-toggle">+</div>
+      </div>
+      <div class="panel-body"><div class="panel-inner"><div class="panel-grid">
+        <pre class="tree">
+<div class="tree-head">▣ Prompt directory</div>
+<span class="d">my-repo/</span>
+├─ <span class="d">prompts/</span>
+│  ├─ <span class="f">review-pyspark.md</span>
+│  ├─ <span class="f">review-spark-java.md</span>
+│  ├─ <span class="f">generate-runbook.md</span>
+│  ├─ <span class="f">incident-rca.md</span>
+│  └─ <span class="d">templates/</span>
+│     ├─ <span class="f">_pr-description.md</span>
+│     └─ <span class="f">_confluence-page.md</span>
+└─ <span class="d">.github/</span>
+   └─ <span class="d">prompts/</span>           <span class="c"># Copilot slash commands</span>
+      └─ <span class="f">/review.prompt.md</span>
+
+<div class="tree-head" style="margin-top:18px">▣ Personal prompts</div>
+<span class="d">~/</span>
+└─ <span class="d">.github/</span>
+   └─ <span class="d">prompts/</span>
+      └─ <span class="f">my-quick-summary.md</span>
+
+<div class="tree-head" style="margin-top:18px">▣ Prompt with frontmatter</div>
+<span class="c">---</span>
+<span class="a">name:</span> review-pyspark
+<span class="a">params:</span> [file_path]
+<span class="c">---</span>
+Review {{file_path}} for the rules in
+.github/skills/pyspark-code-review/...
+</pre>
+        <div class="detail">
+          <h4>Prompts vs instructions vs skills</h4>
+          <ul>
+            <li><strong>Instructions</strong> · always-on rules</li>
+            <li><strong>Prompts</strong> · reusable, parameterized requests</li>
+            <li><strong>Skills</strong> · procedures the agent loads itself when triggered</li>
+          </ul>
+          <h4>Best uses for prompts</h4>
+          <ul>
+            <li>Slash commands in Copilot (<span class="kbd">/review</span>, <span class="kbd">/test</span>)</li>
+            <li>Repeated workflows with small variations</li>
+            <li>Onboarding template for new pipelines</li>
+          </ul>
+          <h4>Parameterization</h4>
+          <p>Use <span class="kbd">{{var}}</span> placeholders and pass values at invocation. Prompts can reference skills (<span class="kbd">@skill:pyspark-job-scaffold</span>) so a single command pulls in the full procedure.</p>
+        </div>
+      </div></div></div>
+    </div>
+
+    <!-- LOADING SEQUENCE STEPS -->
+    <div class="panel" data-id="seq-1" style="--col:#5b8fd9">
+      <div class="panel-head">
+        <div class="panel-icon">①</div>
+        <div class="panel-titles">
+          <div class="panel-title">Step 01 · Discover</div>
+          <div class="panel-subtitle">scan project root → then user home → enumerate everything</div>
+        </div>
+        <div class="panel-toggle">+</div>
+      </div>
+      <div class="panel-body"><div class="panel-inner"><div class="panel-grid">
+        <pre class="tree">
+<div class="tree-head">▣ Discovery walk order</div>
+<span class="a">1.</span> <span class="d">$CWD/.github/skills/*/SKILL.md</span>
+<span class="a">2.</span> <span class="d">$CWD/.github/skills/*/SKILL.md</span>
+<span class="a">3.</span> <span class="d">$CWD/.agents/skills/*/SKILL.md</span>
+<span class="a">4.</span> <span class="d">$CWD/.github/instructions/*.md</span>
+<span class="a">5.</span> <span class="d">$CWD/.github/AGENT.md</span>
+<span class="a">6.</span> <span class="d">$CWD/.mcp.json</span>
+<span class="a">7.</span> <span class="d">$CWD/specs/**/*.schema.json</span>
+<span class="a">8.</span> <span class="d">$CWD/prompts/*.md</span>
+   <span class="c">··· then user home ···</span>
+<span class="a">9.</span> <span class="d">~/.github/skills/*/SKILL.md</span>
+<span class="a">10.</span> <span class="d">~/.copilot/skills/*/SKILL.md</span>
+<span class="a">11.</span> <span class="d">~/.agents/skills/*/SKILL.md</span>
+<span class="a">12.</span> <span class="d">~/.github/AGENT.md</span>
+<span class="a">13.</span> <span class="d">~/.github/mcp.json</span>
+</pre>
+        <div class="detail">
+          <h4>What discovery produces</h4>
+          <p>An in-memory <strong>registry</strong>: a map of skill name → folder path, instruction file → scope, tool name → endpoint, schema → URI.</p>
+          <h4>Lazy parsing</h4>
+          <p>Only frontmatter is parsed at discovery time. The body of each SKILL.md is read on demand when a trigger matches.</p>
+          <h4>Performance note</h4>
+          <p>Walk is <strong>shallow</strong> — typically two levels deep. Skills with deeply nested folders won't be auto-discovered.</p>
+        </div>
+      </div></div></div>
+    </div>
+
+    <div class="panel" data-id="seq-2" style="--col:#a78ef0">
+      <div class="panel-head">
+        <div class="panel-icon">②</div>
+        <div class="panel-titles">
+          <div class="panel-title">Step 02 · Resolve &amp; merge</div>
+          <div class="panel-subtitle">project overrides personal · parse frontmatter · register triggers</div>
+        </div>
+        <div class="panel-toggle">+</div>
+      </div>
+      <div class="panel-body"><div class="panel-inner"><div class="panel-grid">
+        <pre class="tree">
+<div class="tree-head">▣ Conflict resolution rules</div>
+Same skill name in both scopes:
+  <span class="d">project</span> wins → <span class="a">personal silently shadowed</span>
+
+Same instruction key:
+  later in load order wins
+  (path-scoped &gt; global)
+
+Same tool name:
+  project <span class="d">.mcp.json</span> &gt; personal
+  explicit allowlist &gt; implicit
+
+<div class="tree-head" style="margin-top:18px">▣ Frontmatter parse</div>
+<span class="c">---</span>
+<span class="a">name:</span> pyspark-code-review
+<span class="a">description:</span> Review PySpark
+  code against checklist...
+<span class="a">version:</span> 2.1.0
+<span class="c">---</span>
+</pre>
+        <div class="detail">
+          <h4>Why project overrides personal</h4>
+          <p>Teams need consistent output across teammates. Personal preferences are useful defaults but must not break shared workflows.</p>
+          <h4>What gets registered</h4>
+          <ul>
+            <li>Skill descriptions → trigger index (semantic match later)</li>
+            <li>Instructions → context injection rules</li>
+            <li>Tool schemas → callable handlers</li>
+            <li>Specs → validator instances</li>
+          </ul>
+          <h4>Versioning</h4>
+          <p>If a skill exports a <strong>version</strong> field, the agent prefers the newest semver-compatible version when multiple candidates match.</p>
+        </div>
+      </div></div></div>
+    </div>
+
+    <div class="panel" data-id="seq-3" style="--col:#3fd9d0">
+      <div class="panel-head">
+        <div class="panel-icon">③</div>
+        <div class="panel-titles">
+          <div class="panel-title">Step 03 · Assemble context window</div>
+          <div class="panel-subtitle">budget tokens · prioritize signals · inject grounding</div>
+        </div>
+        <div class="panel-toggle">+</div>
+      </div>
+      <div class="panel-body"><div class="panel-inner"><div class="panel-grid">
+        <pre class="tree">
+<div class="tree-head">▣ Context window layout</div>
+┌──────────────────────────────────┐
+│  <span class="a">SYSTEM PROMPT</span>                  │
+│  · identity, policies            │
+├──────────────────────────────────┤
+│  <span class="a">RESOLVED INSTRUCTIONS</span>          │
+│  · global → path-scoped          │
+├──────────────────────────────────┤
+│  <span class="a">TRIGGERED SKILLS</span>               │
+│  · SKILL.md bodies + refs        │
+├──────────────────────────────────┤
+│  <span class="a">RAG RETRIEVED CHUNKS</span>           │
+│  · top-k from vector + BM25      │
+├──────────────────────────────────┤
+│  <span class="a">CONVERSATION HISTORY</span>           │
+│  · recent N turns, summarized    │
+├──────────────────────────────────┤
+│  <span class="a">CURRENT USER MESSAGE</span>           │
+└──────────────────────────────────┘
+       ↓ to reasoning core
+</pre>
+        <div class="detail">
+          <h4>Token budget allocation</h4>
+          <ul>
+            <li><strong>System + instructions</strong> · ~5–10%</li>
+            <li><strong>Skills</strong> · loaded only when triggered</li>
+            <li><strong>RAG chunks</strong> · ~20–40%</li>
+            <li><strong>History</strong> · ~10–20%, summarized when long</li>
+            <li><strong>Headroom for response</strong> · ~25%</li>
+          </ul>
+          <h4>What gets dropped first under pressure</h4>
+          <p>Older conversation turns → unused RAG chunks → less-relevant skill examples. Specs and guardrails are never dropped.</p>
+          <h4>Why deterministic assembly matters</h4>
+          <p>Same inputs → same context layout → same response. The assembler is your most powerful determinism lever after specs.</p>
+        </div>
+      </div></div></div>
+    </div>
+
+    <div class="panel" data-id="seq-4" style="--col:#f5b04a">
+      <div class="panel-head">
+        <div class="panel-icon">④</div>
+        <div class="panel-titles">
+          <div class="panel-title">Step 04 · Plan · act · observe · refine</div>
+          <div class="panel-subtitle">reasoning loop until self-check passes</div>
+        </div>
+        <div class="panel-toggle">+</div>
+      </div>
+      <div class="panel-body"><div class="panel-inner"><div class="panel-grid">
+        <pre class="tree">
+<div class="tree-head">▣ The inner loop</div>
+<span class="a">while</span> not done:
+   plan = <span class="g">decompose</span>(request, skills)
+   <span class="a">for</span> step in plan:
+       result = <span class="g">call_tool</span>(step)
+       <span class="g">observe</span>(result)
+       <span class="a">if</span> result.error:
+           replan()
+   draft = <span class="g">synthesize</span>(observations)
+   ok = <span class="g">validate</span>(draft, specs)
+   <span class="a">if</span> ok and guardrails_pass(draft):
+       done = True
+   <span class="a">else</span>:
+       feedback = critique(draft)
+       continue
+<span class="a">return</span> draft
+
+<div class="tree-head" style="margin-top:18px">▣ Stop conditions</div>
+<span class="g">✓</span> specs validate
+<span class="g">✓</span> guardrails pass
+<span class="g">✓</span> max iterations not hit
+</pre>
+        <div class="detail">
+          <h4>Plan</h4>
+          <p>Break the request into ordered steps. Each step maps to a skill or tool call.</p>
+          <h4>Act</h4>
+          <p>Execute the next step. Tool calls run with structured arguments; results stream back.</p>
+          <h4>Observe</h4>
+          <p>Examine the result. Was it an error? Empty? Did it change the plan?</p>
+          <h4>Refine</h4>
+          <p>Update the plan, re-rank remaining steps, or trigger a different skill if the first one didn't fit.</p>
+          <h4>Self-check before emit</h4>
+          <ul>
+            <li>JSON validates against the spec</li>
+            <li>No prohibited content</li>
+            <li>Citations present where required</li>
+            <li>Confidence above threshold</li>
+          </ul>
+        </div>
+      </div></div></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- DOWNLOAD ACTIONS -->
+<div class="cta">
+  <button class="btn" onclick="downloadSelf()">⇩ Download HTML</button>
+  <button class="btn ghost" onclick="window.print()">🖨 Print / PDF</button>
+</div>
+
+<div class="foot">Enterprise AI agent architecture · built for Spark · Databricks · enterprise data teams</div>
+
+<div class="tip" id="tip"></div>
+
+<script>
+// === Panel expand/collapse ===
+document.querySelectorAll('.panel-head').forEach(head => {
+  head.addEventListener('click', () => {
+    head.parentElement.classList.toggle('open');
+  });
+});
+
+// === Sequence step → jump to panel ===
+document.querySelectorAll('.step').forEach(step => {
+  step.addEventListener('click', () => {
+    const id = step.getAttribute('data-jump');
+    const panel = document.querySelector('.panel[data-id="' + id + '"]');
+    if (!panel) return;
+    document.querySelectorAll('.panel.open').forEach(p => { if (p !== panel) p.classList.remove('open'); });
+    panel.classList.add('open');
+    panel.scrollIntoView({behavior:'smooth', block:'start'});
+  });
+});
+
+// === Architecture node → expand corresponding panel ===
+const NODE_TO_PANEL = {
+  'proj-skills':'skills','pers-skills':'skills',
+  'proj-instructions':'instructions','pers-instructions':'instructions',
+  'proj-tools':'tools','pers-tools':'tools','pers-mcp':'tools',
+  'proj-specs':'specs',
+  'proj-prompts':'prompts',
+  'loader':'seq-2',
+  'planner':'seq-4','agentcore':'seq-4','selfcheck':'seq-4',
+  'ctxwindow':'seq-3','userconv':'seq-3','rag':'seq-3','codebase':'seq-3',
+  'guardrails':'seq-4','response':'seq-4',
+  'pers-memory':'seq-3'
+};
+document.querySelectorAll('.iv-node[data-key]').forEach(node => {
+  node.addEventListener('click', () => {
+    const key = node.getAttribute('data-key');
+    const target = NODE_TO_PANEL[key];
+    if (!target) return;
+    const panel = document.querySelector('.panel[data-id="' + target + '"]');
+    if (!panel) return;
+    document.querySelectorAll('.panel.open').forEach(p => { if (p !== panel) p.classList.remove('open'); });
+    panel.classList.add('open');
+    panel.scrollIntoView({behavior:'smooth', block:'start'});
+  });
+});
+
+// === Tooltips ===
+const TIPS = {
+  'proj-instructions':{t:'Project instructions',d:'Always-on rules committed to .github/instructions/. Path-scoped or global.',k:'.github/instructions/'},
+  'proj-skills':{t:'Project skills',d:'Versioned procedures committed to .github/skills/. Shared with the team.',k:'.github/skills/'},
+  'proj-tools':{t:'Project tool configs',d:'MCP server manifests and allowlists for this repo.',k:'.agents/tools/ · .mcp.json'},
+  'proj-specs':{t:'Specs & schemas',d:'JSON Schema contracts the output must satisfy.',k:'specs/*.schema.json'},
+  'proj-prompts':{t:'Prompts',d:'Reusable, parameterized prompt templates.',k:'prompts/*.md'},
+  'pers-instructions':{t:'Personal instructions',d:'Your defaults across every project.',k:'~/.copilot/instructions/'},
+  'pers-skills':{t:'Personal skills',d:'Skills only you use. Overridden by project skills with the same name.',k:'~/.github/skills/'},
+  'pers-tools':{t:'Personal tool configs',d:'Tools available across every project for you.',k:'~/.agents/tools/'},
+  'pers-mcp':{t:'MCP servers (personal)',d:'External tool processes you trust globally.',k:'~/.github/mcp.json'},
+  'pers-memory':{t:'Memory',d:'Durable cross-session facts the agent remembers about you.',k:'~/.github/memory/'},
+  'loader':{t:'Discovery & resolution loader',d:'Scans both scopes, parses frontmatter, resolves conflicts.',k:'project overrides personal'},
+  'userconv':{t:'User conversation',d:'Live turn plus recent history.',k:'context tier'},
+  'rag':{t:'RAG retrieval',d:'Hybrid search across your knowledge bases.',k:'vectors + BM25'},
+  'codebase':{t:'Codebase knowledge',d:'Repo, AST, symbols — where Copilot grounds suggestions.',k:'repo-aware'},
+  'ctxwindow':{t:'Context window',d:'Assembled payload sent to the LLM.',k:'token-budgeted'},
+  'guardrails':{t:'Guardrails',d:'Policy, PII, injection defense, rate limits.',k:'wraps execution'},
+  'planner':{t:'Execution plan',d:'Decompose into ordered steps, route to skills/tools.',k:'step 04'},
+  'agentcore':{t:'Reasoning core',d:'The LLM running plan · act · observe · refine.',k:'inner loop'},
+  'selfcheck':{t:'Self-check',d:'Validates draft against specs and guardrails. Retries on fail.',k:'before emit'},
+  'response':{t:'Reliable response',d:'Grounded · cited · spec-conformant · policy-safe.',k:'final output'}
+};
+const tip = document.getElementById('tip');
+function pos(e){
+  const w = tip.offsetWidth, h = tip.offsetHeight;
+  let x = e.clientX + 14, y = e.clientY + 14;
+  if (x + w > window.innerWidth - 10) x = e.clientX - w - 14;
+  if (y + h > window.innerHeight - 10) y = e.clientY - h - 14;
+  tip.style.left = x + 'px';
+  tip.style.top = y + 'px';
+}
+document.querySelectorAll('.iv-node[data-key]').forEach(node => {
+  const key = node.getAttribute('data-key');
+  const d = TIPS[key];
+  if (!d) return;
+  const color = node.style.color || '#f5b04a';
+  node.addEventListener('mouseenter', e => {
+    tip.style.setProperty('--col', color);
+    tip.innerHTML = '<strong style="color:'+color+'">'+d.t+'</strong>'+d.d+'<small>'+d.k+'</small>';
+    tip.classList.add('show');
+    pos(e);
+  });
+  node.addEventListener('mousemove', pos);
+  node.addEventListener('mouseleave', () => tip.classList.remove('show'));
+});
+
+// === Self-download ===
+function downloadSelf(){
+  const html = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
+  const blob = new Blob([html], {type:'text/html'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'enterprise-ai-agent-architecture.html';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  setTimeout(() => URL.revokeObjectURL(url), 500);
+}
+</script>
+</body>
+</html>
