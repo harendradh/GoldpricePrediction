@@ -1,0 +1,58 @@
+Create a cinematic animated architecture diagram titled:
+
+“AI Agent Content Building Fundamentals — How Reliable AI Agents Think, Retrieve, and Execute”
+
+Visually show how an enterprise AI Agent generates reliable responses using:
+
+👤 User Conversation
+⚙️ System Prompt
+📘 Instructions
+🛠 Skills
+🔌 Tools
+📂 Codebase Knowledge
+🧠 Memory
+📋 Specs
+🪟 Context Window
+📚 RAG / Retrieval Layers
+🛡 Guardrails
+⚡ Execution Planning
+
+Design Requirements:
+- Futuristic enterprise architecture style
+- Dark theme with neon glow
+- Animated arrows and flowing context packets
+- Glassmorphism UI cards
+- Clean layered visualization
+- High readability
+- Use emojis, AI icons, Vector DB, APIs, GitHub, Databricks visuals
+- Add pulsing nodes, orchestration animations, thinking loops
+- Show retrieval, planning, execution, validation flow
+- Include validation + retry loop around final output
+- Cinematic engineering dashboard aesthetics
+- Optimized for LinkedIn carousel and conference presentation
+
+Main Flow:
+👤 User Request
+↓
+⚙️ System Prompt
+↓
+📘 Instructions
+↓
+📋 Specs
+↓
+🧠 Memory + 📚 Retrieval
+↓
+📂 Codebase Context
+↓
+🛠 Skills Selection
+↓
+🔌 Tool Execution
+↓
+⚡ Planning & Orchestration
+↓
+🛡 Guardrails & Validation
+↓
+✅ Deterministic Final Response
+
+Footer:
+“Reliable AI Agents are built through architecture, retrieval, planning, and validation — not prompts alone.”
