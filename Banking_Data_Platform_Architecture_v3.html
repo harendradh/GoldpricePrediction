@@ -1,0 +1,1524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Enterprise Banking Data Ingestion & Preparation Platform</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: radial-gradient(ellipse at top, #0e1428 0%, #050813 60%, #02040a 100%);
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  color: #e2e8f0;
+  min-height: 100vh;
+  overflow-x: auto;
+}
+.wrap {
+  padding: 20px 28px 60px;
+  min-width: 1640px;
+}
+
+/* ============ HEADER ============ */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 18px;
+  padding: 18px 26px;
+  background: linear-gradient(135deg, rgba(99,102,241,0.10) 0%, rgba(34,211,238,0.06) 50%, rgba(168,85,247,0.10) 100%);
+  border: 1px solid rgba(99,102,241,0.25);
+  border-radius: 14px;
+  backdrop-filter: blur(10px);
+}
+.header-left { display: flex; align-items: center; gap: 16px; }
+.brand-mark {
+  width: 52px; height: 52px;
+  background: linear-gradient(135deg, #6366f1, #22d3ee);
+  border-radius: 12px;
+  display: grid; place-items: center;
+  box-shadow: 0 0 24px rgba(99,102,241,0.45);
+  position: relative;
+}
+.brand-mark::after {
+  content: '🏦'; font-size: 28px;
+}
+.title-stack h1 {
+  font-size: 22px; font-weight: 700; letter-spacing: 0.2px;
+  background: linear-gradient(90deg, #e2e8f0 0%, #67e8f9 50%, #c4b5fd 100%);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.title-stack .sub {
+  font-size: 12px; color: #94a3b8; margin-top: 3px; letter-spacing: 0.4px;
+}
+.header-right { display: flex; align-items: center; gap: 14px; }
+.dd-group { display: flex; flex-direction: column; gap: 3px; }
+.dd-label { font-size: 9px; color: #64748b; letter-spacing: 0.12em; font-weight: 600; }
+.dropdown {
+  background: rgba(15,23,42,0.85);
+  border: 1px solid #334155;
+  color: #67e8f9;
+  padding: 8px 12px;
+  font-size: 12px; font-weight: 600;
+  border-radius: 8px;
+  outline: none;
+  cursor: pointer;
+  min-width: 170px;
+}
+.dropdown:hover { border-color: #67e8f9; }
+.live-pill {
+  display: flex; align-items: center; gap: 6px;
+  background: rgba(34,197,94,0.12);
+  border: 1px solid #22c55e;
+  color: #4ade80;
+  padding: 6px 12px;
+  border-radius: 14px;
+  font-size: 11px; font-weight: 600;
+}
+.live-pill .dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: #4ade80; box-shadow: 0 0 10px #4ade80;
+  animation: pulse 1.6s ease-in-out infinite;
+}
+@keyframes pulse {
+  0%,100% { opacity:1; transform: scale(1); }
+  50%     { opacity:0.4; transform: scale(1.5); }
+}
+
+/* ============ LEGEND ============ */
+.legend {
+  display: flex; flex-wrap: wrap; gap: 16px;
+  padding: 10px 16px;
+  background: rgba(15,23,42,0.5);
+  border: 1px solid #1e293b;
+  border-radius: 10px;
+  margin-bottom: 14px;
+}
+.li { display: flex; align-items: center; gap: 6px; font-size: 11px; color: #94a3b8; }
+.ld { width: 22px; height: 3px; border-radius: 2px; }
+.li-pill { display: inline-flex; padding: 2px 8px; border-radius: 8px; font-size: 10px; font-weight: 600; }
+
+/* ============ TIER SECTIONS ============ */
+.tier {
+  background: linear-gradient(180deg, var(--tier-bg-top), var(--tier-bg-bot));
+  border: 1px solid var(--tier-border);
+  border-radius: 14px;
+  padding: 14px 18px;
+  margin-bottom: 14px;
+  position: relative;
+}
+.tier-head {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 12px;
+}
+.tier-title {
+  display: flex; align-items: center; gap: 10px;
+  font-size: 13px; font-weight: 700;
+  letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--tier-accent);
+}
+.tier-title .ico { font-size: 18px; filter: drop-shadow(0 0 6px var(--tier-accent)); }
+.tier-meta { font-size: 11px; color: #64748b; }
+
+/* ============ SOURCE SYSTEMS GRID ============ */
+.sources-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 12px;
+}
+.source-card {
+  background: rgba(15,23,42,0.85);
+  border: 1px solid #334155;
+  border-radius: 10px;
+  padding: 12px;
+  position: relative;
+  transition: all 0.3s;
+  cursor: pointer;
+}
+.source-card:hover {
+  border-color: #67e8f9;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 22px rgba(103,232,249,0.18);
+}
+.source-card.active {
+  border-color: #fbbf24;
+  background: linear-gradient(135deg, rgba(251,191,36,0.10), rgba(15,23,42,0.85));
+  box-shadow: 0 0 22px rgba(251,191,36,0.40);
+}
+.source-card.active::before {
+  content: ''; position: absolute; inset: -2px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #fbbf24, #f59e0b);
+  z-index: -1;
+  filter: blur(8px); opacity: 0.6;
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+@keyframes pulse-glow {
+  0%,100% { opacity:0.4; } 50% { opacity:0.85; }
+}
+.source-head {
+  display: flex; align-items: center; gap: 8px; margin-bottom: 8px;
+}
+.source-icon {
+  width: 38px; height: 38px;
+  border-radius: 9px;
+  display: grid; place-items: center;
+  font-size: 20px; font-weight: 700;
+  background: linear-gradient(135deg, var(--src-color), rgba(0,0,0,0.2));
+  color: white;
+  flex-shrink: 0;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.4), inset 0 0 12px rgba(255,255,255,0.12);
+  animation: icon-bob 3.5s ease-in-out infinite;
+}
+@keyframes icon-bob {
+  0%,100% { transform: translateY(0) rotate(0deg); }
+  50%     { transform: translateY(-3px) rotate(-3deg); }
+}
+.source-card.active .source-icon {
+  animation: icon-spin-pulse 2s ease-in-out infinite;
+  box-shadow: 0 0 18px var(--src-color), inset 0 0 12px rgba(255,255,255,0.25);
+}
+@keyframes icon-spin-pulse {
+  0%,100% { transform: scale(1) rotate(0deg); }
+  25%     { transform: scale(1.12) rotate(5deg); }
+  75%     { transform: scale(1.12) rotate(-5deg); }
+}
+.source-name {
+  font-size: 12px; font-weight: 700; color: #e2e8f0;
+  letter-spacing: 0.04em;
+}
+.source-type {
+  font-size: 9px; color: #64748b;
+  letter-spacing: 0.08em; text-transform: uppercase;
+}
+.mode-badge {
+  display: inline-block;
+  font-size: 8px; font-weight: 700;
+  letter-spacing: 0.1em;
+  padding: 2px 7px;
+  border-radius: 8px;
+  margin-bottom: 7px;
+}
+.mode-badge.stream {
+  background: rgba(34,211,238,0.15); color: #67e8f9;
+  border: 1px solid rgba(34,211,238,0.45);
+  animation: badge-flash 2.2s ease-in-out infinite;
+}
+.mode-badge.batch {
+  background: rgba(148,163,184,0.15); color: #cbd5e1;
+  border: 1px solid rgba(148,163,184,0.45);
+}
+@keyframes badge-flash {
+  0%,100% { box-shadow: 0 0 0 rgba(34,211,238,0); }
+  50%     { box-shadow: 0 0 10px rgba(34,211,238,0.5); }
+}
+.table-list {
+  display: flex; flex-direction: column; gap: 2px;
+  font-size: 10px; color: #94a3b8;
+  font-family: 'Consolas', 'Courier New', monospace;
+  max-height: 110px; overflow: hidden;
+  position: relative;
+}
+.table-row {
+  display: flex; align-items: center; gap: 5px;
+  padding: 2px 0;
+  transition: all 0.2s;
+}
+.table-row .tbl-dot {
+  width: 4px; height: 4px; border-radius: 50%;
+  background: #475569;
+  flex-shrink: 0;
+}
+.source-card.active .table-row .tbl-dot {
+  background: #fbbf24;
+  box-shadow: 0 0 6px #fbbf24;
+  animation: dot-blink 1.5s ease-in-out infinite;
+}
+@keyframes dot-blink {
+  0%,100% { transform: scale(1); opacity: 1; }
+  50%     { transform: scale(1.8); opacity: 0.5; }
+}
+.source-card.active .table-row {
+  color: #fde68a;
+  animation: row-slide-in 0.5s ease-out backwards;
+}
+@keyframes row-slide-in {
+  from { opacity: 0; transform: translateX(-8px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+.table-list::after {
+  content: '';
+  position: absolute; bottom: 0; left: 0; right: 0; height: 18px;
+  background: linear-gradient(to bottom, transparent, rgba(15,23,42,0.95));
+  pointer-events: none;
+}
+.flow-rate {
+  position: absolute; top: 8px; right: 10px;
+  font-size: 9px; color: #4ade80;
+  display: flex; align-items: center; gap: 3px;
+}
+.flow-rate::before {
+  content: ''; width: 5px; height: 5px; border-radius: 50%;
+  background: #4ade80;
+  animation: pulse 1.4s ease-in-out infinite;
+}
+
+/* ============ INGESTION + ADLS ROW ============ */
+.flow-row {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: 18px;
+  align-items: center;
+}
+.ingest-stage, .adls-stage {
+  background: rgba(15,23,42,0.7);
+  border: 1px solid var(--tier-accent);
+  border-radius: 12px;
+  padding: 14px;
+}
+.stage-title {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 12px; font-weight: 700; color: var(--tier-accent);
+  margin-bottom: 10px;
+  letter-spacing: 0.08em; text-transform: uppercase;
+}
+.stage-row {
+  display: flex; gap: 8px; flex-wrap: wrap;
+}
+.chip {
+  display: inline-flex; align-items: center; gap: 5px;
+  background: rgba(99,102,241,0.15);
+  border: 1px solid rgba(99,102,241,0.5);
+  color: #c7d2fe;
+  font-size: 10px; font-weight: 600;
+  padding: 5px 10px; border-radius: 14px;
+}
+.chip.spark { background: rgba(251,146,60,0.12); border-color: rgba(251,146,60,0.55); color: #fdba74; }
+.chip.dbx { background: rgba(239,68,68,0.12); border-color: rgba(239,68,68,0.55); color: #fca5a5; }
+.chip.kafka { background: rgba(0,0,0,0.4); border-color: #334155; color: #94a3b8; }
+.chip.delta { background: rgba(34,211,238,0.12); border-color: rgba(34,211,238,0.55); color: #67e8f9; }
+
+.medallion-row {
+  display: flex; gap: 8px; margin-top: 10px;
+}
+.med {
+  flex: 1; padding: 10px;
+  border-radius: 8px;
+  text-align: center;
+  position: relative;
+}
+.med.bronze { background: rgba(180,83,9,0.15); border: 1px solid #b45309; color: #fbbf24; }
+.med.silver { background: rgba(148,163,184,0.10); border: 1px solid #94a3b8; color: #cbd5e1; }
+.med.gold   { background: rgba(202,138,4,0.18); border: 1px solid #ca8a04; color: #fde68a; }
+.med-name { font-size: 11px; font-weight: 700; letter-spacing: 0.08em; }
+.med-sub { font-size: 9px; opacity: 0.75; margin-top: 2px; }
+
+.arrow-x {
+  position: relative;
+  font-size: 30px; color: #38bdf8;
+  filter: drop-shadow(0 0 10px #38bdf8);
+  animation: nudge-r 1.2s ease-in-out infinite;
+  display: flex; align-items: center; justify-content: center;
+  min-width: 70px;
+}
+.arrow-x::before {
+  /* flowing horizontal energy line behind the arrow */
+  content: '';
+  position: absolute;
+  left: -6px; right: -6px; top: 50%;
+  height: 3px; transform: translateY(-50%);
+  background: repeating-linear-gradient(90deg,
+      #38bdf8 0 8px, transparent 8px 16px);
+  opacity: 0.6;
+  border-radius: 2px;
+  animation: dash-flow 0.6s linear infinite;
+  z-index: -1;
+}
+@keyframes dash-flow {
+  0%   { background-position-x: 0; }
+  100% { background-position-x: 16px; }
+}
+@keyframes nudge-r {
+  0%,100% { transform: translateX(0); }
+  50%     { transform: translateX(8px); }
+}
+
+/* ============ PROFILER ============ */
+.profiler-row {
+  display: grid;
+  grid-template-columns: 1.2fr 2fr;
+  gap: 14px;
+}
+.profiler-side {
+  background: rgba(15,23,42,0.7);
+  border: 1px solid #fb923c;
+  border-radius: 12px;
+  padding: 14px;
+}
+.profile-checks {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-top: 8px;
+}
+.check-row {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 11px; color: #cbd5e1;
+  padding: 6px 8px;
+  background: rgba(0,0,0,0.25);
+  border-radius: 6px;
+  border-left: 3px solid #4ade80;
+}
+.check-row.warn  { border-left-color: #fb923c; }
+.check-row.fail  { border-left-color: #f87171; }
+.check-row .check-icon { font-size: 13px; }
+.check-row .check-name { flex: 1; }
+.check-row .check-val { font-size: 10px; font-weight: 700; }
+
+.dash-strip {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px;
+}
+.gauge {
+  background: rgba(0,0,0,0.30);
+  border: 1px solid #334155;
+  border-radius: 10px;
+  padding: 10px;
+  text-align: center;
+}
+.gauge-arc {
+  width: 84px; height: 50px; margin: 0 auto 4px;
+  position: relative;
+  overflow: hidden;
+}
+.gauge-arc svg { width: 100%; height: auto; }
+.gauge-val { font-size: 16px; font-weight: 700; }
+.gauge-lbl { font-size: 9px; color: #64748b; letter-spacing: 0.08em; text-transform: uppercase; margin-top: 2px; }
+
+.alert-bar {
+  display: flex; align-items: center; gap: 10px;
+  margin-top: 10px;
+  padding: 8px 12px;
+  background: rgba(251,146,60,0.10);
+  border-left: 3px solid #fb923c;
+  border-radius: 6px;
+  font-size: 11px; color: #fed7aa;
+}
+
+/* ============ DATA PREP STAGES ============ */
+.prep-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 10px;
+  position: relative;
+}
+.prep-stage {
+  background: rgba(15,23,42,0.7);
+  border: 1px solid #475569;
+  border-radius: 12px;
+  padding: 12px;
+  position: relative;
+  transition: all 0.3s;
+  cursor: pointer;
+  overflow: hidden;
+}
+.prep-stage:hover {
+  border-color: #a78bfa;
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(167,139,250,0.20);
+}
+.prep-stage::before {
+  content: '';
+  position: absolute; top:0; left:0; right:0; height: 3px;
+  background: var(--stage-color);
+  box-shadow: 0 0 8px var(--stage-color);
+}
+/* animated flow arrow between consecutive prep stages */
+.prep-stage:not(:last-child)::after {
+  content: '▶';
+  position: absolute;
+  right: -9px; top: 50%;
+  transform: translateY(-50%);
+  font-size: 12px;
+  color: var(--stage-color);
+  z-index: 6;
+  text-shadow: 0 0 8px var(--stage-color);
+  animation: stage-arrow 1.1s ease-in-out infinite;
+}
+@keyframes stage-arrow {
+  0%,100% { transform: translateY(-50%) translateX(0); opacity: 0.5; }
+  50%     { transform: translateY(-50%) translateX(4px); opacity: 1; }
+}
+.stage-num {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 10px; font-weight: 700;
+  color: var(--stage-color);
+  letter-spacing: 0.1em;
+}
+.stage-num .num-circle {
+  width: 20px; height: 20px; border-radius: 50%;
+  background: var(--stage-color);
+  color: #0a0e1f;
+  display: grid; place-items: center;
+  font-size: 11px; font-weight: 800;
+}
+.stage-h {
+  font-size: 13px; font-weight: 700; color: #e2e8f0;
+  margin: 8px 0 4px;
+  line-height: 1.3;
+}
+.stage-icon-big {
+  font-size: 28px; display: block; text-align: center; margin: 10px 0;
+  filter: drop-shadow(0 0 8px var(--stage-color));
+  animation: float 3s ease-in-out infinite;
+}
+@keyframes float {
+  0%,100% { transform: translateY(0); }
+  50%     { transform: translateY(-4px); }
+}
+.stage-list {
+  font-size: 10px; color: #94a3b8;
+  line-height: 1.5;
+}
+.stage-list li {
+  list-style: none;
+  padding-left: 12px;
+  position: relative;
+  margin-bottom: 2px;
+}
+.stage-list li::before {
+  content: '▸'; position: absolute; left: 0;
+  color: var(--stage-color);
+}
+.mini-bar {
+  display: flex; gap: 2px; margin-top: 8px; height: 18px; align-items: flex-end;
+}
+.mini-bar .bb {
+  flex: 1; background: var(--stage-color);
+  border-radius: 1px;
+  opacity: 0.7;
+  animation: barpulse 2s ease-in-out infinite;
+}
+.mini-bar .bb:nth-child(2) { animation-delay: 0.15s; }
+.mini-bar .bb:nth-child(3) { animation-delay: 0.30s; }
+.mini-bar .bb:nth-child(4) { animation-delay: 0.45s; }
+.mini-bar .bb:nth-child(5) { animation-delay: 0.60s; }
+@keyframes barpulse {
+  0%,100% { transform: scaleY(1); opacity: 0.7; }
+  50%     { transform: scaleY(1.4); opacity: 1; transform-origin: bottom; }
+}
+
+.stage-prep-pill {
+  display: inline-block; padding: 2px 7px;
+  background: rgba(99,102,241,0.18);
+  border: 1px solid rgba(99,102,241,0.5);
+  color: #c7d2fe;
+  font-size: 9px; font-weight: 600;
+  border-radius: 10px;
+  margin: 2px 2px 0 0;
+}
+
+.anchor-glow {
+  margin-top: 6px;
+  padding: 5px 8px;
+  background: linear-gradient(90deg, rgba(168,85,247,0.20), rgba(34,211,238,0.15));
+  border: 1px solid rgba(168,85,247,0.55);
+  border-radius: 6px;
+  font-size: 9px; font-weight: 700;
+  color: #d8b4fe;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  letter-spacing: 0.05em;
+}
+.anchor-glow::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.18), transparent);
+  animation: shimmer 2.4s ease-in-out infinite;
+}
+@keyframes shimmer {
+  0%   { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+/* ============ OUTPUT FILES ============ */
+.output-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 10px;
+}
+.output-card {
+  background: rgba(15,23,42,0.85);
+  border: 1px solid #475569;
+  border-radius: 10px;
+  padding: 11px;
+  text-align: center;
+  transition: all 0.3s;
+  position: relative;
+}
+.output-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--out-color);
+  box-shadow: 0 4px 14px var(--out-glow);
+}
+.output-card.success { border-color: #4ade80; }
+.output-card.success { --out-color: #4ade80; --out-glow: rgba(74,222,128,0.30); }
+.output-card.error   { border-color: #f87171; }
+.output-card.error   { --out-color: #f87171; --out-glow: rgba(248,113,113,0.30); }
+.output-card.consumer{ border-color: #c084fc; }
+.output-card.consumer{ --out-color: #c084fc; --out-glow: rgba(192,132,252,0.30); }
+.output-icon {
+  font-size: 26px;
+  margin-bottom: 4px;
+  filter: drop-shadow(0 0 6px var(--out-color));
+}
+.output-name {
+  font-size: 11px; font-weight: 700; color: #e2e8f0;
+}
+.output-meta {
+  font-size: 9px; color: #64748b; margin-top: 2px;
+}
+.output-counter {
+  display: inline-block;
+  margin-top: 6px;
+  padding: 2px 8px;
+  background: rgba(0,0,0,0.35);
+  border-radius: 8px;
+  font-size: 9px; font-weight: 700;
+  color: var(--out-color);
+  font-family: 'Consolas', monospace;
+}
+
+/* ============ MONITORING ============ */
+.monitor-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 10px;
+}
+.monitor-card {
+  background: rgba(15,23,42,0.7);
+  border: 1px solid #334155;
+  border-radius: 10px;
+  padding: 12px;
+}
+.monitor-head {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 10px;
+}
+.monitor-title {
+  font-size: 11px; font-weight: 700;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  color: #818cf8;
+}
+.tag {
+  font-size: 9px; padding: 2px 8px; border-radius: 8px;
+  background: rgba(74,222,128,0.15); color: #4ade80;
+  border: 1px solid rgba(74,222,128,0.45);
+}
+
+.spark-line {
+  width: 100%; height: 50px;
+}
+.metric-strip {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 6px;
+  margin-top: 8px;
+}
+.metric {
+  background: rgba(0,0,0,0.30);
+  padding: 7px 9px;
+  border-radius: 6px;
+  border-left: 2px solid #818cf8;
+}
+.metric .mv { font-size: 15px; font-weight: 700; color: #e2e8f0; }
+.metric .ml { font-size: 9px; color: #64748b; }
+
+.alert-list {
+  font-size: 10px;
+  display: flex; flex-direction: column; gap: 5px;
+}
+.alert-row {
+  display: flex; align-items: center; gap: 7px;
+  padding: 5px 8px;
+  background: rgba(0,0,0,0.30);
+  border-radius: 5px;
+}
+.alert-row.ok { border-left: 2px solid #4ade80; }
+.alert-row.wn { border-left: 2px solid #fb923c; }
+.alert-row.er { border-left: 2px solid #f87171; }
+.alert-time { color: #64748b; font-family: 'Consolas', monospace; font-size: 9px; }
+.alert-msg { flex: 1; color: #cbd5e1; }
+
+/* ============ GLOBAL CONNECTORS (SVG overlay) ============ */
+.connector-svg {
+  position: absolute;
+  pointer-events: none;
+  z-index: 5;
+}
+
+/* ============ DECORATIONS ============ */
+/* ============ BOLD VERTICAL FLOW CONNECTOR ============ */
+.flow-connector {
+  position: relative;
+  height: 64px;
+  margin: 2px 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+/* the glowing vertical pipes carrying data downward */
+.flow-pipes {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  justify-content: space-around;
+  align-items: stretch;
+  pointer-events: none;
+}
+.flow-lane {
+  position: relative;
+  width: 3px;
+  height: 100%;
+  background: linear-gradient(180deg, transparent, rgba(56,189,248,0.25), transparent);
+  border-radius: 2px;
+}
+.flow-lane::before {
+  /* moving dashed energy line */
+  content: '';
+  position: absolute; inset: 0;
+  background: repeating-linear-gradient(180deg,
+      var(--lane-color,#38bdf8) 0 6px, transparent 6px 14px);
+  opacity: 0.45;
+  animation: pipe-flow 0.9s linear infinite;
+  border-radius: 2px;
+}
+@keyframes pipe-flow {
+  0%   { background-position-y: 0; }
+  100% { background-position-y: 14px; }
+}
+/* big glowing data packet that falls down the lane */
+.flow-packet {
+  position: absolute;
+  left: 50%;
+  width: 14px; height: 14px;
+  margin-left: -7px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #fff, var(--lane-color,#38bdf8) 60%, transparent 72%);
+  box-shadow: 0 0 16px 3px var(--lane-color,#38bdf8),
+              0 -14px 12px -4px var(--lane-color,#38bdf8),
+              0 -26px 16px -8px var(--lane-color,#38bdf8);
+  animation: packet-fall 1.8s cubic-bezier(0.5,0,0.7,1) infinite;
+}
+@keyframes packet-fall {
+  0%   { top: -18px; opacity: 0; transform: scale(0.5); }
+  12%  { opacity: 1; transform: scale(1); }
+  85%  { opacity: 1; transform: scale(1); }
+  100% { top: 64px; opacity: 0; transform: scale(0.5); }
+}
+/* central pulsing chevron stack showing direction */
+.flow-chevrons {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+  padding: 4px 18px;
+  background: rgba(10,14,31,0.78);
+  border: 1px solid rgba(56,189,248,0.35);
+  border-radius: 14px;
+  box-shadow: 0 0 20px rgba(56,189,248,0.25);
+  backdrop-filter: blur(4px);
+}
+.flow-chevrons .chev {
+  font-size: 13px; line-height: 9px;
+  color: #38bdf8;
+  animation: chev-pulse 1.4s ease-in-out infinite;
+}
+.flow-chevrons .chev:nth-child(1) { animation-delay: 0s;    color:#67e8f9; }
+.flow-chevrons .chev:nth-child(2) { animation-delay: 0.18s; color:#38bdf8; }
+.flow-chevrons .chev:nth-child(3) { animation-delay: 0.36s; color:#3b82f6; }
+@keyframes chev-pulse {
+  0%,100% { opacity: 0.25; transform: translateY(0); }
+  50%     { opacity: 1;    transform: translateY(2px); }
+}
+.flow-label {
+  position: absolute;
+  right: 18px;
+  font-size: 9px; font-weight: 700; letter-spacing: 0.18em;
+  color: #475569;
+  text-transform: uppercase;
+  display: flex; align-items: center; gap: 6px;
+}
+.flow-label .blip {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: #4ade80; box-shadow: 0 0 8px #4ade80;
+  animation: pulse 1.3s ease-in-out infinite;
+}
+
+.security-badges {
+  display: flex; gap: 8px; align-items: center; margin-top: 8px;
+}
+.sec-badge {
+  display: flex; align-items: center; gap: 4px;
+  padding: 3px 8px;
+  background: rgba(15,23,42,0.6);
+  border: 1px solid #475569;
+  border-radius: 12px;
+  font-size: 9px; color: #94a3b8;
+}
+.sec-badge {
+  animation: badge-breathe 3s ease-in-out infinite;
+}
+@keyframes badge-breathe {
+  0%,100% { border-color: #475569; }
+  50%     { border-color: #4ade80; box-shadow: 0 0 8px rgba(74,222,128,0.3); }
+}
+
+/* rotating gear emoji in stage titles */
+.spin-gear {
+  display: inline-block;
+  animation: spin 4s linear infinite;
+}
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+/* critical job pulse ring */
+.crit-pulse {
+  position: relative;
+}
+.crit-pulse::after {
+  content: '';
+  position: absolute; inset: -3px;
+  border-radius: inherit;
+  border: 2px solid var(--tier-accent);
+  opacity: 0;
+  animation: crit-ring 2.4s ease-out infinite;
+  pointer-events: none;
+}
+@keyframes crit-ring {
+  0%   { opacity: 0.8; transform: scale(1); }
+  100% { opacity: 0; transform: scale(1.06); }
+}
+
+/* medallion glow sweep */
+.med { overflow: hidden; position: relative; }
+.med::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.18), transparent);
+  transform: translateX(-100%);
+  animation: med-sweep 3s ease-in-out infinite;
+}
+.med.silver::after { animation-delay: 1s; }
+.med.gold::after   { animation-delay: 2s; }
+@keyframes med-sweep {
+  0%, 60% { transform: translateX(-100%); }
+  100%    { transform: translateX(200%); }
+}
+
+/* chip live pulse on streaming chips */
+.chip.spark, .chip.dbx, .chip.delta {
+  animation: chip-glow 2.6s ease-in-out infinite;
+}
+.chip.dbx   { animation-delay: 0.4s; }
+.chip.delta { animation-delay: 0.8s; }
+@keyframes chip-glow {
+  0%,100% { box-shadow: 0 0 0 rgba(255,255,255,0); }
+  50%     { box-shadow: 0 0 10px currentColor; }
+}
+
+/* gauge value count flicker */
+.gauge-val { animation: val-flicker 4s ease-in-out infinite; }
+@keyframes val-flicker {
+  0%,100% { opacity: 1; }
+  50%     { opacity: 0.78; }
+}
+
+/* output card live ping */
+.output-icon {
+  animation: out-float 3.2s ease-in-out infinite;
+}
+@keyframes out-float {
+  0%,100% { transform: translateY(0) scale(1); }
+  50%     { transform: translateY(-3px) scale(1.06); }
+}
+
+
+/* ============ DETAIL POPUP ============ */
+#detail-popup {
+  position: fixed;
+  bottom: 24px; right: 24px;
+  background: linear-gradient(135deg, #1e293b, #0f172a);
+  border: 1px solid #67e8f9;
+  border-radius: 12px;
+  padding: 16px 20px;
+  font-size: 12px;
+  display: none;
+  min-width: 260px;
+  max-width: 340px;
+  z-index: 999;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.6), 0 0 20px rgba(103,232,249,0.25);
+  backdrop-filter: blur(10px);
+}
+#detail-popup h3 {
+  font-size: 14px; color: #67e8f9;
+  margin-bottom: 8px;
+  display: flex; justify-content: space-between; align-items: center;
+}
+#detail-popup .close {
+  cursor: pointer; color: #64748b; font-size: 16px;
+}
+#detail-popup .row {
+  display: flex; justify-content: space-between;
+  padding: 4px 0;
+  border-bottom: 1px dashed #334155;
+}
+#detail-popup .row:last-child { border-bottom: none; }
+#detail-popup .k { color: #94a3b8; }
+#detail-popup .v { color: #e2e8f0; font-weight: 600; }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <!-- ====================== HEADER ====================== -->
+  <div class="header">
+    <div class="header-left">
+      <div class="brand-mark"></div>
+      <div class="title-stack">
+        <h1>Enterprise Banking Data Ingestion &amp; Preparation Platform</h1>
+        <div class="sub">Domain-Driven · Automated · Cloud-Native Data Engineering Pipeline</div>
+      </div>
+    </div>
+    <div class="header-right">
+      <div class="dd-group">
+        <div class="dd-label">DOMAIN</div>
+        <select class="dropdown" id="domain-select">
+          <option value="BANKCORE_DNA">🧬 BANKCORE_DNA</option>
+          <option value="HDC">🗄️ HDC</option>
+          <option value="OPTIS">⚙️ OPTIS</option>
+          <option value="CRM">🤝 CRM</option>
+          <option value="EPOC">💳 EPOC</option>
+          <option value="BANKCORE_CTOUCH">📱 BANKCORE_CTOUCH</option>
+          <option value="PAYMENT_GATEWAY">💸 PAYMENT_GATEWAY</option>
+          <option value="FRAUD_SYSTEM">🛡️ FRAUD_SYSTEM</option>
+          <option value="BANKCORE_SIGNATURE">❄️ BANKCORE_SIGNATURE (Snowflake)</option>
+        </select>
+      </div>
+      <div class="dd-group">
+        <div class="dd-label">SUBDOMAIN</div>
+        <select class="dropdown" id="subdomain-select">
+          <option value="CONSUMER_INFO">CONSUMER_INFO</option>
+          <option value="ACCOUNTS">ACCOUNTS</option>
+          <option value="TRANSACTIONS">TRANSACTIONS</option>
+          <option value="PRODUCTS">PRODUCTS</option>
+          <option value="RELATIONSHIPS">RELATIONSHIPS</option>
+        </select>
+      </div>
+      <div class="live-pill"><div class="dot"></div>LIVE · 247 jobs</div>
+    </div>
+  </div>
+
+  <!-- ====================== LEGEND ====================== -->
+  <div class="legend">
+    <div class="li"><div class="ld" style="background:#fbbf24"></div>Active Domain Flow</div>
+    <div class="li"><div class="ld" style="background:#38bdf8"></div>Ingestion</div>
+    <div class="li"><div class="ld" style="background:#fb923c"></div>Quality / Profile</div>
+    <div class="li"><div class="ld" style="background:#a78bfa"></div>Transformation</div>
+    <div class="li"><div class="ld" style="background:#4ade80"></div>Validated / OK</div>
+    <div class="li"><div class="ld" style="background:#f87171"></div>Error / Reject</div>
+    <div class="li"><span class="li-pill" style="background:rgba(180,83,9,0.20);color:#fbbf24">BRONZE</span></div>
+    <div class="li"><span class="li-pill" style="background:rgba(148,163,184,0.18);color:#cbd5e1">SILVER</span></div>
+    <div class="li"><span class="li-pill" style="background:rgba(202,138,4,0.22);color:#fde68a">GOLD</span></div>
+  </div>
+
+  <!-- ====================== TIER 1 — SOURCE SYSTEMS ====================== -->
+  <div class="tier" style="--tier-bg-top:#1a1f35; --tier-bg-bot:#0f1428; --tier-border:rgba(99,102,241,0.30); --tier-accent:#818cf8">
+    <div class="tier-head">
+      <div class="tier-title"><span class="ico">🏛️</span>Source Systems · Banking Domains</div>
+      <div class="tier-meta">9 domains · 222 tables · streaming + batch ingestion</div>
+    </div>
+    <div class="sources-grid" id="sources-grid">
+      <!-- populated by JS -->
+    </div>
+  </div>
+
+  <!-- particle track between tiers -->
+  <div class="flow-connector">
+    <div class="flow-pipes"><div class="flow-lane" style="--lane-color:#38bdf8"><div class="flow-packet" style="--lane-color:#38bdf8; animation-delay:0s"></div></div><div class="flow-lane" style="--lane-color:#67e8f9"><div class="flow-packet" style="--lane-color:#67e8f9; animation-delay:0.35s"></div></div><div class="flow-lane" style="--lane-color:#3b82f6"><div class="flow-packet" style="--lane-color:#3b82f6; animation-delay:0.7s"></div></div><div class="flow-lane" style="--lane-color:#22d3ee"><div class="flow-packet" style="--lane-color:#22d3ee; animation-delay:1.05s"></div></div><div class="flow-lane" style="--lane-color:#818cf8"><div class="flow-packet" style="--lane-color:#818cf8; animation-delay:1.4s"></div></div></div>
+    <div class="flow-chevrons"><span class="chev">▼</span><span class="chev">▼</span><span class="chev">▼</span></div>
+    <div class="flow-label"><span class="blip"></span>INGEST →</div>
+  </div>
+
+  <!-- ====================== TIER 2 — INGESTION + ADLS ====================== -->
+  <div class="tier" style="--tier-bg-top:#1e2d40; --tier-bg-bot:#0f1c2a; --tier-border:rgba(56,189,248,0.30); --tier-accent:#38bdf8">
+    <div class="tier-head">
+      <div class="tier-title"><span class="ico">☁️</span>Enterprise Ingestion Layer</div>
+      <div class="tier-meta">Metadata-driven · auto-scaling · schema evolution · CDC</div>
+    </div>
+    <div class="flow-row">
+      <div class="ingest-stage crit-pulse">
+        <div class="stage-title"><span class="spin-gear">⚙️</span>Spark + Databricks Ingestion Engine 🚀</div>
+        <div class="stage-row">
+          <span class="chip dbx">🧱 Databricks</span>
+          <span class="chip spark">⚡ Spark</span>
+          <span class="chip kafka">📡 Kafka Stream</span>
+          <span class="chip">📦 Batch Jobs</span>
+          <span class="chip">🔄 Auto-scale</span>
+          <span class="chip">🧬 Metadata-Driven</span>
+        </div>
+        <div style="margin-top:10px; display:flex; gap:8px; font-size:10px; color:#94a3b8; flex-wrap:wrap;">
+          <div>📊 <b style="color:#38bdf8">12.4M</b> rows/min</div>
+          <div>•</div>
+          <div>🌐 <b style="color:#38bdf8">8</b> active pipelines</div>
+          <div>•</div>
+          <div>⏱ <b style="color:#38bdf8">45ms</b> avg latency</div>
+          <div>•</div>
+          <div>🔥 <b style="color:#4ade80">99.9%</b> uptime</div>
+        </div>
+      </div>
+      <div class="arrow-x">⚡➜</div>
+      <div class="adls-stage crit-pulse">
+        <div class="stage-title"><span>🌊</span>Azure Data Lake (ADLS Gen2 + Delta) ❄️</div>
+        <div class="stage-row">
+          <span class="chip delta">🔺 Delta Lake</span>
+          <span class="chip">🗂️ Partitioned</span>
+          <span class="chip">🧾 Schema Evolution</span>
+          <span class="chip">📜 Time Travel</span>
+          <span class="chip">🔁 CDC</span>
+        </div>
+        <div class="medallion-row">
+          <div class="med bronze"><div class="med-name">🥉 BRONZE</div><div class="med-sub">raw landing</div></div>
+          <div class="med silver"><div class="med-name">🥈 SILVER</div><div class="med-sub">cleansed</div></div>
+          <div class="med gold"><div class="med-name">🥇 GOLD</div><div class="med-sub">curated</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="flow-connector">
+    <div class="flow-pipes"><div class="flow-lane" style="--lane-color:#fb923c"><div class="flow-packet" style="--lane-color:#fb923c; animation-delay:0s"></div></div><div class="flow-lane" style="--lane-color:#fbbf24"><div class="flow-packet" style="--lane-color:#fbbf24; animation-delay:0.35s"></div></div><div class="flow-lane" style="--lane-color:#f59e0b"><div class="flow-packet" style="--lane-color:#f59e0b; animation-delay:0.7s"></div></div><div class="flow-lane" style="--lane-color:#fb923c"><div class="flow-packet" style="--lane-color:#fb923c; animation-delay:1.05s"></div></div><div class="flow-lane" style="--lane-color:#fdba74"><div class="flow-packet" style="--lane-color:#fdba74; animation-delay:1.4s"></div></div></div>
+    <div class="flow-chevrons"><span class="chev">▼</span><span class="chev">▼</span><span class="chev">▼</span></div>
+    <div class="flow-label"><span class="blip"></span>PROFILE →</div>
+  </div>
+
+  <!-- ====================== TIER 3 — AUTOMATED PROFILER ====================== -->
+  <div class="tier" style="--tier-bg-top:#2d2010; --tier-bg-bot:#1a1408; --tier-border:rgba(251,146,60,0.30); --tier-accent:#fb923c">
+    <div class="tier-head">
+      <div class="tier-title"><span class="ico">📊</span>Automated Data Profiling Engine</div>
+      <div class="tier-meta">PII scan · null analysis · duplicates · data drift · health scoring</div>
+    </div>
+    <div class="profiler-row">
+      <div class="profiler-side">
+        <div class="stage-title"><span>🔍</span>Quality Checks · Live</div>
+        <div class="profile-checks">
+          <div class="check-row">
+            <span class="check-icon">✅</span><span class="check-name">PII Coverage</span><span class="check-val" style="color:#4ade80">99.2%</span>
+          </div>
+          <div class="check-row">
+            <span class="check-icon">✅</span><span class="check-name">Customer Attrs</span><span class="check-val" style="color:#4ade80">98.7%</span>
+          </div>
+          <div class="check-row warn">
+            <span class="check-icon">⚠️</span><span class="check-name">Address Complete</span><span class="check-val" style="color:#fb923c">87.4%</span>
+          </div>
+          <div class="check-row">
+            <span class="check-icon">✅</span><span class="check-name">Phone Quality</span><span class="check-val" style="color:#4ade80">94.1%</span>
+          </div>
+          <div class="check-row">
+            <span class="check-icon">✅</span><span class="check-name">Null % (avg)</span><span class="check-val" style="color:#4ade80">2.3%</span>
+          </div>
+          <div class="check-row warn">
+            <span class="check-icon">⚠️</span><span class="check-name">Duplicate Detect</span><span class="check-val" style="color:#fb923c">1.8%</span>
+          </div>
+        </div>
+        <div class="alert-bar">
+          <span>📧</span>
+          <span>If thresholds breached → <b>pipeline halt</b> · AppOps team notified · incident raised</span>
+        </div>
+      </div>
+      <div>
+        <div class="stage-title" style="color:#fb923c"><span>📈</span>Quality Gauges · Health Score</div>
+        <div class="dash-strip">
+          <div class="gauge">
+            <div class="gauge-arc">
+              <svg viewBox="0 0 100 60">
+                <path d="M10 50 A40 40 0 0 1 90 50" stroke="#1e293b" stroke-width="8" fill="none"/>
+                <path d="M10 50 A40 40 0 0 1 86 32" stroke="#4ade80" stroke-width="8" fill="none" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <div class="gauge-val" style="color:#4ade80">96%</div>
+            <div class="gauge-lbl">Completeness</div>
+          </div>
+          <div class="gauge">
+            <div class="gauge-arc">
+              <svg viewBox="0 0 100 60">
+                <path d="M10 50 A40 40 0 0 1 90 50" stroke="#1e293b" stroke-width="8" fill="none"/>
+                <path d="M10 50 A40 40 0 0 1 82 28" stroke="#38bdf8" stroke-width="8" fill="none" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <div class="gauge-val" style="color:#38bdf8">93%</div>
+            <div class="gauge-lbl">Validity</div>
+          </div>
+          <div class="gauge">
+            <div class="gauge-arc">
+              <svg viewBox="0 0 100 60">
+                <path d="M10 50 A40 40 0 0 1 90 50" stroke="#1e293b" stroke-width="8" fill="none"/>
+                <path d="M10 50 A40 40 0 0 1 75 22" stroke="#fb923c" stroke-width="8" fill="none" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <div class="gauge-val" style="color:#fb923c">87%</div>
+            <div class="gauge-lbl">Conformity</div>
+          </div>
+          <div class="gauge">
+            <div class="gauge-arc">
+              <svg viewBox="0 0 100 60">
+                <path d="M10 50 A40 40 0 0 1 90 50" stroke="#1e293b" stroke-width="8" fill="none"/>
+                <path d="M10 50 A40 40 0 0 1 88 38" stroke="#a78bfa" stroke-width="8" fill="none" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <div class="gauge-val" style="color:#a78bfa">99%</div>
+            <div class="gauge-lbl">Uniqueness</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="flow-connector">
+    <div class="flow-pipes"><div class="flow-lane" style="--lane-color:#c084fc"><div class="flow-packet" style="--lane-color:#c084fc; animation-delay:0s"></div></div><div class="flow-lane" style="--lane-color:#a78bfa"><div class="flow-packet" style="--lane-color:#a78bfa; animation-delay:0.35s"></div></div><div class="flow-lane" style="--lane-color:#d8b4fe"><div class="flow-packet" style="--lane-color:#d8b4fe; animation-delay:0.7s"></div></div><div class="flow-lane" style="--lane-color:#ec4899"><div class="flow-packet" style="--lane-color:#ec4899; animation-delay:1.05s"></div></div><div class="flow-lane" style="--lane-color:#c084fc"><div class="flow-packet" style="--lane-color:#c084fc; animation-delay:1.4s"></div></div></div>
+    <div class="flow-chevrons"><span class="chev">▼</span><span class="chev">▼</span><span class="chev">▼</span></div>
+    <div class="flow-label"><span class="blip"></span>PREP →</div>
+  </div>
+
+  <!-- ====================== TIER 4 — DATA PREP STAGES ====================== -->
+  <div class="tier" style="--tier-bg-top:#2d1a2e; --tier-bg-bot:#1a0f1c; --tier-border:rgba(168,85,247,0.30); --tier-accent:#c084fc">
+    <div class="tier-head">
+      <div class="tier-title"><span class="ico">⚗️</span>Data Preparation Layer · 6 Stages</div>
+      <div class="tier-meta">Extract → Profile → Standardize → Address → QC → Validate</div>
+    </div>
+    <div class="prep-grid">
+
+      <div class="prep-stage" style="--stage-color:#38bdf8" onclick="showDetail('stage1')">
+        <div class="stage-num"><span class="num-circle">1</span> STAGE 1</div>
+        <div class="stage-h">Data Extraction</div>
+        <div class="stage-icon-big">📥</div>
+        <ul class="stage-list">
+          <li>Extract ingestion tables</li>
+          <li>Consumer-specific datasets</li>
+          <li>Domain mapping rules</li>
+          <li>Curated extract layer</li>
+        </ul>
+        <div class="mini-bar"><div class="bb"></div><div class="bb"></div><div class="bb"></div><div class="bb"></div><div class="bb"></div></div>
+      </div>
+
+      <div class="prep-stage" style="--stage-color:#fb923c" onclick="showDetail('stage2')">
+        <div class="stage-num"><span class="num-circle">2</span> STAGE 2</div>
+        <div class="stage-h">Extract Profiling</div>
+        <div class="stage-icon-big">📊</div>
+        <ul class="stage-list">
+          <li>Volume threshold checks</li>
+          <li>Abnormal drop detection</li>
+          <li>Completeness validation</li>
+          <li>⚠️ Auto-halt on breach</li>
+        </ul>
+        <div class="mini-bar"><div class="bb"></div><div class="bb"></div><div class="bb"></div><div class="bb"></div><div class="bb"></div></div>
+      </div>
+
+      <div class="prep-stage" style="--stage-color:#a78bfa" onclick="showDetail('stage3')">
+        <div class="stage-num"><span class="num-circle">3</span> STAGE 3</div>
+        <div class="stage-h">Standardization</div>
+        <div class="stage-icon-big">⚙️</div>
+        <ul class="stage-list">
+          <li>Rules engine</li>
+          <li>Customer normalization</li>
+          <li>Phone · email · name</li>
+          <li>Spark transforms</li>
+        </ul>
+        <div class="mini-bar"><div class="bb"></div><div class="bb"></div><div class="bb"></div><div class="bb"></div><div class="bb"></div></div>
+      </div>
+
+      <div class="prep-stage" style="--stage-color:#22d3ee" onclick="showDetail('stage4')">
+        <div class="stage-num"><span class="num-circle">4</span> STAGE 4</div>
+        <div class="stage-h">Address Standardization</div>
+        <div class="stage-icon-big">🗺️</div>
+        <ul class="stage-list">
+          <li>Address cleansing</li>
+          <li>Geo validation</li>
+          <li>Postal correction</li>
+          <li>Enrichment</li>
+        </ul>
+        <div class="anchor-glow">⚓ ANCHOR SOFTWARE API</div>
+      </div>
+
+      <div class="prep-stage" style="--stage-color:#ec4899" onclick="showDetail('stage5')">
+        <div class="stage-num"><span class="num-circle">5</span> STAGE 5</div>
+        <div class="stage-h">Quality Profiling</div>
+        <div class="stage-icon-big">🎯</div>
+        <ul class="stage-list">
+          <li>% addresses standardized</li>
+          <li>% phones standardized</li>
+          <li>Key-column quality</li>
+          <li>Customer completeness</li>
+        </ul>
+        <div class="mini-bar"><div class="bb"></div><div class="bb"></div><div class="bb"></div><div class="bb"></div><div class="bb"></div></div>
+      </div>
+
+      <div class="prep-stage" style="--stage-color:#4ade80" onclick="showDetail('stage6')">
+        <div class="stage-num"><span class="num-circle">6</span> STAGE 6</div>
+        <div class="stage-h">Validate &amp; Convert</div>
+        <div class="stage-icon-big">✅</div>
+        <ul class="stage-list">
+          <li>Business rule checks</li>
+          <li>Good / bad bucket split</li>
+          <li>Error segregation</li>
+          <li>Output file generation</li>
+        </ul>
+        <div class="mini-bar"><div class="bb"></div><div class="bb"></div><div class="bb"></div><div class="bb"></div><div class="bb"></div></div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="flow-connector">
+    <div class="flow-pipes"><div class="flow-lane" style="--lane-color:#4ade80"><div class="flow-packet" style="--lane-color:#4ade80; animation-delay:0s"></div></div><div class="flow-lane" style="--lane-color:#22c55e"><div class="flow-packet" style="--lane-color:#22c55e; animation-delay:0.35s"></div></div><div class="flow-lane" style="--lane-color:#10b981"><div class="flow-packet" style="--lane-color:#10b981; animation-delay:0.7s"></div></div><div class="flow-lane" style="--lane-color:#4ade80"><div class="flow-packet" style="--lane-color:#4ade80; animation-delay:1.05s"></div></div><div class="flow-lane" style="--lane-color:#34d399"><div class="flow-packet" style="--lane-color:#34d399; animation-delay:1.4s"></div></div></div>
+    <div class="flow-chevrons"><span class="chev">▼</span><span class="chev">▼</span><span class="chev">▼</span></div>
+    <div class="flow-label"><span class="blip"></span>OUTPUT →</div>
+  </div>
+
+  <!-- ====================== TIER 5 — OUTPUT FILES ====================== -->
+  <div class="tier" style="--tier-bg-top:#1a2e1a; --tier-bg-bot:#0f1c0f; --tier-border:rgba(74,222,128,0.30); --tier-accent:#4ade80">
+    <div class="tier-head">
+      <div class="tier-title"><span class="ico">📤</span>Output Layer · Downstream Consumers</div>
+      <div class="tier-meta">curated files · APIs · ML feeds · BI analytics · enterprise reporting</div>
+    </div>
+    <div class="output-grid">
+      <div class="output-card success">
+        <div class="output-icon">📄</div>
+        <div class="output-name">KNL Input File</div>
+        <div class="output-meta">KNL Team feed</div>
+        <div class="output-counter">2.4M rows</div>
+      </div>
+      <div class="output-card success">
+        <div class="output-icon">📋</div>
+        <div class="output-name">FRE Team File</div>
+        <div class="output-meta">Fraud / Risk Eng</div>
+        <div class="output-counter">1.8M rows</div>
+      </div>
+      <div class="output-card error">
+        <div class="output-icon">🗑️</div>
+        <div class="output-name">Error Bucket</div>
+        <div class="output-meta">Reject records</div>
+        <div class="output-counter">12K rows</div>
+      </div>
+      <div class="output-card consumer">
+        <div class="output-icon">🔌</div>
+        <div class="output-name">Consumer APIs</div>
+        <div class="output-meta">REST · GraphQL</div>
+        <div class="output-counter">182 reqs/s</div>
+      </div>
+      <div class="output-card consumer">
+        <div class="output-icon">📊</div>
+        <div class="output-name">Analytics</div>
+        <div class="output-meta">Power BI · Tableau</div>
+        <div class="output-counter">47 dashboards</div>
+      </div>
+      <div class="output-card consumer">
+        <div class="output-icon">🤖</div>
+        <div class="output-name">ML / AI Consumers</div>
+        <div class="output-meta">Feature store</div>
+        <div class="output-counter">23 models</div>
+      </div>
+    </div>
+    <div class="security-badges">
+      <div class="sec-badge">🛡️ Encryption at rest</div>
+      <div class="sec-badge">🔐 TLS 1.3 in flight</div>
+      <div class="sec-badge">🪪 Unity Catalog ACL</div>
+      <div class="sec-badge">📋 PII masking</div>
+      <div class="sec-badge">📜 Audit logged</div>
+    </div>
+  </div>
+
+  <div class="flow-connector">
+    <div class="flow-pipes"><div class="flow-lane" style="--lane-color:#818cf8"><div class="flow-packet" style="--lane-color:#818cf8; animation-delay:0s"></div></div><div class="flow-lane" style="--lane-color:#67e8f9"><div class="flow-packet" style="--lane-color:#67e8f9; animation-delay:0.35s"></div></div><div class="flow-lane" style="--lane-color:#4ade80"><div class="flow-packet" style="--lane-color:#4ade80; animation-delay:0.7s"></div></div><div class="flow-lane" style="--lane-color:#fbbf24"><div class="flow-packet" style="--lane-color:#fbbf24; animation-delay:1.05s"></div></div><div class="flow-lane" style="--lane-color:#818cf8"><div class="flow-packet" style="--lane-color:#818cf8; animation-delay:1.4s"></div></div></div>
+    <div class="flow-chevrons"><span class="chev">▼</span><span class="chev">▼</span><span class="chev">▼</span></div>
+    <div class="flow-label"><span class="blip"></span>AUDIT →</div>
+  </div>
+
+  <!-- ====================== TIER 6 — AUDIT & MONITORING ====================== -->
+  <div class="tier" style="--tier-bg-top:#1a1a2e; --tier-bg-bot:#0f0f1c; --tier-border:rgba(129,140,248,0.30); --tier-accent:#818cf8">
+    <div class="tier-head">
+      <div class="tier-title"><span class="ico">📈</span>Enterprise Audit · Monitoring · Observability</div>
+      <div class="tier-meta">SLA tracking · lineage · alerting · AppOps notifications · live dashboards</div>
+    </div>
+    <div class="monitor-grid">
+
+      <div class="monitor-card">
+        <div class="monitor-head">
+          <div class="monitor-title">📊 Pipeline Health · 24h</div>
+          <div class="tag">all green</div>
+        </div>
+        <svg class="spark-line" viewBox="0 0 200 50" preserveAspectRatio="none">
+          <defs>
+            <linearGradient id="spark-fill" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#4ade80" stop-opacity="0.4"/>
+              <stop offset="100%" stop-color="#4ade80" stop-opacity="0"/>
+            </linearGradient>
+          </defs>
+          <path d="M0,32 L15,28 L30,35 L45,22 L60,26 L75,18 L90,24 L105,15 L120,20 L135,12 L150,18 L165,10 L180,15 L200,8 L200,50 L0,50 Z"
+                fill="url(#spark-fill)"/>
+          <path d="M0,32 L15,28 L30,35 L45,22 L60,26 L75,18 L90,24 L105,15 L120,20 L135,12 L150,18 L165,10 L180,15 L200,8"
+                fill="none" stroke="#4ade80" stroke-width="1.5"/>
+          <circle r="3" fill="#4ade80">
+            <animateMotion dur="3s" repeatCount="indefinite"
+              path="M0,32 L15,28 L30,35 L45,22 L60,26 L75,18 L90,24 L105,15 L120,20 L135,12 L150,18 L165,10 L180,15 L200,8"/>
+          </circle>
+        </svg>
+        <div class="metric-strip">
+          <div class="metric"><div class="mv">99.94%</div><div class="ml">SLA · 30d</div></div>
+          <div class="metric"><div class="mv">247</div><div class="ml">Jobs / hr</div></div>
+        </div>
+      </div>
+
+      <div class="monitor-card">
+        <div class="monitor-head">
+          <div class="monitor-title">🔄 Data Lineage</div>
+          <div class="tag">tracked</div>
+        </div>
+        <div style="font-size:10px; color:#94a3b8; line-height:1.7;">
+          <div>📂 Sources <span style="color:#67e8f9">9</span></div>
+          <div>📥 Tables <span style="color:#67e8f9">222</span></div>
+          <div>⚗️ Transforms <span style="color:#67e8f9">68</span></div>
+          <div>📤 Outputs <span style="color:#67e8f9">6</span></div>
+          <div>🧬 End-to-end traced</div>
+        </div>
+      </div>
+
+      <div class="monitor-card">
+        <div class="monitor-head">
+          <div class="monitor-title">🚨 Alerts · Live</div>
+          <div class="tag" style="background:rgba(251,146,60,0.18);color:#fb923c;border-color:rgba(251,146,60,0.45)">2 active</div>
+        </div>
+        <div class="alert-list">
+          <div class="alert-row ok">
+            <span class="alert-time">14:22</span>
+            <span class="alert-msg">✅ Stage 3 SLA met</span>
+          </div>
+          <div class="alert-row wn">
+            <span class="alert-time">14:18</span>
+            <span class="alert-msg">⚠️ Address fill rate 87%</span>
+          </div>
+          <div class="alert-row er">
+            <span class="alert-time">13:55</span>
+            <span class="alert-msg">❌ HDC delta &gt; 2σ</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="monitor-card">
+        <div class="monitor-head">
+          <div class="monitor-title">📡 AppOps Notify</div>
+          <div class="tag">PagerDuty</div>
+        </div>
+        <div style="font-size:10px; color:#94a3b8; line-height:1.8;">
+          <div>📧 Email · 4 routes</div>
+          <div>💬 Slack · #data-ops</div>
+          <div>📱 PagerDuty · P1/P2</div>
+          <div>🪝 Webhooks · 12</div>
+          <div>📊 Grafana · linked</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<!-- ====================== DETAIL POPUP ====================== -->
+<div id="detail-popup">
+  <h3>
+    <span id="dt-name"></span>
+    <span class="close" onclick="document.getElementById('detail-popup').style.display='none'">✕</span>
+  </h3>
+  <div id="dt-body"></div>
+</div>
+
+<script>
+// ============ SOURCE SYSTEMS DATA ============
+const sources = [
+  {
+    key: 'BANKCORE_DNA', name: 'BANKCORE_DNA', type: 'Core Domain · Streaming',
+    color: '#3b82f6', icon: '🧬', flow: '4.2M/min', mode: 'stream',
+    tables: ['t_activity_item','t_product_purchase_offer','t_ip_person','t_customer_address','t_phone_contact','t_customer_relationship']
+  },
+  {
+    key: 'HDC', name: 'HDC', type: 'Historical Data Capture',
+    color: '#8b5cf6', icon: '🗄️', flow: '2.8M/min', mode: 'batch',
+    tables: ['hdc_customer','hdc_transaction','hdc_product','hdc_contact','hdc_party','hdc_profile']
+  },
+  {
+    key: 'OPTIS', name: 'OPTIS', type: 'Operations & Transaction',
+    color: '#06b6d4', icon: '⚙️', flow: '1.5M/min', mode: 'stream',
+    tables: ['opt_account','opt_txn_history','opt_balance','opt_settlement','opt_recon','opt_position']
+  },
+  {
+    key: 'CRM', name: 'CRM', type: 'Customer Relationship',
+    color: '#f59e0b', icon: '🤝', flow: '850K/min', mode: 'batch',
+    tables: ['crm_lead','crm_opportunity','crm_case','crm_activity','crm_contact','crm_account']
+  },
+  {
+    key: 'EPOC', name: 'EPOC', type: 'Card & Payments',
+    color: '#ef4444', icon: '💳', flow: '3.1M/min', mode: 'stream',
+    tables: ['epoc_card_master','epoc_txn','epoc_auth','epoc_dispute','epoc_reward','epoc_limit']
+  },
+  {
+    key: 'BANKCORE_CTOUCH', name: 'BANKCORE_CTOUCH', type: 'Web · Mobile · API',
+    color: '#10b981', icon: '📱', flow: '5.7M/min', mode: 'stream',
+    tables: ['ctouch_session','ctouch_login','ctouch_action','ctouch_device','ctouch_preference','ctouch_alert']
+  },
+  {
+    key: 'PAYMENT_GATEWAY', name: 'PAYMENT_GATEWAY', type: 'Payment Processing',
+    color: '#ec4899', icon: '💸', flow: '6.4M/min', mode: 'stream',
+    tables: ['pmt_request','pmt_response','pmt_settlement','pmt_refund','pmt_chargeback','pmt_route']
+  },
+  {
+    key: 'FRAUD_SYSTEM', name: 'FRAUD_SYSTEM', type: 'Risk · Fraud Detection',
+    color: '#dc2626', icon: '🛡️', flow: '1.2M/min', mode: 'stream',
+    tables: ['fraud_alert','fraud_rule_hit','fraud_case','fraud_score','fraud_pattern','fraud_outcome']
+  },
+  {
+    key: 'BANKCORE_SIGNATURE', name: 'BANKCORE_SIGNATURE', type: 'Snowflake ❄ · Reference DW',
+    color: '#0ea5e9', icon: '❄️', flow: '900K/min', mode: 'batch',
+    tables: ['sig_account_master','sig_party_master','sig_product_catalog','sig_branch','sig_gl_balance','sig_org_hier']
+  },
+];
+
+function renderSources() {
+  const grid = document.getElementById('sources-grid');
+  const active = document.getElementById('domain-select').value;
+  grid.innerHTML = sources.map(s => `
+    <div class="source-card ${s.key === active ? 'active' : ''}"
+         style="--src-color:${s.color}"
+         onclick="selectDomain('${s.key}')"
+         data-key="${s.key}">
+      <div class="flow-rate">${s.flow}</div>
+      <div class="source-head">
+        <div class="source-icon">${s.icon}</div>
+        <div>
+          <div class="source-name">${s.name}</div>
+          <div class="source-type">${s.type}</div>
+        </div>
+      </div>
+      <div class="mode-badge ${s.mode}">
+        ${s.mode === 'stream' ? '📡 STREAMING' : '📦 BATCH'}
+      </div>
+      <div class="table-list">
+        ${s.tables.map((t, i) => `
+          <div class="table-row" style="animation-delay:${i * 0.12}s">
+            <div class="tbl-dot"></div>
+            <span>📄 ${t}</span>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `).join('');
+}
+
+function selectDomain(key) {
+  document.getElementById('domain-select').value = key;
+  renderSources();
+}
+
+document.getElementById('domain-select').addEventListener('change', renderSources);
+
+// ============ STAGE DETAIL POPUP ============
+const stageDetails = {
+  stage1: {
+    name: 'Stage 1 · Data Extraction',
+    rows: [
+      ['Purpose',     'Extract required ingestion tables'],
+      ['Output',      'Consumer-specific curated extracts'],
+      ['Strategy',    'Domain mapping + filter pushdown'],
+      ['Tech',        'Spark SQL on Delta'],
+      ['Runs',        'Hourly · event-driven'],
+      ['SLA',         '< 5 min per batch'],
+    ]
+  },
+  stage2: {
+    name: 'Stage 2 · Extract Profiling',
+    rows: [
+      ['Purpose',     'Validate extracted data volume & shape'],
+      ['Checks',      'Threshold breach · abnormal drop · completeness'],
+      ['On Failure',  'Halt pipeline · notify AppOps · raise incident'],
+      ['Metrics',     'Row count · null % · distinct values'],
+      ['Window',      '7-day rolling baseline'],
+      ['SLA',         '< 90 seconds'],
+    ]
+  },
+  stage3: {
+    name: 'Stage 3 · Standardization',
+    rows: [
+      ['Purpose',     'Normalize customer attributes via rules engine'],
+      ['Rules',       'Phone format · email cleanup · name normalization'],
+      ['Engine',      'Spark UDFs + DLT expectations'],
+      ['Sources',     'Reference data + lookup tables'],
+      ['Output',      'silver.customer_standardized'],
+      ['SLA',         '< 8 minutes per batch'],
+    ]
+  },
+  stage4: {
+    name: 'Stage 4 · Address Standardization',
+    rows: [
+      ['Vendor',      'Anchor Software (external API)'],
+      ['Functions',   'Cleansing · geo-validate · postal correction · enrichment'],
+      ['Calls',       'Batched API · async with retry'],
+      ['Fallback',    'Mark as unverified if API timeout'],
+      ['Output',      'Enriched address + geo coords'],
+      ['SLA',         '< 12 minutes per batch'],
+    ]
+  },
+  stage5: {
+    name: 'Stage 5 · Standardization Quality Profiling',
+    rows: [
+      ['Purpose',     'Score standardization effectiveness'],
+      ['Metrics',     '% addr standardized · % phone standardized'],
+      ['KPIs',        'Key column quality · customer completeness'],
+      ['Output',      'KPI scorecard · gauge dashboard'],
+      ['Tracking',    'Trended 30 days · alerts on drops'],
+      ['SLA',         '< 3 minutes'],
+    ]
+  },
+  stage6: {
+    name: 'Stage 6 · Validation & Conversion',
+    rows: [
+      ['Purpose',     'Business rule validation + output generation'],
+      ['Gates',       'Schema check · referential integrity · range checks'],
+      ['Routing',     'OK → KNL/FRE file · BAD → Error bucket'],
+      ['Outputs',     'KNL Input File · FRE Team File · Error Bucket'],
+      ['Audit',       'Every record logged with disposition'],
+      ['SLA',         '< 6 minutes'],
+    ]
+  },
+};
+
+function showDetail(stageKey) {
+  const d = stageDetails[stageKey];
+  if (!d) return;
+  document.getElementById('dt-name').textContent = d.name;
+  document.getElementById('dt-body').innerHTML = d.rows.map(([k, v]) =>
+    `<div class="row"><span class="k">${k}</span><span class="v">${v}</span></div>`
+  ).join('');
+  document.getElementById('detail-popup').style.display = 'block';
+}
+
+document.addEventListener('click', e => {
+  if (e.target.closest('.source-card') || e.target.closest('.prep-stage') || e.target.closest('#detail-popup'))
+    return;
+  document.getElementById('detail-popup').style.display = 'none';
+});
+
+// Init
+renderSources();
+</script>
+
+</body>
+</html>
