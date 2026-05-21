@@ -1,0 +1,904 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Enterprise Banking Data Platform · Architecture</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  /* ===== FISERV STANDARD THEME =====
+     Orange  #FF6600  (primary brand accent)
+     Aubergine #3C1053 / #775887 (secondary)
+     Grey  #58595B / #8A8B8C (neutral) */
+  --fiserv-orange:#FF6600; --fiserv-orange-2:#FF8534; --fiserv-orange-d:#CC5200;
+  --fiserv-aubergine:#3C1053; --fiserv-aubergine-2:#775887; --fiserv-grey:#58595B; --fiserv-grey-2:#8A8B8C;
+  --bg0:#160a1f; --bg1:#23103080; --panel:rgba(44,22,58,0.55);
+  --line:#3a2148; --line2:#4d2c5e;
+  --txt:#f4eef8; --mut:#b9a7c6; --dim:#8a7799;
+  /* functional accents re-mapped onto the Fiserv system (orange-led, aubergine support) */
+  --c-ingest:#FF6600; --c-quality:#FF8534; --c-transform:#775887;
+  --c-ok:#3ad29f; --c-err:#f5556d; --c-source:#9d6fb3; --c-out:#3ad29f;
+  --gold:#FF6600;
+  --font-d:'Sora',system-ui,sans-serif; --font-m:'JetBrains Mono',monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{
+  background:
+    radial-gradient(1200px 700px at 18% -5%, rgba(255,102,0,0.12), transparent 60%),
+    radial-gradient(1100px 800px at 95% 8%, rgba(119,88,135,0.22), transparent 55%),
+    radial-gradient(900px 900px at 50% 120%, rgba(255,102,0,0.08), transparent 60%),
+    linear-gradient(180deg,#231030 0%, #160a1f 55%, #0e0614 100%);
+  background-attachment:fixed;
+  font-family:var(--font-d); color:var(--txt);
+  min-height:100vh; overflow-x:auto;
+  -webkit-font-smoothing:antialiased;
+}
+/* faint grid texture overlay */
+body::before{
+  content:''; position:fixed; inset:0; pointer-events:none; z-index:0; opacity:0.4;
+  background-image:linear-gradient(rgba(255,102,0,0.04) 1px,transparent 1px),
+                   linear-gradient(90deg,rgba(255,102,0,0.04) 1px,transparent 1px);
+  background-size:46px 46px;
+  mask-image:radial-gradient(ellipse at 50% 30%, #000 30%, transparent 80%);
+}
+.wrap{ position:relative; z-index:1; padding:22px 30px 70px; min-width:1600px; max-width:1860px; margin:0 auto; }
+.em{ font-size:1em; line-height:1; display:inline-block; vertical-align:-0.06em; font-style:normal;
+  font-family:"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif; }
+/* CSS-drawn chevron (UI control, not emoji) */
+.chev-arrow{ display:inline-block; width:0; height:0; border-style:solid;
+  border-width:5px 0 5px 7px; border-color:transparent transparent transparent currentColor;
+  vertical-align:middle; }
+.fold-chev{ width:0;height:0; border-width:5px 0 5px 7px; transition:transform .35s cubic-bezier(.2,.7,.3,1); }
+.source-card.open .fold-chev{ transform:rotate(90deg); }
+
+/* ============ HEADER ============ */
+.header{
+  display:flex; align-items:center; justify-content:space-between;
+  margin-bottom:16px; padding:18px 24px;
+  background:linear-gradient(120deg, rgba(255,102,0,0.10), rgba(119,88,135,0.10) 45%, rgba(60,16,83,0.18));
+  border:1px solid var(--line2); border-radius:18px;
+  backdrop-filter:blur(14px);
+  box-shadow:0 10px 40px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.04);
+}
+.header-left{display:flex; align-items:center; gap:16px;}
+.brand-mark{
+  width:54px; height:54px; border-radius:15px;
+  background:linear-gradient(135deg,#FF6600,#CC5200 50%,#3C1053);
+  display:grid; place-items:center; color:#fff; font-size:27px;
+  box-shadow:0 0 26px rgba(255,102,0,0.5), inset 0 1px 2px rgba(255,255,255,0.4);
+  position:relative;
+}
+.brand-mark::after{
+  content:''; position:absolute; inset:-2px; border-radius:17px;
+  background:linear-gradient(135deg,#FF6600,#3C1053); z-index:-1; filter:blur(10px); opacity:0.5;
+  animation:breathe 3.5s ease-in-out infinite;
+}
+@keyframes breathe{0%,100%{opacity:0.35}50%{opacity:0.7}}
+.title-stack h1{
+  font-size:23px; font-weight:800; letter-spacing:-0.3px;
+  background:linear-gradient(90deg,#f4eef8,#FF8534 50%,#c9a9d8);
+  -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent;
+}
+.title-stack .sub{ font-size:12px; color:var(--mut); margin-top:4px; letter-spacing:0.3px; font-weight:500;}
+.header-right{display:flex; align-items:center; gap:14px;}
+.dd-group{display:flex; flex-direction:column; gap:4px;}
+.dd-label{font-size:9px; color:var(--dim); letter-spacing:0.16em; font-weight:700;}
+.dropdown{
+  background:rgba(10,15,30,0.9); border:1px solid var(--line2); color:#FF8534;
+  padding:9px 13px; font-size:12px; font-weight:600; border-radius:10px;
+  outline:none; cursor:pointer; min-width:200px; font-family:var(--font-d);
+  transition:border-color .2s, box-shadow .2s;
+}
+.dropdown:hover{border-color:#FF6600; box-shadow:0 0 0 3px rgba(255,102,0,0.15);}
+.live-pill{
+  display:flex; align-items:center; gap:7px;
+  background:rgba(52,211,153,0.10); border:1px solid rgba(52,211,153,0.5);
+  color:#7fe0c0; padding:8px 14px; border-radius:30px; font-size:11px; font-weight:700;
+}
+.live-pill .dot{ width:8px; height:8px; border-radius:50%; background:#3ad29f; box-shadow:0 0 12px #3ad29f; animation:pulse 1.6s ease-in-out infinite;}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(1.5)}}
+
+/* ============ EXECUTIVE SUMMARY BAND ============ */
+.exec{
+  display:grid; grid-template-columns: 1.5fr 1fr; gap:14px; margin-bottom:16px;
+}
+.exec-kpis{ display:grid; grid-template-columns:repeat(4,1fr); gap:12px; }
+.kpi{
+  background:var(--panel); border:1px solid var(--line); border-radius:16px;
+  padding:16px 16px 14px; position:relative; overflow:hidden;
+  backdrop-filter:blur(8px);
+  animation:rise .6s cubic-bezier(.2,.7,.3,1) backwards;
+}
+.kpi:nth-child(1){animation-delay:.05s} .kpi:nth-child(2){animation-delay:.12s}
+.kpi:nth-child(3){animation-delay:.19s} .kpi:nth-child(4){animation-delay:.26s}
+@keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+.kpi::before{
+  content:''; position:absolute; left:0; top:0; bottom:0; width:4px;
+  background:var(--kc,#FF6600); box-shadow:0 0 14px var(--kc,#FF6600);
+}
+.kpi .kpi-ic{
+  position:absolute; right:12px; top:12px; width:30px; height:30px; border-radius:9px;
+  display:grid; place-items:center; color:var(--kc,#FF6600);
+  background:color-mix(in srgb, var(--kc,#FF6600) 14%, transparent);
+  font-size:17px;
+}
+.kpi .kpi-val{ font-size:30px; font-weight:800; letter-spacing:-1px; color:var(--txt); line-height:1;}
+.kpi .kpi-val .u{ font-size:14px; font-weight:700; color:var(--mut); margin-left:2px;}
+.kpi .kpi-lbl{ font-size:10.5px; color:var(--mut); margin-top:7px; letter-spacing:0.1em; text-transform:uppercase; font-weight:600;}
+.kpi .kpi-trend{ font-size:10px; margin-top:5px; font-weight:700; color:var(--c-ok); font-family:var(--font-m);}
+.kpi .kpi-trend.flat{color:var(--mut)}
+
+.exec-flow{
+  background:var(--panel); border:1px solid var(--line); border-radius:16px;
+  padding:14px 18px; backdrop-filter:blur(8px);
+  display:flex; flex-direction:column; justify-content:center;
+  animation:rise .6s cubic-bezier(.2,.7,.3,1) .3s backwards;
+}
+.exec-flow .ef-title{ font-size:10px; letter-spacing:0.16em; text-transform:uppercase; color:var(--dim); font-weight:700; margin-bottom:12px;}
+.ef-track{ display:flex; align-items:center; justify-content:space-between; gap:4px;}
+.ef-node{ display:flex; flex-direction:column; align-items:center; gap:6px; flex:0 0 auto; width:74px; text-align:center;}
+.ef-dot{
+  width:42px; height:42px; border-radius:13px; display:grid; place-items:center;
+  background:color-mix(in srgb, var(--nc) 16%, rgba(10,15,30,0.6)); color:var(--nc);
+  border:1px solid color-mix(in srgb,var(--nc) 50%, transparent); font-size:20px;
+  box-shadow:0 0 16px color-mix(in srgb,var(--nc) 30%, transparent);
+  animation:nodefloat 3s ease-in-out infinite;
+}
+@keyframes nodefloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+.ef-node:nth-child(3) .ef-dot{animation-delay:.4s}
+.ef-node:nth-child(5) .ef-dot{animation-delay:.8s}
+.ef-node:nth-child(7) .ef-dot{animation-delay:1.2s}
+.ef-node:nth-child(9) .ef-dot{animation-delay:1.6s}
+.ef-node:nth-child(11) .ef-dot{animation-delay:2s}
+.ef-lbl{ font-size:9.5px; color:var(--mut); font-weight:600; line-height:1.2;}
+.ef-arrow{ flex:1 1 auto; height:3px; border-radius:2px; position:relative; min-width:14px;
+  background:linear-gradient(90deg,rgba(125,211,252,0.15),rgba(125,211,252,0.4),rgba(125,211,252,0.15));
+  overflow:hidden;}
+.ef-arrow::after{ content:''; position:absolute; inset:0;
+  background:linear-gradient(90deg,transparent,#FF8534,transparent);
+  width:40%; animation:efrun 1.8s linear infinite;}
+@keyframes efrun{0%{transform:translateX(-120%)}100%{transform:translateX(320%)}}
+
+/* ============ LEGEND ============ */
+.legend{ display:flex; flex-wrap:wrap; gap:18px; align-items:center;
+  padding:11px 18px; background:var(--panel); border:1px solid var(--line);
+  border-radius:12px; margin-bottom:16px; backdrop-filter:blur(8px);}
+.li{ display:flex; align-items:center; gap:7px; font-size:11px; color:var(--mut); font-weight:500;}
+.ld{ width:22px; height:4px; border-radius:2px;}
+.li-pill{ display:inline-flex; padding:3px 9px; border-radius:8px; font-size:10px; font-weight:700; letter-spacing:.05em;}
+
+/* ============ TIER SECTIONS ============ */
+.tier{
+  background:linear-gradient(180deg,var(--tt),var(--tb));
+  border:1px solid var(--tbd); border-radius:18px; padding:16px 20px; margin-bottom:4px;
+  position:relative; backdrop-filter:blur(6px);
+  box-shadow:0 12px 40px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.03);
+  animation:rise .55s cubic-bezier(.2,.7,.3,1) backwards;
+}
+.tier-head{ display:flex; align-items:center; justify-content:space-between; margin-bottom:14px;}
+.tier-title{ display:flex; align-items:center; gap:11px; font-size:13px; font-weight:700;
+  letter-spacing:0.13em; text-transform:uppercase; color:var(--ta);}
+.tier-title .ico{ width:34px; height:34px; border-radius:10px; display:grid; place-items:center;
+  font-size:19px; color:var(--ta); background:color-mix(in srgb,var(--ta) 15%, transparent);
+  border:1px solid color-mix(in srgb,var(--ta) 40%, transparent);
+  box-shadow:0 0 14px color-mix(in srgb,var(--ta) 25%, transparent);}
+.tier-meta{ font-size:11px; color:var(--dim); font-weight:500;}
+.tier-badge{ font-size:10px; font-weight:700; color:var(--ta); font-family:var(--font-m);
+  padding:3px 10px; border-radius:20px; background:color-mix(in srgb,var(--ta) 12%, transparent);
+  border:1px solid color-mix(in srgb,var(--ta) 35%, transparent);}
+
+/* ============ SOURCE SYSTEMS GRID (foldable) ============ */
+.sources-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:14px; }
+.source-card{
+  background:rgba(12,18,36,0.85); border:1px solid var(--line2); border-radius:14px;
+  padding:14px; position:relative; transition:border-color .25s, transform .25s, box-shadow .25s;
+}
+.source-card:hover{ border-color:color-mix(in srgb,var(--src) 70%, transparent);
+  transform:translateY(-2px); box-shadow:0 10px 30px color-mix(in srgb,var(--src) 22%, transparent);}
+.source-card.active{ border-color:var(--gold);
+  background:linear-gradient(135deg, rgba(251,191,36,0.08), rgba(12,18,36,0.9));
+  box-shadow:0 0 26px rgba(251,191,36,0.3);}
+.source-card.active::before{ content:''; position:absolute; inset:-1.5px; border-radius:15px;
+  background:linear-gradient(135deg,#FF6600,#CC5200); z-index:-1; filter:blur(9px); opacity:0.55;
+  animation:pulse-glow 2.4s ease-in-out infinite;}
+@keyframes pulse-glow{0%,100%{opacity:.3}50%{opacity:.7}}
+.source-top{ display:flex; align-items:flex-start; gap:11px; }
+.source-icon{
+  width:42px; height:42px; border-radius:12px; display:grid; place-items:center; flex-shrink:0;
+  font-size:21px; color:#fff;
+  background:linear-gradient(135deg,var(--src), color-mix(in srgb,var(--src) 40%, #000));
+  box-shadow:0 3px 12px rgba(0,0,0,0.4), inset 0 1px 3px rgba(255,255,255,0.25);
+}
+.source-meta{ flex:1; min-width:0; }
+.source-name{ font-size:13.5px; font-weight:700; color:var(--txt); letter-spacing:0.02em; }
+.source-type{ font-size:9.5px; color:var(--dim); letter-spacing:0.06em; text-transform:uppercase; margin-top:2px; font-weight:600;}
+.source-flow{ text-align:right; flex-shrink:0; }
+.source-flow .fr{ font-size:13px; font-weight:800; color:#7fe0c0; font-family:var(--font-m); line-height:1;}
+.source-flow .frl{ font-size:8px; color:var(--dim); letter-spacing:0.08em; text-transform:uppercase; }
+.source-sub{ display:flex; align-items:center; gap:8px; margin-top:11px; }
+.mode-badge{ display:inline-flex; align-items:center; gap:5px; font-size:9px; font-weight:700;
+  letter-spacing:0.08em; padding:4px 9px; border-radius:8px; }
+.mode-badge svg{width:11px;height:11px;}
+.mode-badge.stream{ background:rgba(56,189,248,0.14); color:#FF8534; border:1px solid rgba(56,189,248,0.45);
+  animation:badge-flash 2.4s ease-in-out infinite;}
+.mode-badge.batch{ background:rgba(148,163,184,0.14); color:#cbd5e1; border:1px solid rgba(148,163,184,0.4);}
+@keyframes badge-flash{0%,100%{box-shadow:0 0 0 rgba(56,189,248,0)}50%{box-shadow:0 0 12px rgba(56,189,248,0.5)}}
+
+/* fold toggle */
+.fold-toggle{
+  display:flex; align-items:center; justify-content:space-between; gap:8px;
+  margin-top:12px; padding:8px 11px; border-radius:10px; cursor:pointer;
+  background:rgba(0,0,0,0.28); border:1px solid var(--line);
+  transition:background .2s, border-color .2s; user-select:none;
+}
+.fold-toggle:hover{ background:rgba(56,189,248,0.08); border-color:color-mix(in srgb,var(--src) 55%, transparent);}
+.fold-left{ display:flex; align-items:center; gap:8px; font-size:11px; font-weight:600; color:var(--mut);}
+.fold-left .tcount{ font-family:var(--font-m); font-weight:700; color:var(--src); }
+.fold-left svg{ width:14px; height:14px; color:var(--src);}
+.fold-chev{ width:18px; height:18px; color:var(--mut); transition:transform .35s cubic-bezier(.2,.7,.3,1); }
+.source-card.open .fold-chev{ transform:rotate(90deg); }
+.table-wrap{ display:grid; grid-template-rows:0fr; transition:grid-template-rows .4s cubic-bezier(.2,.7,.3,1); }
+.source-card.open .table-wrap{ grid-template-rows:1fr; }
+.table-inner{ overflow:hidden; }
+.table-list{ display:grid; grid-template-columns:1fr 1fr; gap:4px 10px; padding-top:11px; }
+.table-row{ display:flex; align-items:center; gap:6px; font-size:10.5px; color:var(--mut);
+  font-family:var(--font-m); padding:3px 0; }
+.table-row svg{ width:11px; height:11px; color:var(--line2); flex-shrink:0;}
+.source-card.open .table-row{ animation:row-in .45s ease-out backwards; }
+@keyframes row-in{from{opacity:0;transform:translateX(-6px)}to{opacity:1;transform:translateX(0)}}
+.source-card.active .table-row{ color:#FFA366; }
+.source-card.active .table-row svg{ color:var(--gold); }
+
+/* ============ FLOW CONNECTORS ============ */
+.flow-connector{ position:relative; height:58px; margin:0; display:flex; align-items:center; justify-content:center; overflow:hidden;}
+.flow-pipes{ position:absolute; inset:0; display:flex; justify-content:space-evenly; align-items:stretch; pointer-events:none;}
+.flow-lane{ position:relative; width:2px; background:linear-gradient(180deg,transparent,color-mix(in srgb,var(--lc,#FF6600) 30%,transparent),transparent); border-radius:2px;}
+.flow-packet{ position:absolute; left:50%; width:11px; height:11px; margin-left:-5.5px; border-radius:50%;
+  background:radial-gradient(circle at 35% 30%,#fff,var(--lc,#FF6600) 60%,transparent 72%);
+  box-shadow:0 0 14px 2px var(--lc,#FF6600),0 -12px 10px -4px var(--lc,#FF6600);
+  animation:packet-fall 1.9s cubic-bezier(.5,0,.7,1) infinite;}
+@keyframes packet-fall{0%{top:-16px;opacity:0;transform:scale(.5)}12%{opacity:1;transform:scale(1)}85%{opacity:1;transform:scale(1)}100%{top:58px;opacity:0;transform:scale(.5)}}
+.flow-chevrons{ position:relative; z-index:2; display:flex; flex-direction:column; align-items:center; gap:0;
+  padding:5px 20px; background:rgba(8,12,26,0.82); border:1px solid rgba(56,189,248,0.3);
+  border-radius:14px; box-shadow:0 0 22px rgba(56,189,248,0.2); backdrop-filter:blur(4px);}
+.flow-chevrons svg{ width:15px; height:9px; color:#FF6600; animation:chev-pulse 1.5s ease-in-out infinite;}
+.flow-chevrons svg:nth-child(1){animation-delay:0s;color:#FF8534}
+.flow-chevrons svg:nth-child(2){animation-delay:.18s;color:#FF6600}
+.flow-chevrons svg:nth-child(3){animation-delay:.36s;color:#CC5200}
+@keyframes chev-pulse{0%,100%{opacity:.25;transform:translateY(-1px)}50%{opacity:1;transform:translateY(2px)}}
+.flow-label{ position:absolute; right:22px; font-size:9px; font-weight:700; letter-spacing:0.18em;
+  color:var(--dim); text-transform:uppercase; display:flex; align-items:center; gap:7px;}
+.flow-label .blip{ width:6px; height:6px; border-radius:50%; background:#3ad29f; box-shadow:0 0 8px #3ad29f; animation:pulse 1.3s ease-in-out infinite;}
+
+/* ============ INGESTION + ADLS ROW ============ */
+.flow-row{ display:grid; grid-template-columns:1fr auto 1fr; gap:20px; align-items:center; }
+.ingest-stage,.adls-stage{ background:rgba(10,15,30,0.7); border:1px solid color-mix(in srgb,var(--ta) 45%,transparent);
+  border-radius:14px; padding:16px; }
+.stage-title{ display:flex; align-items:center; gap:9px; font-size:12px; font-weight:700; color:var(--ta);
+  margin-bottom:12px; letter-spacing:0.06em; text-transform:uppercase;}
+.stage-title svg{width:17px;height:17px;}
+.stage-row{ display:flex; gap:8px; flex-wrap:wrap; }
+.chip{ display:inline-flex; align-items:center; gap:6px; background:rgba(99,102,241,0.14);
+  border:1px solid rgba(99,102,241,0.45); color:#c7d2fe; font-size:10.5px; font-weight:600;
+  padding:6px 11px; border-radius:20px;}
+.chip svg{width:13px;height:13px;}
+.chip.spark{background:rgba(251,146,60,0.12);border-color:rgba(251,146,60,0.5);color:#FFB07A;}
+.chip.dbx{background:rgba(248,113,113,0.12);border-color:rgba(248,113,113,0.5);color:#f59aa6;}
+.chip.kafka{background:rgba(0,0,0,0.4);border-color:var(--line2);color:#9fb0d0;}
+.chip.delta{background:rgba(56,189,248,0.12);border-color:rgba(56,189,248,0.5);color:#FF8534;}
+.ingest-stats{ margin-top:12px; display:flex; gap:14px; flex-wrap:wrap; font-size:10.5px; color:var(--mut);}
+.ingest-stats b{ font-family:var(--font-m); }
+.medallion-row{ display:flex; gap:9px; margin-top:12px;}
+.med{ flex:1; padding:11px 10px; border-radius:10px; text-align:center; position:relative; overflow:hidden;}
+.med.bronze{ background:rgba(180,83,9,0.16); border:1px solid #b45309; color:#FFA366;}
+.med.silver{ background:rgba(148,163,184,0.12); border:1px solid #94a3b8; color:#e2e8f0;}
+.med.gold{ background:rgba(202,138,4,0.2); border:1px solid #ca8a04; color:#FFC58A;}
+.med-name{ font-size:11px; font-weight:800; letter-spacing:0.06em; display:flex; align-items:center; justify-content:center; gap:5px;}
+.med-sub{ font-size:9px; opacity:0.8; margin-top:3px;}
+.med::after{ content:''; position:absolute; inset:0;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,0.16),transparent);
+  transform:translateX(-100%); animation:med-sweep 3.4s ease-in-out infinite;}
+.med.silver::after{animation-delay:1s} .med.gold::after{animation-delay:2s}
+@keyframes med-sweep{0%,60%{transform:translateX(-100%)}100%{transform:translateX(220%)}}
+.arrow-x{ position:relative; min-width:64px; display:flex; align-items:center; justify-content:center;
+  color:#FF6600; }
+.arrow-x svg{ width:30px; height:30px; filter:drop-shadow(0 0 10px #FF6600); animation:nudge-r 1.3s ease-in-out infinite;}
+.arrow-x::before{ content:''; position:absolute; left:-6px; right:-6px; top:50%; height:3px; transform:translateY(-50%);
+  background:repeating-linear-gradient(90deg,#FF6600 0 8px,transparent 8px 16px); opacity:0.55; border-radius:2px;
+  animation:dash-flow .6s linear infinite; z-index:-1;}
+@keyframes dash-flow{to{background-position-x:16px}}
+@keyframes nudge-r{0%,100%{transform:translateX(0)}50%{transform:translateX(7px)}}
+.crit-pulse{position:relative;}
+.crit-pulse::after{content:'';position:absolute;inset:-2px;border-radius:inherit;
+  border:1.5px solid var(--ta);opacity:0;animation:crit-ring 2.6s ease-out infinite;pointer-events:none;}
+@keyframes crit-ring{0%{opacity:.7;transform:scale(1)}100%{opacity:0;transform:scale(1.05)}}
+
+/* ============ PROFILER ============ */
+.profiler-row{ display:grid; grid-template-columns:1.2fr 2fr; gap:16px; }
+.profiler-side{ background:rgba(10,15,30,0.7); border:1px solid #FF8534; border-radius:14px; padding:16px;}
+.profile-checks{ display:grid; grid-template-columns:1fr 1fr; gap:7px; margin-top:10px;}
+.check-row{ display:flex; align-items:center; gap:7px; font-size:11px; color:#cbd5e1;
+  padding:7px 9px; background:rgba(0,0,0,0.28); border-radius:8px; border-left:3px solid #3ad29f;}
+.check-row.warn{border-left-color:#FF8534;} .check-row.fail{border-left-color:#f5556d;}
+.check-row svg{width:14px;height:14px;flex-shrink:0;} .check-name{flex:1;} .check-val{font-size:11px;font-weight:800;font-family:var(--font-m);}
+.alert-bar{ display:flex; align-items:center; gap:10px; margin-top:12px; padding:10px 12px;
+  background:rgba(251,146,60,0.1); border-left:3px solid #FF8534; border-radius:8px; font-size:11px; color:#FFCBA6;}
+.alert-bar svg{width:16px;height:16px;flex-shrink:0;color:#FF8534;}
+.dash-strip{ display:grid; grid-template-columns:repeat(4,1fr); gap:10px; }
+.gauge{ background:rgba(0,0,0,0.3); border:1px solid var(--line2); border-radius:12px; padding:12px; text-align:center;}
+.gauge-arc{ width:88px; height:52px; margin:0 auto 6px; position:relative; overflow:hidden;}
+.gauge-arc svg{width:100%;height:auto;}
+.gauge-val{ font-size:18px; font-weight:800; font-family:var(--font-d); animation:val-flicker 4s ease-in-out infinite;}
+@keyframes val-flicker{0%,100%{opacity:1}50%{opacity:.8}}
+.gauge-lbl{ font-size:9px; color:var(--dim); letter-spacing:0.08em; text-transform:uppercase; margin-top:3px; font-weight:600;}
+
+/* ============ DATA PREP STAGES ============ */
+.prep-grid{ display:grid; grid-template-columns:repeat(6,1fr); gap:12px; position:relative; }
+.prep-stage{ background:rgba(10,15,30,0.72); border:1px solid var(--line2); border-radius:14px;
+  padding:14px; position:relative; transition:transform .28s, border-color .28s, box-shadow .28s;
+  cursor:pointer; overflow:hidden;}
+.prep-stage:hover{ border-color:var(--sc); transform:translateY(-4px); box-shadow:0 12px 28px color-mix(in srgb,var(--sc) 25%,transparent);}
+.prep-stage::before{ content:''; position:absolute; top:0; left:0; right:0; height:3px; background:var(--sc); box-shadow:0 0 10px var(--sc);}
+.prep-stage:not(:last-child)::after{ content:''; position:absolute; right:-7px; top:50%; width:14px; height:14px;
+  transform:translateY(-50%) rotate(45deg); border-top:2px solid var(--sc); border-right:2px solid var(--sc);
+  z-index:6; animation:stage-arrow 1.2s ease-in-out infinite;}
+@keyframes stage-arrow{0%,100%{opacity:.4;right:-7px}50%{opacity:1;right:-10px}}
+.stage-num{ display:inline-flex; align-items:center; gap:7px; font-size:9.5px; font-weight:700; color:var(--sc); letter-spacing:0.12em;}
+.num-circle{ width:21px; height:21px; border-radius:50%; background:var(--sc); color:#05070f;
+  display:grid; place-items:center; font-size:11px; font-weight:800; font-family:var(--font-d);}
+.stage-h{ font-size:13px; font-weight:700; color:var(--txt); margin:9px 0 4px; line-height:1.25;}
+.stage-icon-big{ display:grid; place-items:center; margin:8px auto; width:46px; height:46px; border-radius:13px;
+  color:var(--sc); background:color-mix(in srgb,var(--sc) 14%, transparent);
+  border:1px solid color-mix(in srgb,var(--sc) 35%, transparent);
+  box-shadow:0 0 14px color-mix(in srgb,var(--sc) 25%,transparent); animation:float 3.2s ease-in-out infinite;}
+.stage-icon-big svg{width:26px;height:26px;}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+.stage-list{ font-size:10px; color:var(--mut); line-height:1.55; margin-top:4px;}
+.stage-list li{ list-style:none; padding-left:13px; position:relative; margin-bottom:2px;}
+.stage-list li::before{ content:''; position:absolute; left:2px; top:6px; width:5px; height:5px; border-radius:1px; background:var(--sc); }
+.mini-bar{ display:flex; gap:2px; margin-top:9px; height:18px; align-items:flex-end;}
+.mini-bar .bb{ flex:1; background:var(--sc); border-radius:1px; opacity:0.65; transform-origin:bottom; animation:barpulse 2s ease-in-out infinite;}
+.mini-bar .bb:nth-child(2){animation-delay:.15s}.mini-bar .bb:nth-child(3){animation-delay:.3s}
+.mini-bar .bb:nth-child(4){animation-delay:.45s}.mini-bar .bb:nth-child(5){animation-delay:.6s}
+@keyframes barpulse{0%,100%{transform:scaleY(1);opacity:.65}50%{transform:scaleY(1.5);opacity:1}}
+.anchor-glow{ margin-top:8px; padding:7px 9px; border-radius:8px; font-size:9px; font-weight:700;
+  color:#c9a9d8; text-align:center; letter-spacing:0.04em; position:relative; overflow:hidden;
+  background:linear-gradient(90deg,rgba(168,85,247,0.2),rgba(56,189,248,0.14)); border:1px solid rgba(168,85,247,0.5);
+  display:flex; align-items:center; justify-content:center; gap:5px;}
+.anchor-glow svg{width:12px;height:12px;}
+.anchor-glow::after{ content:''; position:absolute; inset:0; background:linear-gradient(90deg,transparent,rgba(255,255,255,0.2),transparent); animation:shimmer 2.6s ease-in-out infinite;}
+@keyframes shimmer{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
+
+/* ============ OUTPUT FILES ============ */
+.output-grid{ display:grid; grid-template-columns:repeat(6,1fr); gap:12px; }
+.output-card{ background:rgba(12,18,36,0.85); border:1px solid var(--line2); border-radius:13px;
+  padding:14px 12px; text-align:center; transition:transform .28s, border-color .28s, box-shadow .28s; position:relative;}
+.output-card:hover{ transform:translateY(-3px); border-color:var(--oc); box-shadow:0 8px 22px var(--og);}
+.output-card.success{--oc:#3ad29f;--og:rgba(52,211,153,0.3);border-color:rgba(52,211,153,0.5);}
+.output-card.error{--oc:#f5556d;--og:rgba(251,113,133,0.3);border-color:rgba(251,113,133,0.5);}
+.output-card.consumer{--oc:#9d6fb3;--og:rgba(192,132,252,0.3);border-color:rgba(192,132,252,0.5);}
+.output-ic{ width:46px; height:46px; margin:0 auto 8px; border-radius:13px; display:grid; place-items:center;
+  color:var(--oc); background:color-mix(in srgb,var(--oc) 14%, transparent);
+  border:1px solid color-mix(in srgb,var(--oc) 35%,transparent); animation:out-float 3.3s ease-in-out infinite;}
+.output-ic svg{width:25px;height:25px;}
+@keyframes out-float{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-3px) scale(1.05)}}
+.output-name{ font-size:11.5px; font-weight:700; color:var(--txt);}
+.output-meta{ font-size:9px; color:var(--dim); margin-top:3px;}
+.output-counter{ display:inline-block; margin-top:8px; padding:3px 10px; background:rgba(0,0,0,0.35);
+  border-radius:10px; font-size:9.5px; font-weight:700; color:var(--oc); font-family:var(--font-m);}
+.security-badges{ display:flex; gap:9px; align-items:center; margin-top:12px; flex-wrap:wrap;}
+.sec-badge{ display:flex; align-items:center; gap:6px; padding:5px 11px; background:rgba(10,15,30,0.6);
+  border:1px solid var(--line2); border-radius:20px; font-size:9.5px; color:var(--mut); font-weight:600;
+  animation:badge-breathe 3.2s ease-in-out infinite;}
+.sec-badge svg{width:13px;height:13px;color:#7fe0c0;}
+@keyframes badge-breathe{0%,100%{border-color:var(--line2)}50%{border-color:rgba(52,211,153,0.5);box-shadow:0 0 10px rgba(52,211,153,0.25)}}
+
+/* ============ MONITORING ============ */
+.monitor-grid{ display:grid; grid-template-columns:2fr 1fr 1fr 1fr; gap:12px; }
+.monitor-card{ background:rgba(10,15,30,0.7); border:1px solid var(--line2); border-radius:13px; padding:14px;}
+.monitor-head{ display:flex; align-items:center; justify-content:space-between; margin-bottom:11px;}
+.monitor-title{ font-size:11px; font-weight:700; letter-spacing:0.06em; text-transform:uppercase; color:#c9a9d8;
+  display:flex; align-items:center; gap:7px;}
+.monitor-title svg{width:15px;height:15px;}
+.tag{ font-size:9px; padding:3px 9px; border-radius:8px; background:rgba(52,211,153,0.14); color:#7fe0c0;
+  border:1px solid rgba(52,211,153,0.45); font-weight:700;}
+.spark-line{ width:100%; height:54px;}
+.metric-strip{ display:grid; grid-template-columns:1fr 1fr; gap:7px; margin-top:10px;}
+.metric{ background:rgba(0,0,0,0.3); padding:9px 10px; border-radius:8px; border-left:2px solid #b483c9;}
+.metric .mv{ font-size:16px; font-weight:800; color:var(--txt); font-family:var(--font-d);}
+.metric .ml{ font-size:9px; color:var(--dim); margin-top:2px;}
+.mon-list{ font-size:10.5px; color:var(--mut); line-height:1.85;}
+.mon-list .accent{ color:#FF8534; font-weight:700; font-family:var(--font-m);}
+.mon-list .ln{ display:flex; align-items:center; gap:8px; }
+.mon-list .ln svg{width:13px;height:13px;color:var(--dim);}
+.alert-list{ font-size:10px; display:flex; flex-direction:column; gap:6px;}
+.alert-row{ display:flex; align-items:center; gap:8px; padding:6px 9px; background:rgba(0,0,0,0.3); border-radius:7px;}
+.alert-row.ok{border-left:2px solid #3ad29f;} .alert-row.wn{border-left:2px solid #FF8534;} .alert-row.er{border-left:2px solid #f5556d;}
+.alert-row svg{width:13px;height:13px;flex-shrink:0;}
+.alert-time{ color:var(--dim); font-family:var(--font-m); font-size:9px;} .alert-msg{flex:1;color:#cbd5e1;}
+
+/* ============ DETAIL POPUP ============ */
+#detail-popup{ position:fixed; bottom:26px; right:26px; background:linear-gradient(135deg,#162038,#0a0e1c);
+  border:1px solid #FF6600; border-radius:14px; padding:18px 22px; font-size:12px; display:none;
+  min-width:280px; max-width:360px; z-index:999; box-shadow:0 24px 70px rgba(0,0,0,0.6),0 0 24px rgba(56,189,248,0.3);
+  backdrop-filter:blur(12px); animation:pop-in .3s cubic-bezier(.2,.8,.3,1);}
+@keyframes pop-in{from{opacity:0;transform:translateY(12px) scale(.97)}to{opacity:1;transform:none}}
+#detail-popup h3{ font-size:14px; color:#FF8534; margin-bottom:10px; display:flex; justify-content:space-between; align-items:center; font-weight:700;}
+#detail-popup .close{ cursor:pointer; color:var(--dim); font-size:18px; line-height:1;}
+#detail-popup .close:hover{color:var(--txt);}
+#detail-popup .prow{ display:flex; justify-content:space-between; gap:14px; padding:6px 0; border-bottom:1px dashed var(--line2);}
+#detail-popup .prow:last-child{border-bottom:none;}
+#detail-popup .k{ color:var(--mut);} #detail-popup .v{ color:var(--txt); font-weight:600; text-align:right;}
+
+/* scroll reveal */
+.reveal{opacity:0;transform:translateY(20px);transition:opacity .6s ease,transform .6s ease;}
+.reveal.in{opacity:1;transform:none;}
+
+@media print{ body{background:#05070f;} .wrap{min-width:1600px;} }
+
+/* emoji sizing inside icon tiles */
+.brand-mark .em{font-size:26px;}
+.kpi .kpi-ic .em{font-size:16px;}
+.ef-dot .em{font-size:19px;}
+.tier-title .ico .em{font-size:18px;}
+.stage-title .em{font-size:15px;}
+.chip .em{font-size:12px;}
+.mode-badge .em{font-size:11px;}
+.fold-left .em{font-size:13px;}
+.table-row .em{font-size:11px; opacity:0.7;}
+.stage-icon-big .em{font-size:24px;}
+.output-ic .em{font-size:23px;}
+.sec-badge .em{font-size:12px;}
+.monitor-title .em{font-size:14px;}
+.mon-list .ln .em{font-size:12px;}
+.alert-row .em{font-size:12px;}
+.check-row .em{font-size:13px;}
+.alert-bar .em{font-size:15px;}
+.source-icon .em{font-size:20px;}
+.ingest-stats .em{font-size:12px;}
+.anchor-glow .em{font-size:11px;}
+
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <!-- ============ HEADER ============ -->
+  <div class="header">
+    <div class="header-left">
+      <div class="brand-mark"><span class="em">🏛️</span></div>
+      <div class="title-stack">
+        <h1>Enterprise Banking Data Platform</h1>
+        <div class="sub">Domain-Driven · Automated · Cloud-Native Ingestion &amp; Preparation Pipeline</div>
+      </div>
+    </div>
+    <div class="header-right">
+      <div class="dd-group">
+        <div class="dd-label">DOMAIN</div>
+        <select class="dropdown" id="domain-select"></select>
+      </div>
+      <div class="dd-group">
+        <div class="dd-label">SUBDOMAIN</div>
+        <select class="dropdown" id="subdomain-select">
+          <option>CONSUMER_INFO</option><option>ACCOUNTS</option><option>TRANSACTIONS</option>
+          <option>PRODUCTS</option><option>RELATIONSHIPS</option>
+        </select>
+      </div>
+      <div class="live-pill"><div class="dot"></div>LIVE · 247 JOBS</div>
+    </div>
+  </div>
+
+  <!-- ============ EXECUTIVE SUMMARY BAND ============ -->
+  <div class="exec">
+    <div class="exec-kpis">
+      <div class="kpi" style="--kc:#FF6600">
+        <div class="kpi-ic"><span class="em">📡</span></div>
+        <div class="kpi-val">12.4<span class="u">M/min</span></div>
+        <div class="kpi-lbl">Throughput</div>
+        <div class="kpi-trend">▲ 8.2% vs last wk</div>
+      </div>
+      <div class="kpi" style="--kc:#3ad29f">
+        <div class="kpi-ic"><span class="em">📊</span></div>
+        <div class="kpi-val">99.94<span class="u">%</span></div>
+        <div class="kpi-lbl">SLA · 30 day</div>
+        <div class="kpi-trend flat">— within target</div>
+      </div>
+      <div class="kpi" style="--kc:#9d6fb3">
+        <div class="kpi-ic"><span class="em">🗄️</span></div>
+        <div class="kpi-val">222<span class="u"> tbls</span></div>
+        <div class="kpi-lbl">9 Source Domains</div>
+        <div class="kpi-trend">▲ 2 onboarded</div>
+      </div>
+      <div class="kpi" style="--kc:#FF8534">
+        <div class="kpi-ic"><span class="em">📊</span></div>
+        <div class="kpi-val">93.7<span class="u">%</span></div>
+        <div class="kpi-lbl">Data Health Score</div>
+        <div class="kpi-trend">▲ 1.4 pts</div>
+      </div>
+    </div>
+    <div class="exec-flow">
+      <div class="ef-title">End-to-End Pipeline · One Glance</div>
+      <div class="ef-track">
+        <div class="ef-node"><div class="ef-dot" style="--nc:#b483c9"><span class="em">🏛️</span></div><div class="ef-lbl">Sources</div></div>
+        <div class="ef-arrow"></div>
+        <div class="ef-node"><div class="ef-dot" style="--nc:#FF6600"><span class="em">☁️</span></div><div class="ef-lbl">Ingest</div></div>
+        <div class="ef-arrow"></div>
+        <div class="ef-node"><div class="ef-dot" style="--nc:#FF8534"><span class="em">📊</span></div><div class="ef-lbl">Profile</div></div>
+        <div class="ef-arrow"></div>
+        <div class="ef-node"><div class="ef-dot" style="--nc:#9d6fb3"><span class="em">⚗️</span></div><div class="ef-lbl">Prepare</div></div>
+        <div class="ef-arrow"></div>
+        <div class="ef-node"><div class="ef-dot" style="--nc:#3ad29f"><span class="em">📤</span></div><div class="ef-lbl">Deliver</div></div>
+        <div class="ef-arrow"></div>
+        <div class="ef-node"><div class="ef-dot" style="--nc:#b483c9"><span class="em">📈</span></div><div class="ef-lbl">Monitor</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ LEGEND ============ -->
+  <div class="legend">
+    <div class="li"><div class="ld" style="background:#FFA366"></div>Active Domain</div>
+    <div class="li"><div class="ld" style="background:#FF6600"></div>Ingestion</div>
+    <div class="li"><div class="ld" style="background:#FF8534"></div>Quality</div>
+    <div class="li"><div class="ld" style="background:#9d6fb3"></div>Transformation</div>
+    <div class="li"><div class="ld" style="background:#3ad29f"></div>Validated</div>
+    <div class="li"><div class="ld" style="background:#f5556d"></div>Reject</div>
+    <div class="li"><span class="li-pill" style="background:rgba(180,83,9,0.2);color:#FFA366">BRONZE</span></div>
+    <div class="li"><span class="li-pill" style="background:rgba(148,163,184,0.18);color:#e2e8f0">SILVER</span></div>
+    <div class="li"><span class="li-pill" style="background:rgba(202,138,4,0.22);color:#FFC58A">GOLD</span></div>
+  </div>
+
+  <!-- ============ TIER 1 — SOURCES ============ -->
+  <div class="tier reveal" style="--tt:#2a1438;--tb:#1a0c24;--tbd:rgba(157,111,179,0.35);--ta:#b483c9; animation-delay:.05s">
+    <div class="tier-head">
+      <div class="tier-title"><span class="ico"><span class="em">🏛️</span></span>Source Systems · Banking Domains</div>
+      <div class="tier-badge">9 DOMAINS · 222 TABLES</div>
+    </div>
+    <div class="sources-grid" id="sources-grid"></div>
+  </div>
+
+  <div class="flow-connector">
+    <div class="flow-pipes"><div class="flow-lane" style="--lc:#FF6600"><div class="flow-packet" style="--lc:#FF6600;animation-delay:0s"></div></div><div class="flow-lane" style="--lc:#FFA366"><div class="flow-packet" style="--lc:#FFA366;animation-delay:.35s"></div></div><div class="flow-lane" style="--lc:#CC5200"><div class="flow-packet" style="--lc:#CC5200;animation-delay:.7s"></div></div><div class="flow-lane" style="--lc:#FF8534"><div class="flow-packet" style="--lc:#FF8534;animation-delay:1.05s"></div></div><div class="flow-lane" style="--lc:#b483c9"><div class="flow-packet" style="--lc:#b483c9;animation-delay:1.4s"></div></div></div>
+    <div class="flow-chevrons"><span class="chev-arrow "></span><span class="chev-arrow "></span><span class="chev-arrow "></span></div>
+    <div class="flow-label"><span class="blip"></span>INGEST</div>
+  </div>
+
+  <!-- ============ TIER 2 — INGESTION + ADLS ============ -->
+  <div class="tier reveal" style="--tt:#33180c;--tb:#1f0e06;--tbd:rgba(255,102,0,0.38);--ta:#FF6600">
+    <div class="tier-head">
+      <div class="tier-title"><span class="ico"><span class="em">☁️</span></span>Enterprise Ingestion Layer</div>
+      <div class="tier-badge">METADATA-DRIVEN · CDC · AUTO-SCALE</div>
+    </div>
+    <div class="flow-row">
+      <div class="ingest-stage crit-pulse">
+        <div class="stage-title"><span class="em">⚡</span>Spark + Databricks Ingestion Engine</div>
+        <div class="stage-row">
+          <span class="chip dbx"><span class="em">🗄️</span>Databricks</span>
+          <span class="chip spark"><span class="em">⚡</span>Spark</span>
+          <span class="chip kafka"><span class="em">📡</span>Kafka Stream</span>
+          <span class="chip"><span class="em">📦</span>Batch Jobs</span>
+          <span class="chip"><span class="em">⚙️</span>Auto-scale</span>
+          <span class="chip"><span class="em">🔗</span>Metadata-Driven</span>
+        </div>
+        <div class="ingest-stats">
+          <div><span class="em" style="color:#FF6600">📈</span> <b style="color:#FF6600">12.4M</b> rows/min</div>
+          <div><span class="em" style="color:#FF6600">📡</span> <b style="color:#FF6600">8</b> pipelines</div>
+          <div><span class="em" style="color:#FF6600">⚡</span> <b style="color:#FF6600">45ms</b> latency</div>
+          <div><span class="em" style="color:#3ad29f">✅</span> <b style="color:#3ad29f">99.9%</b> uptime</div>
+        </div>
+      </div>
+      <div class="arrow-x"><span class="em">⚡</span></div>
+      <div class="adls-stage crit-pulse">
+        <div class="stage-title"><span class="em">☁️</span>Azure Data Lake · ADLS Gen2 + Delta</div>
+        <div class="stage-row">
+          <span class="chip delta"><span class="em">🗄️</span>Delta Lake</span>
+          <span class="chip"><span class="em">📦</span>Partitioned</span>
+          <span class="chip"><span class="em">🔗</span>Schema Evolution</span>
+          <span class="chip"><span class="em">🔗</span>Time Travel</span>
+          <span class="chip"><span class="em">⚙️</span>CDC</span>
+        </div>
+        <div class="medallion-row">
+          <div class="med bronze"><div class="med-name">BRONZE</div><div class="med-sub">raw landing</div></div>
+          <div class="med silver"><div class="med-name">SILVER</div><div class="med-sub">cleansed</div></div>
+          <div class="med gold"><div class="med-name">GOLD</div><div class="med-sub">curated</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="flow-connector">
+    <div class="flow-pipes"><div class="flow-lane" style="--lc:#FF8534"><div class="flow-packet" style="--lc:#FF8534;animation-delay:0s"></div></div><div class="flow-lane" style="--lc:#FF6600"><div class="flow-packet" style="--lc:#FF6600;animation-delay:.35s"></div></div><div class="flow-lane" style="--lc:#FF6600"><div class="flow-packet" style="--lc:#FF6600;animation-delay:.7s"></div></div><div class="flow-lane" style="--lc:#FF8534"><div class="flow-packet" style="--lc:#FF8534;animation-delay:1.05s"></div></div><div class="flow-lane" style="--lc:#FFB07A"><div class="flow-packet" style="--lc:#FFB07A;animation-delay:1.4s"></div></div></div>
+    <div class="flow-chevrons"><span class="chev-arrow "></span><span class="chev-arrow "></span><span class="chev-arrow "></span></div>
+    <div class="flow-label"><span class="blip"></span>PROFILE</div>
+  </div>
+
+  <!-- ============ TIER 3 — PROFILER ============ -->
+  <div class="tier reveal" style="--tt:#331a0a;--tb:#1d0f06;--tbd:rgba(255,133,52,0.35);--ta:#FF8534">
+    <div class="tier-head">
+      <div class="tier-title"><span class="ico"><span class="em">📊</span></span>Automated Data Profiling Engine</div>
+      <div class="tier-badge">PII · NULLS · DRIFT · HEALTH</div>
+    </div>
+    <div class="profiler-row">
+      <div class="profiler-side">
+        <div class="stage-title" style="color:#FF8534"><span class="em">🔍</span>Quality Checks · Live</div>
+        <div class="profile-checks">
+          <div class="check-row"><span class="em" style="color:#3ad29f">✅</span><span class="check-name">PII Coverage</span><span class="check-val" style="color:#3ad29f">99.2%</span></div>
+          <div class="check-row"><span class="em" style="color:#3ad29f">✅</span><span class="check-name">Customer Attrs</span><span class="check-val" style="color:#3ad29f">98.7%</span></div>
+          <div class="check-row warn"><span class="em" style="color:#FF8534">🔔</span><span class="check-name">Address Complete</span><span class="check-val" style="color:#FF8534">87.4%</span></div>
+          <div class="check-row"><span class="em" style="color:#3ad29f">✅</span><span class="check-name">Phone Quality</span><span class="check-val" style="color:#3ad29f">94.1%</span></div>
+          <div class="check-row"><span class="em" style="color:#3ad29f">✅</span><span class="check-name">Null % (avg)</span><span class="check-val" style="color:#3ad29f">2.3%</span></div>
+          <div class="check-row warn"><span class="em" style="color:#FF8534">🔔</span><span class="check-name">Duplicate Detect</span><span class="check-val" style="color:#FF8534">1.8%</span></div>
+        </div>
+        <div class="alert-bar"><span class="em">🔔</span><span>If thresholds breached → <b>pipeline halt</b> · AppOps notified · incident raised</span></div>
+      </div>
+      <div>
+        <div class="stage-title" style="color:#FF8534"><span class="em">📈</span>Quality Gauges · Health Score</div>
+        <div class="dash-strip">
+          <div class="gauge"><div class="gauge-arc"><svg viewBox="0 0 100 60"><path d="M10 50 A40 40 0 0 1 90 50" stroke="#1e293b" stroke-width="8" fill="none"/><path d="M10 50 A40 40 0 0 1 86 32" stroke="#3ad29f" stroke-width="8" fill="none" stroke-linecap="round"/></svg></div><div class="gauge-val" style="color:#3ad29f">96%</div><div class="gauge-lbl">Completeness</div></div>
+          <div class="gauge"><div class="gauge-arc"><svg viewBox="0 0 100 60"><path d="M10 50 A40 40 0 0 1 90 50" stroke="#1e293b" stroke-width="8" fill="none"/><path d="M10 50 A40 40 0 0 1 82 28" stroke="#FF6600" stroke-width="8" fill="none" stroke-linecap="round"/></svg></div><div class="gauge-val" style="color:#FF6600">93%</div><div class="gauge-lbl">Validity</div></div>
+          <div class="gauge"><div class="gauge-arc"><svg viewBox="0 0 100 60"><path d="M10 50 A40 40 0 0 1 90 50" stroke="#1e293b" stroke-width="8" fill="none"/><path d="M10 50 A40 40 0 0 1 75 22" stroke="#FF8534" stroke-width="8" fill="none" stroke-linecap="round"/></svg></div><div class="gauge-val" style="color:#FF8534">87%</div><div class="gauge-lbl">Conformity</div></div>
+          <div class="gauge"><div class="gauge-arc"><svg viewBox="0 0 100 60"><path d="M10 50 A40 40 0 0 1 90 50" stroke="#1e293b" stroke-width="8" fill="none"/><path d="M10 50 A40 40 0 0 1 88 38" stroke="#9d6fb3" stroke-width="8" fill="none" stroke-linecap="round"/></svg></div><div class="gauge-val" style="color:#9d6fb3">99%</div><div class="gauge-lbl">Uniqueness</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="flow-connector">
+    <div class="flow-pipes"><div class="flow-lane" style="--lc:#9d6fb3"><div class="flow-packet" style="--lc:#9d6fb3;animation-delay:0s"></div></div><div class="flow-lane" style="--lc:#9d6fb3"><div class="flow-packet" style="--lc:#9d6fb3;animation-delay:.35s"></div></div><div class="flow-lane" style="--lc:#c9a9d8"><div class="flow-packet" style="--lc:#c9a9d8;animation-delay:.7s"></div></div><div class="flow-lane" style="--lc:#FF6600"><div class="flow-packet" style="--lc:#FF6600;animation-delay:1.05s"></div></div><div class="flow-lane" style="--lc:#9d6fb3"><div class="flow-packet" style="--lc:#9d6fb3;animation-delay:1.4s"></div></div></div>
+    <div class="flow-chevrons"><span class="chev-arrow "></span><span class="chev-arrow "></span><span class="chev-arrow "></span></div>
+    <div class="flow-label"><span class="blip"></span>PREPARE</div>
+  </div>
+
+  <!-- ============ TIER 4 — PREP STAGES ============ -->
+  <div class="tier reveal" style="--tt:#281338;--tb:#170b20;--tbd:rgba(119,88,135,0.4);--ta:#9d6fb3">
+    <div class="tier-head">
+      <div class="tier-title"><span class="ico"><span class="em">⚗️</span></span>Data Preparation Layer · 6 Stages</div>
+      <div class="tier-badge">EXTRACT → PROFILE → STANDARDIZE → ADDRESS → QC → VALIDATE</div>
+    </div>
+    <div class="prep-grid">
+      <div class="prep-stage" style="--sc:#FF6600" onclick="showDetail('stage1')">
+        <div class="stage-num"><span class="num-circle">1</span> STAGE 1</div>
+        <div class="stage-h">Data Extraction</div>
+        <div class="stage-icon-big"><span class="em">📥</span></div>
+        <ul class="stage-list"><li>Extract ingestion tables</li><li>Consumer-specific datasets</li><li>Domain mapping rules</li><li>Curated extract layer</li></ul>
+        <div class="mini-bar"><div class="bb"></div><div class="bb"></div><div class="bb"></div><div class="bb"></div><div class="bb"></div></div>
+      </div>
+      <div class="prep-stage" style="--sc:#FF8534" onclick="showDetail('stage2')">
+        <div class="stage-num"><span class="num-circle">2</span> STAGE 2</div>
+        <div class="stage-h">Extract Profiling</div>
+        <div class="stage-icon-big"><span class="em">📈</span></div>
+        <ul class="stage-list"><li>Volume threshold checks</li><li>Abnormal drop detection</li><li>Completeness validation</li><li>Auto-halt on breach</li></ul>
+        <div class="mini-bar"><div class="bb"></div><div class="bb"></div><div class="bb"></div><div class="bb"></div><div class="bb"></div></div>
+      </div>
+      <div class="prep-stage" style="--sc:#9d6fb3" onclick="showDetail('stage3')">
+        <div class="stage-num"><span class="num-circle">3</span> STAGE 3</div>
+        <div class="stage-h">Standardization</div>
+        <div class="stage-icon-big"><span class="em">⚙️</span></div>
+        <ul class="stage-list"><li>Rules engine</li><li>Customer normalization</li><li>Phone · email · name</li><li>Spark transforms</li></ul>
+        <div class="mini-bar"><div class="bb"></div><div class="bb"></div><div class="bb"></div><div class="bb"></div><div class="bb"></div></div>
+      </div>
+      <div class="prep-stage" style="--sc:#FF8534" onclick="showDetail('stage4')">
+        <div class="stage-num"><span class="num-circle">4</span> STAGE 4</div>
+        <div class="stage-h">Address Standardization</div>
+        <div class="stage-icon-big"><span class="em">🗺️</span></div>
+        <ul class="stage-list"><li>Address cleansing</li><li>Geo validation</li><li>Postal correction</li><li>Enrichment</li></ul>
+        <div class="anchor-glow"><span class="em">🔌</span> ANCHOR SOFTWARE API</div>
+      </div>
+      <div class="prep-stage" style="--sc:#FF6600" onclick="showDetail('stage5')">
+        <div class="stage-num"><span class="num-circle">5</span> STAGE 5</div>
+        <div class="stage-h">Quality Profiling</div>
+        <div class="stage-icon-big"><span class="em">🎯</span></div>
+        <ul class="stage-list"><li>% addresses standardized</li><li>% phones standardized</li><li>Key-column quality</li><li>Customer completeness</li></ul>
+        <div class="mini-bar"><div class="bb"></div><div class="bb"></div><div class="bb"></div><div class="bb"></div><div class="bb"></div></div>
+      </div>
+      <div class="prep-stage" style="--sc:#3ad29f" onclick="showDetail('stage6')">
+        <div class="stage-num"><span class="num-circle">6</span> STAGE 6</div>
+        <div class="stage-h">Validate &amp; Convert</div>
+        <div class="stage-icon-big"><span class="em">✅</span></div>
+        <ul class="stage-list"><li>Business rule checks</li><li>Good / bad bucket split</li><li>Error segregation</li><li>Output file generation</li></ul>
+        <div class="mini-bar"><div class="bb"></div><div class="bb"></div><div class="bb"></div><div class="bb"></div><div class="bb"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="flow-connector">
+    <div class="flow-pipes"><div class="flow-lane" style="--lc:#3ad29f"><div class="flow-packet" style="--lc:#3ad29f;animation-delay:0s"></div></div><div class="flow-lane" style="--lc:#2bb98a"><div class="flow-packet" style="--lc:#2bb98a;animation-delay:.35s"></div></div><div class="flow-lane" style="--lc:#1fa97e"><div class="flow-packet" style="--lc:#1fa97e;animation-delay:.7s"></div></div><div class="flow-lane" style="--lc:#3ad29f"><div class="flow-packet" style="--lc:#3ad29f;animation-delay:1.05s"></div></div><div class="flow-lane" style="--lc:#3ad29f"><div class="flow-packet" style="--lc:#3ad29f;animation-delay:1.4s"></div></div></div>
+    <div class="flow-chevrons"><span class="chev-arrow "></span><span class="chev-arrow "></span><span class="chev-arrow "></span></div>
+    <div class="flow-label"><span class="blip"></span>DELIVER</div>
+  </div>
+
+  <!-- ============ TIER 5 — OUTPUT ============ -->
+  <div class="tier reveal" style="--tt:#0e2a20;--tb:#081a13;--tbd:rgba(58,210,159,0.32);--ta:#3ad29f">
+    <div class="tier-head">
+      <div class="tier-title"><span class="ico"><span class="em">📤</span></span>Output Layer · Downstream Consumers</div>
+      <div class="tier-badge">FILES · APIs · ML · BI</div>
+    </div>
+    <div class="output-grid">
+      <div class="output-card success"><div class="output-ic"><span class="em">📄</span></div><div class="output-name">KNL Input File</div><div class="output-meta">KNL Team feed</div><div class="output-counter">2.4M rows</div></div>
+      <div class="output-card success"><div class="output-ic"><span class="em">📄</span></div><div class="output-name">FRE Team File</div><div class="output-meta">Fraud / Risk Eng</div><div class="output-counter">1.8M rows</div></div>
+      <div class="output-card error"><div class="output-ic"><span class="em">🗑️</span></div><div class="output-name">Error Bucket</div><div class="output-meta">Reject records</div><div class="output-counter">12K rows</div></div>
+      <div class="output-card consumer"><div class="output-ic"><span class="em">🔌</span></div><div class="output-name">Consumer APIs</div><div class="output-meta">REST · GraphQL</div><div class="output-counter">182 req/s</div></div>
+      <div class="output-card consumer"><div class="output-ic"><span class="em">📈</span></div><div class="output-name">Analytics</div><div class="output-meta">Power BI · Tableau</div><div class="output-counter">47 dashboards</div></div>
+      <div class="output-card consumer"><div class="output-ic"><span class="em">🤖</span></div><div class="output-name">ML / AI Consumers</div><div class="output-meta">Feature store</div><div class="output-counter">23 models</div></div>
+    </div>
+    <div class="security-badges">
+      <div class="sec-badge"><span class="em">🛡️</span>Encryption at rest</div>
+      <div class="sec-badge"><span class="em">🔐</span>TLS 1.3 in flight</div>
+      <div class="sec-badge"><span class="em">🔐</span>Unity Catalog ACL</div>
+      <div class="sec-badge"><span class="em">🛡️</span>PII masking</div>
+      <div class="sec-badge"><span class="em">✅</span>Audit logged</div>
+    </div>
+  </div>
+
+  <div class="flow-connector">
+    <div class="flow-pipes"><div class="flow-lane" style="--lc:#b483c9"><div class="flow-packet" style="--lc:#b483c9;animation-delay:0s"></div></div><div class="flow-lane" style="--lc:#FFA366"><div class="flow-packet" style="--lc:#FFA366;animation-delay:.35s"></div></div><div class="flow-lane" style="--lc:#3ad29f"><div class="flow-packet" style="--lc:#3ad29f;animation-delay:.7s"></div></div><div class="flow-lane" style="--lc:#FF6600"><div class="flow-packet" style="--lc:#FF6600;animation-delay:1.05s"></div></div><div class="flow-lane" style="--lc:#b483c9"><div class="flow-packet" style="--lc:#b483c9;animation-delay:1.4s"></div></div></div>
+    <div class="flow-chevrons"><span class="chev-arrow "></span><span class="chev-arrow "></span><span class="chev-arrow "></span></div>
+    <div class="flow-label"><span class="blip"></span>MONITOR</div>
+  </div>
+
+  <!-- ============ TIER 6 — MONITORING ============ -->
+  <div class="tier reveal" style="--tt:#221830;--tb:#140d1c;--tbd:rgba(138,139,140,0.32);--ta:#a99bb5">
+    <div class="tier-head">
+      <div class="tier-title"><span class="ico"><span class="em">📈</span></span>Enterprise Audit · Monitoring · Observability</div>
+      <div class="tier-badge">SLA · LINEAGE · ALERTING</div>
+    </div>
+    <div class="monitor-grid">
+      <div class="monitor-card">
+        <div class="monitor-head"><div class="monitor-title"><span class="em">📈</span>Pipeline Health · 24h</div><div class="tag">all green</div></div>
+        <svg class="spark-line" viewBox="0 0 200 50" preserveAspectRatio="none">
+          <defs><linearGradient id="spark-fill" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#3ad29f" stop-opacity="0.4"/><stop offset="100%" stop-color="#3ad29f" stop-opacity="0"/></linearGradient></defs>
+          <path d="M0,32 L15,28 L30,35 L45,22 L60,26 L75,18 L90,24 L105,15 L120,20 L135,12 L150,18 L165,10 L180,15 L200,8 L200,50 L0,50 Z" fill="url(#spark-fill)"/>
+          <path d="M0,32 L15,28 L30,35 L45,22 L60,26 L75,18 L90,24 L105,15 L120,20 L135,12 L150,18 L165,10 L180,15 L200,8" fill="none" stroke="#3ad29f" stroke-width="1.5"/>
+          <circle r="3" fill="#3ad29f"><animateMotion dur="3s" repeatCount="indefinite" path="M0,32 L15,28 L30,35 L45,22 L60,26 L75,18 L90,24 L105,15 L120,20 L135,12 L150,18 L165,10 L180,15 L200,8"/></circle>
+        </svg>
+        <div class="metric-strip"><div class="metric"><div class="mv">99.94%</div><div class="ml">SLA · 30d</div></div><div class="metric"><div class="mv">247</div><div class="ml">Jobs / hr</div></div></div>
+      </div>
+      <div class="monitor-card">
+        <div class="monitor-head"><div class="monitor-title"><span class="em">🔗</span>Data Lineage</div><div class="tag">tracked</div></div>
+        <div class="mon-list">
+          <div class="ln"><span class="em">🏛️</span>Sources <span class="accent">9</span></div>
+          <div class="ln"><span class="em">🗄️</span>Tables <span class="accent">222</span></div>
+          <div class="ln"><span class="em">⚗️</span>Transforms <span class="accent">68</span></div>
+          <div class="ln"><span class="em">📤</span>Outputs <span class="accent">6</span></div>
+          <div class="ln"><span class="em">🔗</span>End-to-end traced</div>
+        </div>
+      </div>
+      <div class="monitor-card">
+        <div class="monitor-head"><div class="monitor-title"><span class="em">🔔</span>Alerts · Live</div><div class="tag" style="background:rgba(251,146,60,0.18);color:#FFB07A;border-color:rgba(251,146,60,0.45)">2 active</div></div>
+        <div class="alert-list">
+          <div class="alert-row ok"><span class="em" style="color:#3ad29f">✅</span><span class="alert-time">14:22</span><span class="alert-msg">Stage 3 SLA met</span></div>
+          <div class="alert-row wn"><span class="em" style="color:#FF8534">🔔</span><span class="alert-time">14:18</span><span class="alert-msg">Address fill rate 87%</span></div>
+          <div class="alert-row er"><span class="em" style="color:#f5556d">🔔</span><span class="alert-time">13:55</span><span class="alert-msg">HDC delta &gt; 2σ</span></div>
+        </div>
+      </div>
+      <div class="monitor-card">
+        <div class="monitor-head"><div class="monitor-title"><span class="em">💬</span>AppOps Notify</div><div class="tag">PagerDuty</div></div>
+        <div class="mon-list">
+          <div class="ln"><span class="em">🔔</span>Email · 4 routes</div>
+          <div class="ln"><span class="em">💬</span>Slack · #data-ops</div>
+          <div class="ln"><span class="em">📱</span>PagerDuty · P1/P2</div>
+          <div class="ln"><span class="em">🔌</span>Webhooks · 12</div>
+          <div class="ln"><span class="em">📈</span>Grafana · linked</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div id="detail-popup">
+  <h3><span id="dt-name"></span><span class="close" onclick="document.getElementById('detail-popup').style.display='none'">✕</span></h3>
+  <div id="dt-body"></div>
+</div>
+<script>
+// ============ SOURCE SYSTEMS DATA ============
+const sources = [
+  { key:'BANKCORE_DNA', name:'BANKCORE_DNA', type:'Core Domain · Streaming', color:'#FF6600', ic:'i-db', flow:'4.2M/min', mode:'stream',
+    tables:['t_activity_item','t_product_purchase_offer','t_ip_person','t_customer_address','t_phone_contact','t_customer_relationship'] },
+  { key:'HDC', name:'HDC', type:'Historical Data Capture', color:'#775887', ic:'i-db', flow:'2.8M/min', mode:'batch',
+    tables:['hdc_customer','hdc_transaction','hdc_product','hdc_contact','hdc_party','hdc_profile'] },
+  { key:'OPTIS', name:'OPTIS', type:'Operations & Transaction', color:'#FF8534', ic:'i-cog', flow:'1.5M/min', mode:'stream',
+    tables:['opt_account','opt_txn_history','opt_balance','opt_settlement','opt_recon','opt_position'] },
+  { key:'CRM', name:'CRM', type:'Customer Relationship', color:'#9d6fb3', ic:'i-handshake', flow:'850K/min', mode:'batch',
+    tables:['crm_lead','crm_opportunity','crm_case','crm_activity','crm_contact','crm_account'] },
+  { key:'EPOC', name:'EPOC', type:'Card & Payments', color:'#CC5200', ic:'i-card', flow:'3.1M/min', mode:'stream',
+    tables:['epoc_card_master','epoc_txn','epoc_auth','epoc_dispute','epoc_reward','epoc_limit'] },
+  { key:'BANKCORE_CTOUCH', name:'BANKCORE_CTOUCH', type:'Web · Mobile · API', color:'#FFA366', ic:'i-phone', flow:'5.7M/min', mode:'stream',
+    tables:['ctouch_session','ctouch_login','ctouch_action','ctouch_device','ctouch_preference','ctouch_alert'] },
+  { key:'PAYMENT_GATEWAY', name:'PAYMENT_GATEWAY', type:'Payment Processing', color:'#3C1053', ic:'i-card', flow:'6.4M/min', mode:'stream',
+    tables:['pmt_request','pmt_response','pmt_settlement','pmt_refund','pmt_chargeback','pmt_route'] },
+  { key:'FRAUD_SYSTEM', name:'FRAUD_SYSTEM', type:'Risk · Fraud Detection', color:'#e23b54', ic:'i-shield', flow:'1.2M/min', mode:'stream',
+    tables:['fraud_alert','fraud_rule_hit','fraud_case','fraud_score','fraud_pattern','fraud_outcome'] },
+  { key:'BANKCORE_SIGNATURE', name:'BANKCORE_SIGNATURE', type:'Snowflake · Reference DW', color:'#8A8B8C', ic:'i-snow', flow:'900K/min', mode:'batch',
+    tables:['sig_account_master','sig_party_master','sig_product_catalog','sig_branch','sig_gl_balance','sig_org_hier'] },
+];
+
+// populate domain dropdown
+document.getElementById('domain-select').innerHTML =
+  sources.map(s => `<option value="${s.key}">${s.name}</option>`).join('');
+
+const EMOJI = {
+  'i-db':'🗄️','i-cog':'⚙️','i-handshake':'🤝','i-card':'💳','i-phone':'📱',
+  'i-shield':'🛡️','i-snow':'❄️','i-stream':'📡','i-batch':'📦','i-table':'🗂️','i-chevron':''
+};
+const svg = id => id==='i-chevron' ? '<span class="chev-arrow"></span>' : `<span class="em">${EMOJI[id]||'•'}</span>`;
+
+function renderSources(){
+  const grid = document.getElementById('sources-grid');
+  const active = document.getElementById('domain-select').value;
+  grid.innerHTML = sources.map(s => `
+    <div class="source-card ${s.key===active?'active':''}" style="--src:${s.color}" data-key="${s.key}">
+      <div class="source-top">
+        <div class="source-icon">${svg(s.ic)}</div>
+        <div class="source-meta">
+          <div class="source-name">${s.name}</div>
+          <div class="source-type">${s.type}</div>
+        </div>
+        <div class="source-flow"><div class="fr">${s.flow}</div><div class="frl">ingest</div></div>
+      </div>
+      <div class="source-sub">
+        <span class="mode-badge ${s.mode}">${s.mode==='stream'?svg('i-stream')+'STREAMING':svg('i-batch')+'BATCH'}</span>
+      </div>
+      <div class="fold-toggle" onclick="toggleFold(this)">
+        <div class="fold-left">${svg('i-table')}<span><span class="tcount">${s.tables.length}</span> tables</span></div>
+        <span class="chev-arrow fold-chev"></span>
+      </div>
+      <div class="table-wrap"><div class="table-inner"><div class="table-list">
+        ${s.tables.map((t,i)=>`<div class="table-row" style="animation-delay:${i*0.05}s">${svg('i-table')}<span>${t}</span></div>`).join('')}
+      </div></div></div>
+    </div>
+  `).join('');
+}
+
+function toggleFold(el){
+  const card = el.closest('.source-card');
+  card.classList.toggle('open');
+}
+
+function selectDomain(key){
+  document.getElementById('domain-select').value = key;
+  renderSources();
+}
+document.getElementById('domain-select').addEventListener('change', renderSources);
+
+// click card body (not the fold toggle) to set active domain
+document.getElementById('sources-grid').addEventListener('click', e => {
+  if (e.target.closest('.fold-toggle')) return;
+  const card = e.target.closest('.source-card');
+  if (card) selectDomain(card.dataset.key);
+});
+
+// ============ STAGE DETAIL POPUP ============
+const stageDetails = {
+  stage1:{name:'Stage 1 · Data Extraction',rows:[['Purpose','Extract required ingestion tables'],['Output','Consumer-specific curated extracts'],['Strategy','Domain mapping + filter pushdown'],['Tech','Spark SQL on Delta'],['Runs','Hourly · event-driven'],['SLA','< 5 min per batch']]},
+  stage2:{name:'Stage 2 · Extract Profiling',rows:[['Purpose','Validate extracted data volume & shape'],['Checks','Threshold breach · abnormal drop · completeness'],['On Failure','Halt pipeline · notify AppOps · raise incident'],['Metrics','Row count · null % · distinct values'],['Window','7-day rolling baseline'],['SLA','< 90 seconds']]},
+  stage3:{name:'Stage 3 · Standardization',rows:[['Purpose','Normalize customer attributes via rules engine'],['Rules','Phone format · email cleanup · name normalization'],['Engine','Spark UDFs + DLT expectations'],['Sources','Reference data + lookup tables'],['Output','silver.customer_standardized'],['SLA','< 8 minutes per batch']]},
+  stage4:{name:'Stage 4 · Address Standardization',rows:[['Vendor','Anchor Software (external API)'],['Functions','Cleansing · geo-validate · postal correction'],['Calls','Batched API · async with retry'],['Fallback','Mark as unverified if API timeout'],['Output','Enriched address + geo coords'],['SLA','< 12 minutes per batch']]},
+  stage5:{name:'Stage 5 · Quality Profiling',rows:[['Purpose','Score standardization effectiveness'],['Metrics','% addr standardized · % phone standardized'],['KPIs','Key column quality · customer completeness'],['Output','KPI scorecard · gauge dashboard'],['Tracking','Trended 30 days · alerts on drops'],['SLA','< 3 minutes']]},
+  stage6:{name:'Stage 6 · Validation & Conversion',rows:[['Purpose','Business rule validation + output generation'],['Gates','Schema check · referential integrity · range'],['Routing','OK → KNL/FRE file · BAD → Error bucket'],['Outputs','KNL File · FRE File · Error Bucket'],['Audit','Every record logged with disposition'],['SLA','< 6 minutes']]},
+};
+function showDetail(k){
+  const d = stageDetails[k]; if(!d) return;
+  document.getElementById('dt-name').textContent = d.name;
+  document.getElementById('dt-body').innerHTML = d.rows.map(([k,v])=>`<div class="prow"><span class="k">${k}</span><span class="v">${v}</span></div>`).join('');
+  document.getElementById('detail-popup').style.display='block';
+}
+document.addEventListener('click', e => {
+  if (e.target.closest('.prep-stage') || e.target.closest('#detail-popup')) return;
+  document.getElementById('detail-popup').style.display='none';
+});
+
+// ============ SCROLL REVEAL ============
+const io = new IntersectionObserver(entries => {
+  entries.forEach(en => { if(en.isIntersecting){ en.target.classList.add('in'); io.unobserve(en.target); } });
+}, {threshold:0.08});
+document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+renderSources();
+</script>
+</body>
+</html>
