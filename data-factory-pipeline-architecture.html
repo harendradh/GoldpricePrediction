@@ -1,0 +1,1807 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>DCS Data Factory Pipeline Studio — Architecture</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+  :root{
+    --bg-deep:#04101c; --bg:#06121f; --bg-surface:#0b1c2d; --bg-raised:#14293d;
+    --fg:#f0f4f8; --fg-dim:#7d8fa3; --fg-soft:#b0bcc8; --line:#1f3a57;
+    --fiserv-orange:#FF6200; --fiserv-orange-soft:#FF8533; --fiserv-amber:#FFB300;
+    --fiserv-teal:#0E9BAD; --fiserv-green:#00A572; --docs:#a978ff;
+    --ing:var(--fiserv-orange); --eda:var(--fiserv-teal); --prep:var(--fiserv-green); --doc:var(--docs);
+    --font:'Inter','Segoe UI',-apple-system,Roboto,Helvetica,Arial,sans-serif;
+    --mono:'JetBrains Mono',Consolas,'SF Mono',Menlo,monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  /* v1.0 fix: was overflow:hidden (single-screen pitch deck design) — but the slide
+     has grown past viewport (Problem panel · animated agent flow · Deliverables),
+     and the user couldn't scroll. Now scrollable with a custom Fiserv-themed
+     scrollbar that's clearly visible on the right edge. */
+  html,body{min-height:100%;width:100%;background:var(--bg-deep);color:var(--fg);
+    font-family:var(--font);-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;
+    font-feature-settings:"cv02","cv03","cv04","cv11"}
+  /* Page scroll · `scroll` (not `auto`) keeps the gutter visible even on
+     macOS overlay-scrollbar setups, so reviewers SEE they can scroll.
+     The 101vh hack is gone — .slide now has real content extending past
+     viewport (it's a sibling of the fixed .stage backdrop, in normal flow). */
+  html{scroll-behavior:smooth;overflow-y:scroll}
+  body{overflow-x:hidden;overflow-y:scroll}
+
+  /* Custom scrollbar · ORANGE THUMB · ALWAYS VISIBLE.
+     Browsers (especially macOS / iOS / mobile Chrome) default to overlay
+     scrollbars that fade out — reviewers can miss the fact they can scroll.
+     We force a 16px gutter on html AND body, give the thumb high contrast +
+     gradient + glow, and set min-height so it always shows a thumb. */
+  body::-webkit-scrollbar,
+  html::-webkit-scrollbar           { width:16px; background:rgba(11,28,45,.92); -webkit-appearance:none }
+  body::-webkit-scrollbar-track,
+  html::-webkit-scrollbar-track     {
+    background:linear-gradient(180deg, rgba(11,28,45,.92), rgba(20,40,60,.92));
+    border-left:1px solid rgba(255,255,255,.06);
+  }
+  body::-webkit-scrollbar-thumb,
+  html::-webkit-scrollbar-thumb     {
+    background:linear-gradient(180deg, #ff8c1e 0%, var(--fiserv-orange) 50%, var(--fiserv-orange-deep,#e04500) 100%);
+    border-radius:8px;border:2px solid rgba(11,28,45,.92);
+    box-shadow:0 0 10px rgba(255,98,0,.55) inset, 0 0 6px rgba(255,140,30,.40);
+    min-height:80px;
+  }
+  body::-webkit-scrollbar-thumb:hover,
+  html::-webkit-scrollbar-thumb:hover{
+    background:linear-gradient(180deg, #ffa040 0%, #ff8c1e 50%, var(--fiserv-orange) 100%);
+    box-shadow:0 0 14px rgba(255,140,30,.75) inset, 0 0 10px rgba(255,140,30,.55);
+  }
+  /* Firefox · same orange theme with auto (chunky) gutter */
+  html{scrollbar-width:auto;scrollbar-color:var(--fiserv-orange) rgba(11,28,45,.92)}
+
+  /* ── ambient backdrop · radial glows + drifting dot grid ─────
+     `.stage` was position:fixed (locked to viewport). Keeping it that way means
+     the backdrop stays in place while the slide content scrolls naturally over it
+     — that's the right behaviour for a backdrop. Content is now in a separate
+     scrollable layer above. */
+  .stage{
+    position:fixed;inset:0;overflow:hidden;
+    z-index:0;pointer-events:none;
+    background:
+      radial-gradient(1400px 800px at 15% -5%,  rgba(255,98,0,.14),  transparent 55%),
+      radial-gradient(1200px 700px at 92% 8%,   rgba(14,155,173,.11), transparent 55%),
+      radial-gradient(1100px 600px at 50% 110%, rgba(0,165,114,.09),  transparent 60%),
+      radial-gradient(1000px 600px at 85% 95%,  rgba(169,120,255,.09),transparent 60%),
+      var(--bg);
+  }
+  .stage::before{
+    content:"";position:absolute;inset:0;pointer-events:none;
+    background-image:radial-gradient(rgba(255,255,255,.025) 1px, transparent 1px);
+    background-size:32px 32px;animation:driftDots 60s linear infinite
+  }
+  @keyframes driftDots { to { background-position:-320px 320px } }
+  .nebula{
+    position:absolute;top:30%;left:-20%;width:140%;height:40%;
+    background:radial-gradient(ellipse at center, rgba(255,98,0,.07) 0%, transparent 65%);
+    filter:blur(30px);animation:nebulaDrift 20s ease-in-out infinite alternate
+  }
+  @keyframes nebulaDrift {
+    from { transform:translate(0,0) scale(1); opacity:.6 }
+    to   { transform:translate(60px,-20px) scale(1.1); opacity:1 }
+  }
+  .float-emoji{
+    position:absolute;font-size:24px;opacity:.18;pointer-events:none;
+    animation:floatUp linear infinite
+  }
+  @keyframes floatUp {
+    from { transform:translateY(0) rotate(0deg); opacity:0 }
+    10%  { opacity:.20 }
+    90%  { opacity:.20 }
+    to   { transform:translateY(-110vh) rotate(360deg); opacity:0 }
+  }
+
+  /* ── slide ──────────────────────────────────────────────────── */
+  /* min-height (was height) so content can extend past the viewport · the body now
+     scrolls vertically · justify-content:flex-start so content starts from the top
+     rather than centring (centring only made sense in the old single-screen layout). */
+  .slide{position:relative;width:100%;min-height:100vh;
+    display:flex;flex-direction:column;align-items:center;justify-content:flex-start;
+    padding:3.2vh 4vw 6vh;z-index:1}
+
+  /* ── header ─────────────────────────────────────────────────── */
+  header{text-align:center;width:100%;animation:fadeDown .9s cubic-bezier(.2,.8,.4,1) both}
+  @keyframes fadeDown { from { opacity:0; transform:translateY(-20px) } to { opacity:1; transform:translateY(0) } }
+  /* ── top-right brandmark row · in-flow so it never overlaps the title ── */
+  .topbar{
+    width:100%;display:flex;justify-content:flex-end;align-items:center;
+    min-height:28px;animation:fadeDown .9s cubic-bezier(.2,.8,.4,1) both
+  }
+  .brandmark{
+    display:inline-flex;align-items:center;gap:7px;
+    padding:5px 14px 5px 12px;border-radius:99px;
+    background:linear-gradient(135deg,var(--fiserv-orange) 0%,#CC4E00 100%);
+    color:#fff;font-size:10.5px;font-weight:800;letter-spacing:1.4px;text-transform:uppercase;
+    box-shadow:0 4px 14px rgba(255,98,0,.42), inset 0 1px 0 rgba(255,255,255,.18)
+  }
+  .brandmark .spark{animation:sparkle 2.2s ease-in-out infinite;display:inline-block;font-size:12px}
+  @keyframes sparkle { 0%,100% {opacity:.7; transform:rotate(0)} 50% {opacity:1;transform:rotate(15deg) scale(1.15)} }
+
+  h1{font-size:clamp(36px,5.2vw,64px);font-weight:800;letter-spacing:-.5px;line-height:1.05;
+    display:inline-flex;align-items:center;gap:18px;justify-content:center;
+    text-shadow:0 4px 40px rgba(255,98,0,.25)}
+  /* Fiserv-style brand logo · gentle pulse + aura halo (no rotation) */
+  h1 .brandlogo{display:inline-flex;align-items:center;justify-content:center;
+    filter:drop-shadow(0 6px 16px rgba(255,98,0,.55));
+    animation:logoPulse 3.6s ease-in-out infinite}
+  @keyframes logoPulse {
+    0%,100% { transform:scale(1)    }
+    50%     { transform:scale(1.06) }
+  }
+  h1 .brandlogo .bl-aura{
+    transform-origin:32px 32px;
+    animation:auraBreath 3.6s ease-in-out infinite
+  }
+  @keyframes auraBreath {
+    0%,100% { transform:scale(1)   ; opacity:.7 }
+    50%     { transform:scale(1.15); opacity:1  }
+  }
+  h1 .gradient{
+    background:linear-gradient(90deg,var(--fiserv-orange) 0%, var(--fiserv-amber) 40%, var(--fiserv-teal) 70%, var(--docs) 100%);
+    background-size:200% 100%;
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+    animation:gradientShift 6s ease infinite
+  }
+  @keyframes gradientShift { 0%,100% {background-position:0% 50%} 50% {background-position:100% 50%} }
+  .tagline{margin-top:10px;color:var(--fg-soft);font-size:clamp(13px,1.3vw,18px);
+    letter-spacing:1.3px;text-transform:uppercase;font-weight:600}
+  .tagline .pip{color:var(--fiserv-orange);margin:0 12px;font-size:.6em;vertical-align:middle}
+
+  /* ── architecture ───────────────────────────────────────────── */
+  .arch{flex:1;width:100%;max-width:1500px;
+    display:flex;flex-direction:column;justify-content:flex-start;gap:2.5vh;padding:2.5vh 0}
+
+  .tier{display:flex;align-items:center;justify-content:center;gap:14px;
+    animation:tierIn .9s cubic-bezier(.2,.8,.4,1) both}
+  .tier.t1{animation-delay:.20s}
+  .tier.t2{animation-delay:.40s}
+  .tier.t3{animation-delay:.60s}
+  .tier.t4{animation-delay:.80s}
+  @keyframes tierIn { from { opacity:0; transform:translateY(20px) } to { opacity:1; transform:translateY(0) } }
+
+  .tier-label{flex:0 0 130px;text-align:right;
+    color:var(--fg-dim);font-size:10.5px;font-weight:700;letter-spacing:1.8px;text-transform:uppercase}
+  .tier-label .em{display:inline-block;margin-right:6px;font-size:14px;vertical-align:middle}
+
+  /* ── Fiserv-standard tile · single base for ALL cards ────────
+     One unified card style. Accent identity lives in a top stripe
+     (var(--accent)) + icon color, never the background. */
+  .tile{position:relative;display:inline-flex;align-items:center;gap:14px;
+    padding:15px 22px 14px;border-radius:10px;overflow:hidden;
+    background:linear-gradient(180deg,rgba(18,34,52,.88) 0%,rgba(10,20,32,.94) 100%);
+    border:1px solid var(--line);
+    box-shadow:0 6px 18px rgba(0,0,0,.42), inset 0 1px 0 rgba(255,255,255,.05);
+    backdrop-filter:blur(8px);
+    transition:transform .35s cubic-bezier(.2,.8,.4,1), box-shadow .35s, border-color .25s;
+    --accent: var(--line);  /* default · overridden per type below */
+  }
+  .tile::before{
+    content:"";position:absolute;top:0;left:0;right:0;height:3px;
+    background:var(--accent);
+    box-shadow:0 0 12px var(--accent), 0 0 4px var(--accent);
+    opacity:.9
+  }
+  .tile:hover{transform:translateY(-3px);border-color:var(--accent);box-shadow:0 12px 32px rgba(0,0,0,.48), inset 0 1px 0 rgba(255,255,255,.06)}
+  .tile .icon{font-size:30px;line-height:1;color:var(--accent)}
+  .tile .text{display:flex;flex-direction:column;gap:2px}
+  .tile .text b{font-size:15px;font-weight:700;color:var(--fg);letter-spacing:.2px}
+  .tile .text small{font-size:11.5px;color:var(--fg-dim);font-weight:500;letter-spacing:.4px}
+
+  /* ── per-type accent assignments (top stripe + icon color only) ── */
+  .tile.input               { --accent: #4cc2ff; }
+  .tile.studio              { --accent: var(--fiserv-orange); }
+  .tile.agent.ing           { --accent: var(--fiserv-orange); }
+  .tile.agent.eda           { --accent: var(--fiserv-teal); }
+  .tile.agent.prep          { --accent: var(--fiserv-green); }
+  .tile.agent.doc           { --accent: var(--docs); }
+  .tile.agent.lineage       { --accent: #3dd9c4; }   /* lineage = cyan-teal · matches studio lineage modal */
+
+  /* ── Tier 3 clean · interactive flip-cards + animated lifecycle strip ── */
+  .t3-clean{align-items:flex-start}
+  .t3-clean .tier-label{padding-top:42px}
+  .t3-grid{display:flex;flex-direction:column;gap:18px;flex:1;min-width:0}
+  .agent-row{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;align-items:stretch}
+
+  /* ── Agent cards · static tiles · click to update the shared details panel ── */
+  .agent-card{
+    position:relative;background:linear-gradient(180deg,rgba(18,34,52,.94) 0%,rgba(10,20,32,.98) 100%);
+    border:1px solid var(--line);border-radius:12px;
+    padding:18px 14px;cursor:pointer;outline:none;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;
+    text-align:center;min-height:140px;
+    box-shadow:0 6px 18px rgba(0,0,0,.42), inset 0 1px 0 rgba(255,255,255,.05);
+    transition:transform .25s cubic-bezier(.4,0,.2,1), box-shadow .25s, border-color .25s, opacity .25s;
+    --accent: var(--line);
+  }
+  .agent-card.ing      { --accent: var(--fiserv-orange); }
+  .agent-card.eda      { --accent: var(--fiserv-teal); }
+  .agent-card.prep     { --accent: var(--fiserv-green); }
+  .agent-card.doc      { --accent: var(--docs); }
+  .agent-card.lineage  { --accent: #3dd9c4; }
+
+  /* Top accent stripe — uses the per-agent color */
+  .agent-card::before{
+    content:"";position:absolute;top:0;left:0;right:0;height:3px;
+    background:var(--accent);border-radius:12px 12px 0 0;
+    box-shadow:0 0 12px var(--accent), 0 0 4px var(--accent);opacity:.9
+  }
+  .agent-card:hover{transform:translateY(-3px);box-shadow:0 12px 28px rgba(0,0,0,.48), inset 0 1px 0 rgba(255,255,255,.06);border-color:var(--accent)}
+  .agent-card:focus-visible{box-shadow:0 0 0 2px var(--accent)}
+
+  /* Active card · glowing border + full opacity · others dim slightly */
+  .agent-row:has(.agent-card.active) .agent-card:not(.active){opacity:.55}
+  .agent-card.active{
+    border-color:var(--accent);
+    box-shadow:0 0 0 2px rgba(255,255,255,.04), 0 0 28px var(--accent), inset 0 1px 0 rgba(255,255,255,.08);
+    transform:translateY(-2px)
+  }
+
+  .agent-card .stage-pill{
+    position:absolute;top:8px;right:10px;
+    font-size:9.5px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;
+    color:var(--accent);background:rgba(255,255,255,.06);
+    padding:2px 7px;border-radius:99px;border:1px solid var(--accent)
+  }
+  .agent-card .stage-pill.cross{font-size:9px}
+  .agent-card .icon{font-size:36px;line-height:1;color:var(--accent);
+    filter:drop-shadow(0 4px 10px var(--accent))}
+  .agent-card b{font-size:15px;font-weight:700;color:var(--fg);letter-spacing:.2px;font-family:var(--mono)}
+  .agent-card small{font-size:11.5px;color:var(--fg-dim);font-weight:500;letter-spacing:.3px;line-height:1.4}
+
+  /* ── Master-detail panel · slides in below the row · updates on click ── */
+  .agent-details{
+    background:linear-gradient(180deg,rgba(28,44,62,.92) 0%,rgba(18,28,40,.96) 100%);
+    border:1px solid var(--line);border-radius:12px;padding:16px 20px;
+    box-shadow:0 6px 22px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.04);
+    animation:detailsIn .35s cubic-bezier(.2,.8,.4,1)
+  }
+  @keyframes detailsIn { from { opacity:0; transform:translateY(-6px) } to { opacity:1; transform:none } }
+  .agent-details .ad-head{display:flex;align-items:center;gap:12px;margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid var(--line)}
+  .agent-details .ad-icon{font-size:28px;line-height:1}
+  .agent-details .ad-title{font-family:var(--mono);font-weight:700;font-size:18px;color:var(--fg);letter-spacing:.3px}
+  .agent-details .ad-stage{margin-left:auto;font-size:10.5px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;
+    padding:4px 10px;border-radius:99px;background:rgba(255,98,0,.12);color:var(--fiserv-orange);border:1px solid rgba(255,98,0,.30)}
+  .agent-details.lineage-active .ad-stage{background:rgba(61,217,196,.12);color:#3dd9c4;border-color:rgba(61,217,196,.30)}
+  .agent-details .ad-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px 18px}
+  .agent-details .ad-kv{display:flex;flex-direction:column;gap:3px;min-width:0}
+  .agent-details .ad-kv span{font-size:10px;letter-spacing:1.4px;text-transform:uppercase;color:var(--fg-mute);font-weight:700}
+  .agent-details .ad-kv code{font-family:var(--mono);font-size:11.5px;color:var(--fg);
+    background:rgba(255,255,255,.04);padding:5px 9px;border-radius:5px;
+    word-break:break-word;line-height:1.4;border:1px solid rgba(255,255,255,.05)}
+
+  @media (max-width:760px){
+    .agent-details .ad-grid{grid-template-columns:1fr}
+  }
+
+  /* ── Animated agent-flow chart (Read → Spec → Agent → Write) ─────────
+     Each step = yellow CIRCLE (icon + number badge) above a RECTANGLE
+     listing what the step does as bullet points. Sequenced animation:
+     each step lights up in turn (1.5s slot · 6s full cycle · loops) and
+     a pulse dot travels through every arrow between circles. Pure CSS
+     animation + small JS scheduler. Honours prefers-reduced-motion. */
+  .agent-flow{
+    display:grid;
+    grid-template-columns: 1fr 32px 1fr 32px 1fr 32px 1fr;
+    align-items:start;
+    gap:0;
+    margin-top:6px;
+  }
+  .flow-step{
+    position:relative;display:flex;flex-direction:column;align-items:stretch;
+    gap:10px;transition:transform .4s ease;
+  }
+  /* ── Circle (icon + number badge · YELLOW) ── */
+  .flow-circle{
+    position:relative;align-self:center;
+    width:62px;height:62px;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    background:radial-gradient(circle at 30% 25%, #ffe98c 0%, #f9c647 55%, #b8862c 100%);
+    border:2px solid #ffd54f;
+    box-shadow:0 4px 14px rgba(0,0,0,.45), inset 0 1px 2px rgba(255,255,255,.45);
+    transition:all .4s ease;
+  }
+  .flow-circle .circle-ico{font-size:24px;line-height:1;filter:drop-shadow(0 1px 1px rgba(0,0,0,.30))}
+  .flow-circle .circle-num{
+    position:absolute;top:-4px;right:-4px;
+    width:22px;height:22px;border-radius:50%;
+    background:#0a1422;color:#ffd54f;
+    display:flex;align-items:center;justify-content:center;
+    font-family:var(--mono);font-size:11px;font-weight:800;
+    border:2px solid #ffd54f;
+    box-shadow:0 2px 6px rgba(0,0,0,.4);
+  }
+  .flow-step-label{
+    text-align:center;font-size:11px;font-weight:800;
+    letter-spacing:1.8px;text-transform:uppercase;
+    color:var(--fg-mute);transition:color .4s ease;
+  }
+  /* ── Rectangle (bullet list explaining what this step does) ── */
+  .flow-rect{
+    position:relative;background:linear-gradient(180deg, rgba(20,32,46,.92), rgba(14,22,32,.96));
+    border:1.5px solid var(--line);border-radius:10px;
+    padding:11px 12px;min-height:100px;
+    transition:all .4s ease;
+  }
+  .flow-rect ul{
+    list-style:none;margin:0;padding:0;
+    display:flex;flex-direction:column;gap:6px;
+  }
+  .flow-rect li{
+    position:relative;padding-left:14px;
+    font-size:11px;line-height:1.45;color:var(--fg-soft);
+    word-break:break-word;
+    font-family:var(--mono);
+  }
+  .flow-rect li::before{
+    content:'•';position:absolute;left:2px;top:-1px;
+    color:#ffd54f;font-size:13px;font-weight:700;
+  }
+
+  /* Idle dim state — non-active steps slightly faded */
+  .flow-step{opacity:.55}
+  .flow-step.is-active{opacity:1;transform:translateY(-2px)}
+
+  /* Active circle + rectangle — bright yellow accent */
+  .flow-step.is-active .flow-circle{
+    box-shadow:0 0 0 4px rgba(255,213,79,.18), 0 6px 20px rgba(255,213,79,.50), inset 0 1px 2px rgba(255,255,255,.55);
+    border-color:#ffe98c;
+  }
+  .flow-step.is-active .flow-step-label{color:#ffd54f}
+  .flow-step.is-active .flow-rect{
+    border-color:rgba(255,213,79,.55);
+    background:linear-gradient(180deg, rgba(255,213,79,.08), rgba(20,32,46,.96));
+    box-shadow:0 0 18px rgba(255,213,79,.20);
+  }
+
+  /* ── Arrow between circles · animated pulse dot ── */
+  .flow-arrow{
+    position:relative;align-self:start;margin-top:30px;   /* aligns with vertical centre of the circle (62px / 2) */
+    height:3px;background:linear-gradient(90deg, rgba(255,255,255,.06), rgba(255,213,79,.30), rgba(255,255,255,.06));
+    border-radius:2px;overflow:visible;
+  }
+  .flow-arrow::after{
+    /* chevron tip */
+    content:'›';position:absolute;right:-10px;top:50%;transform:translateY(-50%);
+    color:#ffd54f;font-size:22px;line-height:0;font-weight:800;
+    text-shadow:0 0 6px rgba(255,213,79,.40);
+  }
+  .flow-pulse{
+    position:absolute;left:0;top:50%;transform:translateY(-50%);
+    width:11px;height:11px;border-radius:50%;
+    background:#ffe98c;box-shadow:0 0 14px rgba(255,213,79,.95), 0 0 4px #fff8d0 inset;
+    animation:pulseTravel 6s ease-in-out infinite;opacity:0;
+  }
+  .agent-flow .flow-arrow:nth-of-type(2) .flow-pulse{ animation-delay: 0.6s }   /* READ → SPEC  */
+  .agent-flow .flow-arrow:nth-of-type(4) .flow-pulse{ animation-delay: 2.1s }   /* SPEC → AGENT */
+  .agent-flow .flow-arrow:nth-of-type(6) .flow-pulse{ animation-delay: 3.6s }   /* AGENT → WRITE */
+  @keyframes pulseTravel {
+    0%   { left:-4%;  opacity:0   }
+    10%  { left:0;    opacity:1   }
+    18%  { left:100%; opacity:1   }
+    20%, 100% { left:100%; opacity:0 }
+  }
+
+  /* Reduced-motion users · stop cycling but keep the last step lit */
+  @media (prefers-reduced-motion: reduce){
+    .flow-step    { opacity:1; transform:none }
+    .flow-pulse   { animation:none; opacity:0 }
+  }
+
+  /* Narrow screens — stack the 4 steps vertically · arrows become down-arrows */
+  @media (max-width: 800px){
+    .agent-flow{
+      grid-template-columns: 1fr;
+      grid-auto-rows: auto;
+      gap:6px;
+    }
+    .flow-arrow{
+      margin:0 auto;
+      height:24px;width:3px;
+      background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,213,79,.30), rgba(255,255,255,.06));
+    }
+    .flow-arrow::after{ content:'⌄'; right:auto; left:50%; top:auto; bottom:-14px; transform:translateX(-50%) }
+    .flow-pulse{
+      left:50%;top:0;transform:translateX(-50%);
+      animation-name:pulseTravelV;
+    }
+    @keyframes pulseTravelV {
+      0%   { top:-4%;  opacity:0 }
+      10%  { top:0;    opacity:1 }
+      18%  { top:100%; opacity:1 }
+      20%, 100% { top:100%; opacity:0 }
+    }
+  }
+
+  /* Cross-cutting badge on lineage card */
+  .cross-badge{
+    position:absolute;top:-8px;left:50%;transform:translateX(-50%);
+    z-index:2;font-size:9px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;
+    color:#0a141f;background:#3dd9c4;padding:3px 9px;border-radius:99px;
+    box-shadow:0 2px 8px rgba(61,217,196,.45);white-space:nowrap
+  }
+
+  /* ── Animated lifecycle strip beneath the cards ── */
+  .lifecycle-strip{
+    position:relative;height:32px;margin:0 12px;
+    border-radius:99px;
+    background:linear-gradient(90deg,
+      rgba(255,98,0,.05) 0%,
+      rgba(14,155,173,.05) 25%,
+      rgba(0,165,114,.05) 50%,
+      rgba(169,120,255,.05) 75%,
+      rgba(61,217,196,.05) 100%);
+    border:1px solid rgba(255,255,255,.05)
+  }
+  .lifecycle-strip .strip-line{
+    position:absolute;top:50%;left:6%;right:6%;height:2px;transform:translateY(-50%);
+    background:linear-gradient(90deg,
+      var(--fiserv-orange) 0%,
+      var(--fiserv-teal)   25%,
+      var(--fiserv-green)  50%,
+      var(--docs)          75%,
+      #3dd9c4              100%);
+    border-radius:2px;opacity:.55
+  }
+  .lifecycle-strip .strip-pulse{
+    position:absolute;top:50%;left:6%;width:18px;height:18px;transform:translate(-50%,-50%);
+    border-radius:50%;background:radial-gradient(circle,#fff 0%,rgba(255,255,255,0) 70%);
+    animation:stripFlow 4s linear infinite;pointer-events:none
+  }
+  @keyframes stripFlow {
+    0%   { left:6%   ; opacity:0   }
+    8%   {              opacity:1   }
+    92%  {              opacity:1   }
+    100% { left:94%  ; opacity:0   }
+  }
+  .lifecycle-strip .strip-tick{
+    position:absolute;top:50%;transform:translate(-50%,-50%);
+    width:24px;height:24px;border-radius:50%;
+    background:var(--bg2);border:1.5px solid var(--line);
+    display:flex;align-items:center;justify-content:center;
+    font-size:11px;font-weight:800;color:var(--fg-dim);font-family:var(--mono)
+  }
+  .lifecycle-strip .strip-tick.cross{
+    color:#3dd9c4;border-color:#3dd9c4;background:rgba(61,217,196,.12);
+    box-shadow:0 0 12px rgba(61,217,196,.35)
+  }
+
+  /* Responsive — collapse to 3 cols then 2 then 1 */
+  @media (max-width:1100px){
+    .agent-row{grid-template-columns:repeat(3,1fr)}
+  }
+  @media (max-width:760px){
+    .agent-row{grid-template-columns:repeat(2,1fr)}
+    .lifecycle-strip{display:none}
+  }
+  .tile.deliv.cfg           { --accent: var(--fiserv-orange); }       /* job profiles */
+  .tile.deliv.prof          { --accent: var(--fiserv-teal); }          /* auto-profiling */
+  .tile.deliv.eda           { --accent: var(--fiserv-green); }         /* reusable EDA · golden record */
+  .tile.deliv.doc           { --accent: var(--docs); }                 /* docs + runbooks */
+  .tile.deliv.std           { --accent: #ffd54f; }                     /* shared spec format · matches problem-panel yellow */
+
+  /* per-type small typography tweaks (keep tile body Fiserv-uniform) */
+  .tile.input .text small,
+  .tile.deliv .text small  { font-family:var(--mono); font-size:10.5px; }
+
+  /* "solves problem N" chip · sits inside the tile, ties deliverable ↔ pain card visually */
+  .tile.deliv .solves{
+    display:inline-flex;align-items:center;gap:5px;
+    margin-top:6px;align-self:flex-start;
+    font-size:9.5px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;
+    padding:3px 9px;border-radius:99px;
+    background:rgba(255,82,82,.10);
+    border:1px solid rgba(255,82,82,.28);
+    color:#ffb56b;
+    line-height:1;
+  }
+  .tile.deliv .solves .sv-ico{font-size:13px;line-height:1;-webkit-text-stroke:0}
+  .tile.deliv .solves .sv-arrow{
+    color:var(--accent,#ffb56b);font-weight:900;font-size:11px;
+    text-shadow:0 0 4px currentColor;
+  }
+
+  /* input tile · gentle vertical float */
+  .tile.input .icon         { animation:inputFloat 3.4s ease-in-out infinite }
+  @keyframes inputFloat {
+    0%,100% { transform:translateY(0);   filter:drop-shadow(0 0 4px var(--accent)) }
+    50%     { transform:translateY(-3px);filter:drop-shadow(0 0 12px var(--accent)) }
+  }
+  .tile.input.t2 .icon{animation-delay:.4s}
+  .tile.input.t3 .icon{animation-delay:.8s}
+
+  /* deliverable tile · pulse glow */
+  .tile.deliv .icon         { animation:delivGlow 3.2s ease-in-out infinite }
+  @keyframes delivGlow {
+    0%,100% { transform:scale(1);    filter:drop-shadow(0 0 6px var(--accent)) }
+    50%     { transform:scale(1.10); filter:drop-shadow(0 0 16px var(--accent)) }
+  }
+  .tile.deliv.cfg  .icon{animation-delay:0s}
+  .tile.deliv.prof .icon{animation-delay:.4s}
+  .tile.deliv.eda  .icon{animation-delay:.8s}
+  .tile.deliv.doc  .icon{animation-delay:1.2s}
+  .tile.deliv.std  .icon{animation-delay:1.6s}
+
+  /* Uniform tile sizing for Tier 4 · all 5 deliverables share width + height
+     so the row reads as a clean grid regardless of description length. */
+  .tier.t4-uniform{align-items:stretch}
+  .tier.t4-uniform .tile.deliv{
+    flex:1 1 0;                    /* equal width within the row */
+    min-width:0;                    /* allow tiles to shrink in narrow viewports */
+    min-height:118px;               /* equal minimum height */
+    align-items:flex-start;         /* icon + text aligned to top, not centred */
+    padding-top:14px;padding-bottom:14px;
+  }
+  .tier.t4-uniform .tile.deliv .text{ flex:1; min-width:0 }
+  .tier.t4-uniform .tile.deliv .text small{ display:block }     /* wrap inside fixed width */
+  @media (max-width:1100px){
+    .tier.t4-uniform{flex-wrap:wrap}
+    .tier.t4-uniform .tile.deliv{ flex:1 1 calc(50% - 14px); min-height:130px }
+  }
+  @media (max-width:680px){
+    .tier.t4-uniform .tile.deliv{ flex:1 1 100% }
+  }
+
+  /* ────────────────────────────────────────────────────────────────────
+     ROADMAP TIER — Next-phase work shown as 5 themed groups × 2 cards.
+     Forward-looking palette (violet → cyan → gold) so it reads as "future"
+     and not confused with Problem (red) / Solution (orange) sections above.
+     Each card breathes a soft violet glow on a 4s loop, staggered, and the
+     section header has a flowing milestone track at the top. ─────────── */
+  .roadmap-section{
+    width:100%;max-width:1500px;margin:4vh auto 0;padding:3vh 0 1vh;
+    position:relative;
+    animation:tierIn 1s cubic-bezier(.2,.8,.4,1) both;animation-delay:1s;
+  }
+  .roadmap-header{
+    display:flex;align-items:center;gap:18px;
+    margin-bottom:24px;padding:0 4px;
+  }
+  .roadmap-header .rm-icon{
+    width:48px;height:48px;border-radius:50%;flex:none;
+    display:flex;align-items:center;justify-content:center;font-size:24px;
+    background:radial-gradient(circle at 35% 30%, #c89cff 0%, #7a4fd1 60%, #3a1f6e 100%);
+    border:2px solid #a978ff;
+    box-shadow:0 0 24px rgba(169,120,255,.55), inset 0 1px 2px rgba(255,255,255,.50);
+    animation:rmIconPulse 2.6s ease-in-out infinite;
+  }
+  @keyframes rmIconPulse {
+    0%,100% { box-shadow:0 0 24px rgba(169,120,255,.55), inset 0 1px 2px rgba(255,255,255,.50) }
+    50%     { box-shadow:0 0 36px rgba(169,120,255,.85), 0 0 60px rgba(61,217,196,.30), inset 0 1px 2px rgba(255,255,255,.60) }
+  }
+  .roadmap-header .rm-title{font-size:24px;font-weight:800;letter-spacing:.5px;
+    background:linear-gradient(135deg, #c89cff 0%, #a978ff 50%, #3dd9c4 100%);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+    background-size:200% 200%;animation:gradientShift 8s ease-in-out infinite;
+  }
+  .roadmap-header .rm-sub{font-size:12px;color:var(--fg-mute);letter-spacing:1.5px;text-transform:uppercase;font-weight:600}
+  .roadmap-header .rm-badge{
+    margin-left:auto;padding:5px 14px;border-radius:99px;
+    background:rgba(169,120,255,.14);color:#c89cff;
+    border:1px solid rgba(169,120,255,.40);
+    font-size:11px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;
+  }
+
+  /* Flowing milestone track — animated gradient bar across the section header */
+  .roadmap-track{
+    height:3px;width:100%;border-radius:2px;margin-bottom:28px;
+    background:linear-gradient(90deg, #a978ff 0%, #6f4ddf 25%, #3dd9c4 60%, #ffd54f 100%);
+    background-size:200% 100%;
+    animation:trackFlow 4s linear infinite;
+    box-shadow:0 0 12px rgba(169,120,255,.50);
+    position:relative;
+  }
+  @keyframes trackFlow {
+    0%   { background-position:0% 0% }
+    100% { background-position:200% 0% }
+  }
+  .roadmap-track::after{
+    content:'';position:absolute;top:-3px;right:-2px;
+    width:9px;height:9px;border-radius:50%;
+    background:#ffe98c;box-shadow:0 0 14px #ffd54f;
+    animation:trackTip 4s ease-in-out infinite;
+  }
+  @keyframes trackTip {
+    0%,100% { opacity:.7; transform:scale(1) }
+    50%     { opacity:1;  transform:scale(1.4) }
+  }
+
+  /* 4 themed group columns · was 5, consolidated to 4 after merging
+     Observability + Handover into a single "Operations" theme with one
+     super-card (Pipeline Dashboarding & Health Score). The wider gap
+     leaves room for the animated connector arrows BETWEEN columns. */
+  .roadmap-themes{
+    display:grid;grid-template-columns:repeat(4, 1fr);gap:26px;
+    position:relative;
+  }
+  @media (max-width:1200px){ .roadmap-themes{grid-template-columns:repeat(2, 1fr);gap:18px} }
+  @media (max-width:720px){  .roadmap-themes{grid-template-columns:1fr;gap:14px} }
+
+  /* Per-theme card variables (set by .rm-theme.t-N) so each theme has its own
+     identity: gradient header banner + accent border + hover-glow colour.
+     No auto-animation — the card sits still until the user actually interacts. */
+  .rm-theme{
+    --rmt-accent:#a978ff;            /* default · violet */
+    --rmt-accent-soft:rgba(169,120,255,.55);
+    --rmt-accent-glow:rgba(169,120,255,.30);
+    --rmt-banner-start:#7a4fd1;
+    --rmt-banner-end:#3a1f6e;
+  }
+  .rm-theme.t-1{                     /* Foundation · violet */
+    --rmt-accent:#c89cff; --rmt-accent-soft:rgba(200,156,255,.55); --rmt-accent-glow:rgba(200,156,255,.35);
+    --rmt-banner-start:#9b6dff; --rmt-banner-end:#4d2799;
+  }
+  .rm-theme.t-2{                     /* Agentic AI · cyan/teal */
+    --rmt-accent:#3dd9c4; --rmt-accent-soft:rgba(61,217,196,.55); --rmt-accent-glow:rgba(61,217,196,.35);
+    --rmt-banner-start:#1aa994; --rmt-banner-end:#08574d;
+  }
+  .rm-theme.t-3{                     /* Integrations · green */
+    --rmt-accent:#7be0a8; --rmt-accent-soft:rgba(123,224,168,.55); --rmt-accent-glow:rgba(123,224,168,.35);
+    --rmt-banner-start:#2f9d61; --rmt-banner-end:#0d4f2c;
+  }
+  .rm-theme.t-4{                     /* Operations · orange/amber */
+    --rmt-accent:#ffb56b; --rmt-accent-soft:rgba(255,140,30,.55); --rmt-accent-glow:rgba(255,140,30,.35);
+    --rmt-banner-start:#ff8c1e; --rmt-banner-end:#9c4400;
+  }
+
+  .rm-theme{
+    display:flex;flex-direction:column;gap:0;
+    /* Glass background · subtle, lets the per-theme banner above carry colour */
+    background:linear-gradient(180deg, rgba(28,22,46,.85) 0%, rgba(14,10,22,.95) 100%);
+    border:1px solid var(--rmt-accent-soft);
+    border-radius:14px;
+    position:relative;
+    overflow:hidden;                  /* clips the banner's clipped-corner shape */
+    box-shadow:
+      0 10px 28px rgba(0,0,0,.45),    /* lift shadow · static */
+      inset 0 1px 0 rgba(255,255,255,.05);
+    transition:transform .25s cubic-bezier(.2,.8,.4,1),
+               box-shadow .3s, border-color .3s;
+    /* NO auto-animation · was themeBreathe pulsing every 4s · user explicitly
+       asked for cards to NOT auto-hover. Hover state below adds the lift. */
+  }
+
+  /* Animated connector between adjacent theme columns · cascades L→R
+     showing forward motion through the 4 phases of work. Uses ::after for
+     the static arrow + a child .rm-connector for the travelling pulse dot. */
+  .rm-theme:not(:last-child)::after{
+    content:'›';
+    position:absolute;top:50%;right:-22px;
+    width:24px;height:24px;
+    transform:translateY(-50%);
+    display:flex;align-items:center;justify-content:center;
+    color:#c89cff;font-size:26px;font-weight:800;line-height:0;
+    text-shadow:0 0 12px rgba(169,120,255,.70), 0 0 6px rgba(61,217,196,.40);
+    pointer-events:none;z-index:2;
+  }
+  .rm-theme .rm-connector{
+    position:absolute;top:50%;right:-26px;
+    width:26px;height:2px;
+    transform:translateY(-50%);
+    background:linear-gradient(90deg, rgba(169,120,255,.55) 0%, rgba(200,156,255,.95) 60%, rgba(61,217,196,.55) 100%);
+    border-radius:1px;
+    box-shadow:0 0 8px rgba(169,120,255,.55);
+    pointer-events:none;overflow:visible;
+  }
+  .rm-theme:last-child .rm-connector{display:none}
+  .rm-theme .rm-connector::before{
+    /* travelling pulse dot · cascades through all 3 connectors */
+    content:'';position:absolute;top:50%;left:-2px;
+    width:9px;height:9px;border-radius:50%;
+    transform:translate(0,-50%);
+    background:radial-gradient(circle at 35% 35%, #e0d4ff 0%, #c89cff 45%, #a978ff 100%);
+    box-shadow:0 0 14px rgba(200,156,255,.95), 0 0 4px #fff inset;
+    animation:rmConnectorPulse 5s ease-in-out infinite;
+    animation-delay:var(--rmcp, 0s);
+    opacity:0;
+  }
+  .rm-theme:nth-child(1) .rm-connector{ --rmcp: 0.0s }
+  .rm-theme:nth-child(2) .rm-connector{ --rmcp: 1.0s }
+  .rm-theme:nth-child(3) .rm-connector{ --rmcp: 2.0s }
+  @keyframes rmConnectorPulse {
+    0%             { left:-2px; opacity:0; transform:translate(0,-50%) scale(.6) }
+    8%             { opacity:1; }
+    12%, 18%       { transform:translate(0,-50%) scale(1.3); }
+    25%            { left:calc(100% - 7px); opacity:1; transform:translate(0,-50%) scale(1) }
+    32%, 100%      { left:calc(100% - 7px); opacity:0; }
+  }
+  /* Connectors collapse when grid wraps (no horizontal sibling to point at) */
+  @media (max-width:1200px){
+    .rm-theme:not(:last-child)::after,
+    .rm-theme .rm-connector{display:none}
+  }
+  @media (prefers-reduced-motion: reduce){
+    .rm-theme .rm-connector::before{animation:none;opacity:0}
+  }
+  /* Hover only on actual hover (no auto-cycling) */
+  .rm-theme:hover{
+    transform:translateY(-4px);
+    border-color:var(--rmt-accent);
+    box-shadow:0 16px 36px rgba(0,0,0,.55), 0 0 28px var(--rmt-accent-glow), inset 0 1px 0 rgba(255,255,255,.06);
+  }
+
+  /* ── Theme HEADER BANNER · the visual identity per theme.
+     Angled bottom edge (clip-path) so each theme reads as a distinct "card-with-tab"
+     rather than 4 identical boxes. Per-theme gradient banner + big numbered emblem. */
+  .rm-theme .rmt-head{
+    position:relative;
+    display:flex;align-items:center;gap:14px;
+    padding:14px 16px 22px;
+    background:linear-gradient(135deg, var(--rmt-banner-start) 0%, var(--rmt-banner-end) 100%);
+    /* Diagonal cut at the bottom-right corner · gives the banner a tab/ribbon shape */
+    clip-path:polygon(0 0, 100% 0, 100% calc(100% - 14px), calc(100% - 22px) 100%, 0 100%);
+    box-shadow:inset 0 -1px 0 rgba(0,0,0,.30);
+  }
+  .rm-theme .rmt-head::before{
+    /* subtle inner highlight on top edge */
+    content:'';position:absolute;top:0;left:0;right:0;height:1px;
+    background:linear-gradient(90deg, transparent, rgba(255,255,255,.30), transparent);
+  }
+  .rm-theme .rmt-num{
+    width:36px;height:36px;border-radius:10px;flex:none;
+    display:flex;align-items:center;justify-content:center;
+    background:rgba(255,255,255,.18);
+    color:#fff;font-weight:900;font-size:18px;font-family:var(--mono);
+    border:1px solid rgba(255,255,255,.30);
+    box-shadow:0 4px 10px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.25);
+    text-shadow:0 1px 2px rgba(0,0,0,.40);
+  }
+  .rm-theme .rmt-title{
+    font-size:14px;font-weight:800;color:#fff;
+    letter-spacing:1.4px;text-transform:uppercase;
+    text-shadow:0 1px 3px rgba(0,0,0,.50);
+    flex:1;
+  }
+
+  /* Card body container · pads the area beneath the angled banner */
+  .rm-theme .rmt-body{
+    display:flex;flex-direction:column;gap:10px;
+    padding:14px 12px 16px;
+  }
+
+  /* ── Individual roadmap cards · glass background · per-theme accent border ── */
+  .rm-card{
+    position:relative;padding:11px 12px;
+    background:linear-gradient(180deg, rgba(40,30,60,.75), rgba(18,14,30,.90));
+    border:1px solid rgba(255,255,255,.07);border-left:3px solid var(--rmt-accent);
+    border-radius:0 8px 8px 0;             /* sharp left edge · accent strip stands out */
+    transition:transform .2s, border-color .2s, box-shadow .2s, background .2s;
+    overflow:hidden;
+  }
+  .rm-card::before{
+    /* shimmer sweep on hover · NOT auto-firing */
+    content:'';position:absolute;inset:0;
+    background:linear-gradient(120deg, transparent 30%, var(--rmt-accent-glow) 50%, transparent 70%);
+    transform:translateX(-100%);
+    transition:transform .55s;pointer-events:none;
+  }
+  .rm-card:hover{
+    transform:translateX(3px);
+    border-left-color:var(--rmt-accent);
+    border-left-width:5px;
+    background:linear-gradient(180deg, rgba(50,38,75,.85), rgba(22,16,38,.95));
+    box-shadow:0 6px 18px rgba(0,0,0,.45), 0 0 14px var(--rmt-accent-glow);
+  }
+  .rm-card:hover::before{transform:translateX(100%)}
+  .rm-card .rmc-row{display:flex;align-items:center;gap:10px}
+  .rm-card .rmc-ico{font-size:20px;line-height:1;flex:none;
+    filter:drop-shadow(0 0 6px var(--rmt-accent-glow))}
+  .rm-card .rmc-name{font-size:12px;font-weight:700;color:#f0e6ff;line-height:1.3;flex:1;letter-spacing:.2px}
+  .rm-card .rmc-pill{
+    flex:none;font-size:9px;font-weight:800;letter-spacing:.8px;text-transform:uppercase;
+    padding:2px 8px;border-radius:99px;
+  }
+  .rm-card .rmc-pill.next   { background:rgba(61,217,196,.16);color:#3dd9c4;border:1px solid rgba(61,217,196,.45) }
+  .rm-card .rmc-pill.soon   { background:rgba(255,213,79,.14);color:#ffd54f;border:1px solid rgba(255,213,79,.40) }
+  .rm-card .rmc-pill.future { background:rgba(169,120,255,.14);color:#c89cff;border:1px solid rgba(169,120,255,.40) }
+  .rm-card .rmc-desc{font-size:10.5px;color:var(--fg-soft);line-height:1.55;
+    margin-top:7px;padding-left:30px}
+
+  /* Hero super-card · Pipeline Dashboarding & Health Score (Operations theme).
+     Same orange theme as parent · thicker accent stripe (5px not 3px) ·
+     ribbon corner so it visually pops out as "the main deliverable here". */
+  .rm-card.rm-card-hero{
+    background:linear-gradient(180deg, rgba(255,140,30,.10), rgba(50,38,82,.70) 30%, rgba(22,16,36,.92) 100%);
+    border:1px solid rgba(255,255,255,.07);
+    border-left:5px solid var(--rmt-accent);
+    box-shadow:0 8px 22px rgba(0,0,0,.40), 0 0 18px var(--rmt-accent-glow), inset 0 1px 0 rgba(255,255,255,.06);
+    position:relative;
+  }
+  /* Small "HERO" ribbon in the top-right corner so the super-card is obviously special */
+  .rm-card.rm-card-hero::after{
+    content:'★';position:absolute;top:8px;right:10px;
+    color:var(--rmt-accent);font-size:14px;
+    text-shadow:0 0 8px var(--rmt-accent-glow);
+    pointer-events:none;
+  }
+  .rm-card.rm-card-hero:hover{
+    border-left-width:7px;
+    box-shadow:0 10px 28px rgba(0,0,0,.55), 0 0 26px var(--rmt-accent-soft), inset 0 1px 0 rgba(255,255,255,.08);
+  }
+  .rm-card.rm-card-hero .rmc-ico{
+    filter:drop-shadow(0 0 8px var(--rmt-accent-soft))
+  }
+  .rm-card.rm-card-hero .rmc-name{color:#ffe4c4}
+
+  /* Checklist inside the hero super-card · 5 inputs that compute the health score */
+  .rmc-list{
+    list-style:none;margin:6px 0 0;padding:0;
+    display:flex;flex-direction:column;gap:3px;
+  }
+  .rmc-list li{
+    font-size:10px;line-height:1.45;color:var(--fg-soft);
+    padding:2px 0;
+  }
+
+  /* Per-theme auto-pulse was REMOVED — the user explicitly asked for cards not
+     to auto-hover. The static box-shadow on .rm-theme above + the .rm-theme:hover
+     state are the only visual states. Inter-card connector pulses (animated flow
+     between themes) are kept — those are a separate user request. */
+
+  /* Reduced motion · keep the static look · disable the only remaining auto-animations
+     (milestone track flow + 📍 header icon pulse + connector dots) */
+  @media (prefers-reduced-motion: reduce){
+    .roadmap-track, .roadmap-track::after, .roadmap-header .rm-icon,
+    .rm-theme .rm-connector::before { animation:none }
+  }
+
+  /* studio tile · bigger icon + extra glow ring */
+  .tile.studio              { box-shadow:0 8px 28px rgba(255,98,0,.18), 0 6px 18px rgba(0,0,0,.42), inset 0 1px 0 rgba(255,255,255,.06) }
+  .tile.studio .icon        { font-size:36px;animation:glowPulse 2.4s ease-in-out infinite }
+  @keyframes glowPulse {
+    0%,100% { filter:drop-shadow(0 0 6px var(--accent)) }
+    50%     { filter:drop-shadow(0 0 18px var(--fiserv-amber)) }
+  }
+
+  /* Hero variant · single centered Pipeline-Studio tile in Tier 2 ·
+     larger, bolder, anchored in the middle of the tier with extra padding
+     so it carries the whole UI-layer story by itself. */
+  .tile.studio.studio-hero{
+    padding:18px 28px;
+    border-width:2px;
+    min-width:560px;max-width:680px;
+    border-color:rgba(255,98,0,.55);
+    background:linear-gradient(135deg, rgba(255,98,0,.08) 0%, rgba(15,28,46,.95) 70%);
+    box-shadow:0 14px 38px rgba(255,98,0,.28), 0 8px 22px rgba(0,0,0,.55), inset 0 1px 0 rgba(255,255,255,.10);
+  }
+  .tile.studio.studio-hero .icon{ font-size:46px }
+  .tile.studio.studio-hero .text b{ font-size:18px;letter-spacing:.4px }
+  .tile.studio.studio-hero .text small{ font-size:12.5px;line-height:1.55 }
+  @media (max-width:900px){
+    .tile.studio.studio-hero{ min-width:0;max-width:none;padding:14px 18px }
+    .tile.studio.studio-hero .icon{ font-size:36px }
+    .tile.studio.studio-hero .text b{ font-size:15px }
+  }
+
+  /* agent tiles · mono brand label + pulse */
+  .tile.agent .icon         { font-size:34px;animation:agentPulse 2.4s ease-in-out infinite }
+  @keyframes agentPulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.10)} }
+  .tile.agent .text b       { font-family:var(--mono);font-size:14px;letter-spacing:.6px;color:var(--accent) }
+  .tile.agent.eda     .icon{animation-delay:.35s}
+  .tile.agent.prep    .icon{animation-delay:.70s}
+  .tile.agent.doc     .icon{animation-delay:1.05s}
+  .tile.agent.lineage .icon{animation-delay:1.40s}
+
+
+  .arrow{width:50px;height:14px;color:var(--fg-dim);opacity:.85;flex:none;
+    filter:drop-shadow(0 0 4px rgba(255,255,255,.1))}
+  .arrow line{stroke:currentColor;stroke-width:1.5;stroke-linecap:round;
+    stroke-dasharray:4 5;animation:dashFlow 1.4s linear infinite}
+  .arrow path{stroke:currentColor;stroke-width:2;fill:none;stroke-linecap:round;stroke-linejoin:round}
+  @keyframes dashFlow { to { stroke-dashoffset:-9 } }
+
+  /* ─────────────────────────────────────────────────────────────────
+     PROBLEM PANEL · the "why this exists" section that sits ABOVE the
+     solution flow. High-contrast red/amber accent so it grabs attention
+     first; a divider+badge below transitions into the framework tiers.
+     ───────────────────────────────────────────────────────────────── */
+  .problem-panel{
+    position:relative;
+    margin:0 0 28px;
+    padding:22px 26px 26px;
+    border-radius:16px;
+    background:
+      radial-gradient(circle at 12% 0%, rgba(229,57,53,.18) 0%, transparent 55%),
+      radial-gradient(circle at 88% 100%, rgba(255,140,30,.16) 0%, transparent 55%),
+      linear-gradient(180deg, rgba(40,15,18,.95), rgba(22,12,16,.98));
+    border:1.5px solid rgba(229,57,53,.35);
+    box-shadow:0 12px 40px rgba(229,57,53,.18), inset 0 1px 0 rgba(255,255,255,.04);
+    overflow:hidden;
+    animation:problemIn .55s cubic-bezier(.2,.8,.4,1);
+  }
+  @keyframes problemIn { from { opacity:0; transform:translateY(-8px) } to { opacity:1; transform:none } }
+  /* Decorative warning stripe on the left edge */
+  .problem-panel::before{
+    content:'';position:absolute;top:0;left:0;bottom:0;width:5px;
+    background:linear-gradient(180deg, #ff5252, #ff8c1e, #ff5252);
+    box-shadow:0 0 14px rgba(255,82,82,.45);
+    animation:stripeBreathe 3.4s ease-in-out infinite;
+  }
+  @keyframes stripeBreathe { 0%,100%{opacity:.7} 50%{opacity:1} }
+
+  .problem-head{
+    display:flex;align-items:center;gap:14px;flex-wrap:wrap;
+    margin-bottom:18px;
+  }
+  .problem-badge{
+    display:inline-flex;align-items:center;gap:8px;
+    padding:6px 14px;border-radius:99px;
+    background:rgba(229,57,53,.18);
+    border:1px solid rgba(229,57,53,.50);
+    font-size:11px;font-weight:800;letter-spacing:2px;text-transform:uppercase;
+    color:#ff7a7a;
+    box-shadow:0 0 14px rgba(229,57,53,.30) inset;
+  }
+  .problem-badge::before{
+    content:'⚠';font-size:13px;animation:badgePulse 1.8s ease-in-out infinite;
+  }
+  @keyframes badgePulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.18)} }
+  .problem-title{
+    font-size:22px;font-weight:800;letter-spacing:.3px;
+    background:linear-gradient(90deg, #ff8b6b 0%, #ffb86b 50%, #ff8b6b 100%);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+    margin:0;
+  }
+  .problem-sub{
+    flex:1;min-width:200px;text-align:right;
+    font-size:12px;color:var(--fg-dim);line-height:1.5;
+    font-style:italic;
+  }
+
+  /* ─── PREMIUM PROBLEM CARDS · layered backgrounds + animated connectors ───
+     5-up grid with explicit gap that doubles as the "connector zone".
+     Each card has a glowing top accent line, an icon-in-halo badge, and
+     a subtle border-breathe animation (staggered so cards pulse in turn).
+     Cards 1-4 also have an ::after arrow + ::before pulse dot that animate
+     a cascading left-to-right flow showing how the problems compound. */
+  .problem-grid{
+    display:grid;
+    grid-template-columns:repeat(5, 1fr);
+    gap:28px;                       /* wider gap so connector lines have room */
+    position:relative;
+  }
+  .problem-card{
+    position:relative;
+    background:
+      radial-gradient(circle at 50% 0%, rgba(255,140,30,.18) 0%, transparent 45%),
+      linear-gradient(180deg, rgba(60,22,28,.92) 0%, rgba(26,14,18,.96) 60%, rgba(18,10,14,.98) 100%);
+    border:1px solid rgba(229,57,53,.40);
+    border-radius:13px;
+    padding:18px 14px 16px;
+    transition:transform .3s cubic-bezier(.2,.8,.4,1),
+               border-color .3s ease,
+               box-shadow .35s ease;
+    cursor:default;
+    box-shadow:
+      0 8px 22px rgba(0,0,0,.45),                       /* lift shadow */
+      inset 0 1px 0 rgba(255,255,255,.06),               /* top edge highlight */
+      inset 0 -22px 30px rgba(0,0,0,.25);                /* inner bottom depth */
+    animation:cardBreathe 4.5s ease-in-out infinite;
+    animation-delay:var(--bd, 0s);
+  }
+  /* Glowing top accent line · cycles brighter on each card in turn */
+  .problem-card::before{
+    content:'';position:absolute;top:0;left:14px;right:14px;height:2px;
+    background:linear-gradient(90deg, transparent, #ff8c1e 30%, #ff5252 50%, #ff8c1e 70%, transparent);
+    border-radius:0 0 2px 2px;
+    box-shadow:0 0 12px rgba(255,140,30,.55);
+    opacity:.65;
+    transition:opacity .3s ease;
+  }
+  .problem-card:hover{
+    transform:translateY(-5px) scale(1.015);
+    border-color:rgba(255,140,30,.85);
+    box-shadow:
+      0 18px 38px rgba(0,0,0,.55),
+      0 0 22px rgba(255,140,30,.35),
+      inset 0 1px 0 rgba(255,255,255,.10),
+      inset 0 -22px 30px rgba(0,0,0,.25);
+  }
+  .problem-card:hover::before{opacity:1}
+
+  /* Staggered breathing animation — each card pulses its border at a different phase */
+  @keyframes cardBreathe {
+    0%, 100% { box-shadow:0 8px 22px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.06), inset 0 -22px 30px rgba(0,0,0,.25), 0 0 0 0 rgba(255,140,30,0)    }
+    50%      { box-shadow:0 8px 22px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.06), inset 0 -22px 30px rgba(0,0,0,.25), 0 0 24px 2px rgba(255,140,30,.18) }
+  }
+
+  /* Per-card stagger offset so cards "wave" in sequence */
+  .problem-card:nth-child(1) { --bd: 0s    }
+  .problem-card:nth-child(2) { --bd: 0.9s  }
+  .problem-card:nth-child(3) { --bd: 1.8s  }
+  .problem-card:nth-child(4) { --bd: 2.7s  }
+  .problem-card:nth-child(5) { --bd: 3.6s  }
+
+  /* Icon badge — round halo behind the emoji */
+  .problem-card .pc-ico{
+    display:inline-flex;align-items:center;justify-content:center;
+    width:42px;height:42px;border-radius:50%;
+    font-size:22px;line-height:1;
+    margin-bottom:10px;
+    background:radial-gradient(circle at 35% 30%, rgba(255,170,80,.30) 0%, rgba(229,57,53,.18) 55%, rgba(20,10,14,.0) 80%);
+    border:1px solid rgba(255,140,30,.40);
+    box-shadow:
+      0 0 18px rgba(255,140,30,.30),
+      inset 0 1px 1px rgba(255,255,255,.18);
+    filter:drop-shadow(0 1px 2px rgba(0,0,0,.45));
+    transition:transform .3s ease, box-shadow .3s ease;
+  }
+  .problem-card:hover .pc-ico{
+    transform:scale(1.08) rotate(-3deg);
+    box-shadow:
+      0 0 28px rgba(255,140,30,.55),
+      inset 0 1px 1px rgba(255,255,255,.25);
+  }
+  .problem-card .pc-title{
+    font-size:13px;font-weight:800;color:#ffc079;
+    letter-spacing:.3px;margin-bottom:6px;
+    text-shadow:0 1px 2px rgba(0,0,0,.45);
+  }
+  .problem-card .pc-desc{
+    font-size:11px;line-height:1.5;color:var(--fg-soft);
+  }
+  .problem-card .pc-desc code{
+    background:rgba(255,140,30,.12);
+    border:1px solid rgba(255,140,30,.25);
+    padding:0 4px;border-radius:3px;
+    font-family:var(--mono);font-size:10.5px;color:#ffc079;
+  }
+
+  /* Tiny "alert dot" in the top-right corner of each card — gives a real warning vibe */
+  .problem-card .pc-dot{
+    position:absolute;top:12px;right:12px;
+    width:8px;height:8px;border-radius:50%;
+    background:#ff5252;
+    box-shadow:0 0 10px rgba(255,82,82,.70), 0 0 2px rgba(255,82,82,.95);
+    animation:dotPulse 1.8s ease-in-out infinite;
+    animation-delay:var(--bd, 0s);
+  }
+  @keyframes dotPulse {
+    0%, 100% { opacity:.65; transform:scale(1)   }
+    50%      { opacity:1;   transform:scale(1.35) }
+  }
+
+  /* ─── ANIMATED CONNECTORS between cards (cards 1-4 → next card) ───
+     Horizontal arrow line sits in the gap; a glowing pulse dot travels
+     left-to-right and the wave cascades through all 4 connectors so the
+     viewer's eye follows naturally across the panel. */
+  .problem-card:not(:last-child)::after{
+    content:'›';
+    position:absolute;
+    top:50%;right:-22px;
+    width:24px;height:24px;
+    transform:translateY(-50%);
+    display:flex;align-items:center;justify-content:center;
+    color:#ffb56b;font-size:24px;font-weight:800;line-height:0;
+    text-shadow:0 0 10px rgba(255,140,30,.55), 0 0 4px rgba(255,82,82,.40);
+    pointer-events:none;
+    z-index:2;
+  }
+  /* Dedicated connector element holds the animated line + pulse · cleaner than a third pseudo */
+  .problem-card .pc-connector{
+    position:absolute;
+    top:50%;right:-25px;
+    width:25px;height:2px;
+    transform:translateY(-50%);
+    background:linear-gradient(90deg, rgba(255,82,82,.45) 0%, rgba(255,140,30,.85) 60%, rgba(255,170,80,.40) 100%);
+    border-radius:1px;
+    box-shadow:0 0 8px rgba(255,140,30,.45);
+    pointer-events:none;
+    overflow:visible;
+  }
+  .problem-card:last-child .pc-connector{display:none}
+  .problem-card .pc-connector::before{
+    /* Travelling pulse dot — cascades through all 4 connectors */
+    content:'';position:absolute;top:50%;left:-2px;
+    width:9px;height:9px;border-radius:50%;
+    transform:translate(0,-50%);
+    background:radial-gradient(circle at 35% 35%, #ffe6a8 0%, #ffb56b 45%, #ff8c1e 100%);
+    box-shadow:0 0 14px rgba(255,170,80,.95), 0 0 4px #fff3c4 inset;
+    animation:connectorPulse 5s ease-in-out infinite;
+    animation-delay:var(--cp, 0s);
+    opacity:0;
+  }
+  /* Stagger pulse start so it cascades 1 → 2 → 3 → 4 */
+  .problem-card:nth-child(1) .pc-connector{ --cp: 0.0s  }
+  .problem-card:nth-child(2) .pc-connector{ --cp: 0.9s  }
+  .problem-card:nth-child(3) .pc-connector{ --cp: 1.8s  }
+  .problem-card:nth-child(4) .pc-connector{ --cp: 2.7s  }
+  @keyframes connectorPulse {
+    0%               { left:-2px;     opacity:0; transform:translate(0,-50%)   scale(.6) }
+    8%               { opacity:1;                                            }
+    12%, 18%         { transform:translate(0,-50%) scale(1.2);                          }
+    25%              { left:calc(100% - 7px); opacity:1; transform:translate(0,-50%) scale(1) }
+    32%, 100%        { left:calc(100% - 7px); opacity:0;                              }
+  }
+
+  /* Reduced motion · stop the pulse + breathe but keep the static glow */
+  @media (prefers-reduced-motion: reduce){
+    .problem-card                    { animation:none }
+    .problem-card .pc-dot            { animation:none; opacity:.85 }
+    .problem-card .pc-connector::before { animation:none; opacity:0 }
+  }
+
+  /* Hide horizontal connectors on wrapped layouts (cards stack on narrow screens) */
+  @media (max-width:1100px){
+    .problem-card::after,
+    .problem-card .pc-connector{display:none}
+  }
+
+  /* Transition divider — "Problem ↓ Solution" with chevron */
+  .solution-divider{
+    display:flex;align-items:center;gap:12px;
+    margin:0 0 24px;justify-content:center;
+    font-size:11px;font-weight:800;letter-spacing:2.5px;text-transform:uppercase;color:var(--fg-mute);
+  }
+  .solution-divider::before,.solution-divider::after{
+    content:'';flex:1;height:1px;
+    background:linear-gradient(90deg, transparent, rgba(255,255,255,.18), transparent);
+  }
+  .solution-divider .sd-pill{
+    padding:7px 16px;border-radius:99px;
+    background:linear-gradient(135deg, rgba(255,98,0,.22), rgba(255,179,0,.18));
+    border:1px solid rgba(255,98,0,.45);
+    color:var(--fiserv-orange);font-size:11px;
+    display:inline-flex;align-items:center;gap:8px;
+    box-shadow:0 0 22px rgba(255,98,0,.18) inset;
+  }
+  .solution-divider .sd-pill::before{ content:'✨' }
+
+  @media (max-width:1100px){
+    .problem-grid{grid-template-columns:repeat(3,1fr)}
+    .problem-sub{text-align:left}
+  }
+  @media (max-width:700px){
+    .problem-grid{grid-template-columns:repeat(2,1fr)}
+    .problem-title{font-size:18px}
+  }
+
+  .v-flow{display:flex;justify-content:center;align-items:center;height:0}
+  .v-flow .bolt{color:var(--fiserv-amber);font-size:18px;
+    animation:flowDown 1.6s linear infinite;opacity:.55}
+  @keyframes flowDown {
+    0%   { transform:translateY(-6px); opacity:0 }
+    40%  { opacity:.9 }
+    100% { transform:translateY(8px); opacity:0 }
+  }
+
+  /* ── value props ────────────────────────────────────────────── */
+  .props{display:flex;flex-wrap:wrap;justify-content:center;gap:12px;width:100%;
+    padding:0 4vw;animation:fadeUp 1s cubic-bezier(.2,.8,.4,1) both;animation-delay:1.1s}
+  @keyframes fadeUp { from { opacity:0; transform:translateY(20px) } to { opacity:1; transform:translateY(0) } }
+  .prop{display:inline-flex;align-items:center;gap:9px;padding:9px 17px;border-radius:99px;
+    background:linear-gradient(180deg,rgba(20,41,61,.65) 0%,rgba(11,28,45,.55) 100%);
+    border:1px solid var(--line);font-size:13px;font-weight:600;color:var(--fg)}
+  .prop .ico{font-size:18px;animation:propPulse 3.2s ease-in-out infinite}
+  @keyframes propPulse { 0%,100%{transform:scale(1) rotate(0)} 50%{transform:scale(1.18) rotate(8deg)} }
+  .prop.orange .ico{color:var(--fiserv-orange)}
+  .prop.teal   .ico{color:var(--fiserv-teal)}
+  .prop.green  .ico{color:var(--fiserv-green)}
+  .prop.amber  .ico{color:var(--fiserv-amber)}
+  .prop.purple .ico{color:var(--docs)}
+
+  footer{width:100%;display:flex;justify-content:space-between;align-items:center;
+    font-size:11.5px;color:var(--fg-dim);font-weight:600;letter-spacing:1.2px;text-transform:uppercase;
+    padding-top:14px}
+  footer .right{color:var(--fiserv-orange)}
+
+  @media (max-height:720px){
+    .tile{padding:11px 16px}
+    .tile .icon{font-size:24px}
+    .tile.studio .icon, .tile.agent .icon{font-size:28px}
+    .tier{gap:10px}
+    .tier-label{flex-basis:110px}
+    h1{font-size:clamp(32px,4.5vw,52px)}
+    .props{gap:8px}
+    .prop{font-size:12px;padding:7px 14px}
+    .arch{gap:2vh}
+  }
+</style>
+</head>
+<body>
+<!-- Backdrop · position:fixed · contains ONLY decorative layers (nebula + drift emoji)
+     so it never affects document height. The .slide content is now a sibling below
+     so body.scrollHeight reflects real content height and the page can actually scroll.
+     Earlier version had .slide inside .stage; because .stage was position:fixed (out
+     of flow), body only saw the fixed wrapper → scrollbar gutter showed but page
+     wouldn't actually scroll (looked like a "fixed line"). -->
+<div class="stage">
+  <div class="nebula"></div>
+
+  <!-- floating ambient emoji (decorative drift) -->
+  <div class="float-emoji" style="left:8%; bottom:-30px; animation-duration:24s">📊</div>
+  <div class="float-emoji" style="left:22%;bottom:-30px; animation-duration:32s; animation-delay:4s">⚡</div>
+  <div class="float-emoji" style="left:38%;bottom:-30px; animation-duration:28s; animation-delay:9s">🔄</div>
+  <div class="float-emoji" style="left:55%;bottom:-30px; animation-duration:35s; animation-delay:2s">💎</div>
+  <div class="float-emoji" style="left:72%;bottom:-30px; animation-duration:26s; animation-delay:14s">📈</div>
+  <div class="float-emoji" style="left:88%;bottom:-30px; animation-duration:30s; animation-delay:7s">🤖</div>
+</div>
+
+  <div class="slide">
+
+    <!-- top-right brandmark row -->
+    <div class="topbar">
+      <div class="brandmark"><span class="spark">✨</span> DCS · Data Factory</div>
+    </div>
+
+    <header>
+      <h1>
+        <!-- Fiserv-style brand mark · same SVG as studio header · also available at docs/architecture/fiserv-logo.svg -->
+        <span class="brandlogo" aria-label="DCS Data Factory logo">
+          <svg viewBox="0 0 64 64" width="64" height="64" xmlns="http://www.w3.org/2000/svg" role="img" aria-hidden="true">
+            <defs>
+              <linearGradient id="archlogo-grad" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%"   stop-color="#FF8a2a"/>
+                <stop offset="100%" stop-color="#E04500"/>
+              </linearGradient>
+              <radialGradient id="archlogo-glow" cx="50%" cy="50%" r="50%">
+                <stop offset="0%"   stop-color="#FFB070" stop-opacity="0.55"/>
+                <stop offset="100%" stop-color="#FFB070" stop-opacity="0"/>
+              </radialGradient>
+            </defs>
+            <circle cx="32" cy="32" r="30" fill="url(#archlogo-glow)" class="bl-aura"/>
+            <circle cx="32" cy="32" r="26" fill="url(#archlogo-grad)"/>
+            <path d="M40 18 q-9 0 -12 8 v6 h-6 v6 h6 v14 h7 v-14 h7 l1 -6 h-8 v-4 q1 -4 6 -4 h2 v-6 z" fill="#ffffff"/>
+            <circle cx="48" cy="50" r="3" fill="#ffffff"/>
+          </svg>
+        </span>
+        <span class="gradient">Data Factory Pipeline Studio</span>
+      </h1>
+      <div class="tagline">
+        Spec-driven<span class="pip">●</span>Multi-agent<span class="pip">●</span>Databricks-native lifecycle
+      </div>
+    </header>
+
+    <div class="arch">
+
+      <!-- ─── PROBLEM PANEL · "why this framework exists" ───
+           Sits ABOVE the solution flow to frame the conversation. Focused on
+           the actual day-to-day pain: hand-built job profiles · manual data
+           profiling · EDA repeated twice · runbooks written late · every
+           team reinventing the wheel. PII compliance is NOT in this list —
+           Fiserv Protector encrypts at-source so plain PII never lands.
+           Lineage is also out of scope for v1.0. -->
+      <section class="problem-panel" aria-labelledby="problemTitle">
+        <div class="problem-head">
+          <span class="problem-badge">Problem</span>
+          <h2 class="problem-title" id="problemTitle">Building a pipeline today = days of hand-edited JSON, repeated EDA, and late runbooks</h2>
+          <div class="problem-sub">Manual profiles · manual profiling · manual EDA · manual runbooks. Per pipeline. Per team. Per release.</div>
+        </div>
+        <div class="problem-grid">
+          <div class="problem-card">
+            <span class="pc-dot" aria-hidden="true"></span>
+            <span class="pc-ico">🧩</span>
+            <div class="pc-title">Complex job-profile onboarding</div>
+            <div class="pc-desc">Ingestion profile + Data Prep profile both authored by hand. Per pipeline. No template, no validation, no schema. New job = days of copy-paste from a neighbour's repo.</div>
+            <span class="pc-connector" aria-hidden="true"></span>
+          </div>
+          <div class="problem-card">
+            <span class="pc-dot" aria-hidden="true"></span>
+            <span class="pc-ico">🔍</span>
+            <div class="pc-title">Data profiling is manual guesswork</div>
+            <div class="pc-desc">Engineers eyeball the schema to decide which columns deserve profiling. Then hand-write the metrics JSON (null counts, distincts, drift thresholds). Every. Single. Time.</div>
+            <span class="pc-connector" aria-hidden="true"></span>
+          </div>
+          <div class="problem-card">
+            <span class="pc-dot" aria-hidden="true"></span>
+            <span class="pc-ico">📊</span>
+            <div class="pc-title">EDA done twice — late and inconsistent</div>
+            <div class="pc-desc">Once during standalone analysis, again at Data Prep time for data distributions. Same effort, two outputs, neither reused. No shared golden-record SQL across runs.</div>
+            <span class="pc-connector" aria-hidden="true"></span>
+          </div>
+          <div class="problem-card">
+            <span class="pc-dot" aria-hidden="true"></span>
+            <span class="pc-ico">📝</span>
+            <div class="pc-title">Runbooks are last-minute &amp; hand-typed</div>
+            <div class="pc-desc">Each team writes their own runbook from scratch · drifts the day code ships · on-call gets paged at 3am for a stage that isn't even in the doc. SLA / SOP / quarantine paths all stitched manually.</div>
+            <span class="pc-connector" aria-hidden="true"></span>
+          </div>
+          <div class="problem-card">
+            <span class="pc-dot" aria-hidden="true"></span>
+            <span class="pc-ico">🌀</span>
+            <div class="pc-title">Every team reinvents the wheel</div>
+            <div class="pc-desc">No shared spec format, naming convention, or output contract. 10 teams = 10 ways to chain stages. Onboarding a new engineer = 2 weeks of "how does <i>this</i> team do it?"</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Transition into the solution -->
+      <div class="solution-divider"><span class="sd-pill">The framework — one console solves all of the above</span></div>
+
+      <!-- TIER 1 · What the user gives the framework -->
+      <div class="tier t1">
+        <span class="tier-label"><span class="em">📝</span>Inputs<br><span style="font-weight:500;letter-spacing:.5px;color:var(--fg-dim);text-transform:none">what you provide</span></span>
+        <div class="tile input">
+          <span class="icon">📝</span>
+          <div class="text"><b>Pipeline Spec</b><small>plain English · form-driven</small></div>
+        </div>
+        <div class="tile input t2">
+          <span class="icon">🗂</span>
+          <div class="text"><b>Schema &amp; Columns</b><small>DDL · JSON · or SQL SELECT</small></div>
+        </div>
+        <div class="tile input t3">
+          <span class="icon">🔐</span>
+          <div class="text"><b>Source &amp; Target</b><small>catalog · schema · credentials</small></div>
+        </div>
+      </div>
+      <div class="v-flow"><span class="bolt">▼</span></div>
+
+      <!-- TIER 2 · Studio UI -->
+      <div class="tier t2">
+        <span class="tier-label"><span class="em">🎛</span>UI Layer</span>
+        <!-- Single centered tile · slightly larger than the surrounding tier tiles
+             to anchor the slide visually. Detail tiles for Dashboard / Lineage /
+             Team filter were folded back into "Pipeline Studio" itself; the
+             features still ship in the studio, just not enumerated here. -->
+        <div class="tile studio studio-hero">
+          <span class="icon">🎛</span>
+          <div class="text">
+            <b>Pipeline Studio</b>
+            <small>spec-driven · 6 tabs · sticky toolbar + collapsible sections · auto-launch into VS Code Copilot Chat</small>
+          </div>
+        </div>
+      </div>
+      <div class="v-flow"><span class="bolt">▼</span></div>
+
+      <!-- TIER 3 · AI agents · master-detail pattern
+           Static tiles on top · single shared details panel below updates on click.
+           No flip · no overlap · clean state model (one active card at a time). -->
+      <div class="tier t3-clean">
+        <span class="tier-label"><span class="em">🤖</span>AI Agents<br><span style="font-weight:500;letter-spacing:.5px;color:var(--fg-dim);text-transform:none">click any card</span></span>
+        <div class="t3-grid">
+          <div class="agent-row">
+
+            <button class="agent-card ing active" onclick="selectAgent(this)"
+                    data-stage="stage 1"
+                    data-reads="JDBC / ADLS source · source_db_schema · per-subdomain load_query OR query_path (UC volume)"
+                    data-writes="N Bronze Delta tables (1 per subdomain) + per-subdomain profile.json + top-level manifest.json chaining 2N stages"
+                    data-spec="specs/ingestion/&lt;name&gt;/spec.md"
+                    data-agent-file="agents/data_ingest.md">
+              <span class="stage-pill">stage 1</span>
+              <span class="icon">📥</span>
+              <b>data_ingest</b>
+              <small>sources → N Bronze tables (multi-subdomain)</small>
+            </button>
+
+            <button class="agent-card eda" onclick="selectAgent(this)"
+                    data-stage="stage 2"
+                    data-reads="Bronze tables · schema"
+                    data-writes="consumer_header_query.sql · ER diagram · profile"
+                    data-spec="specs/eda/&lt;name&gt;/spec.md"
+                    data-agent-file="agents/data_forge.md">
+              <span class="stage-pill">stage 2</span>
+              <span class="icon">🔬</span>
+              <b>data_forge</b>
+              <small>EDA + relationships</small>
+            </button>
+
+            <button class="agent-card prep" onclick="selectAgent(this)"
+                    data-stage="stage 3"
+                    data-reads="Bronze + EDA SQL"
+                    data-writes="Silver/Gold + KNL · Prep-Purp · Prep-Purp-header files"
+                    data-spec="specs/dataprep/&lt;name&gt;/spec.md"
+                    data-agent-file="agents/data_prep.md">
+              <span class="stage-pill">stage 3</span>
+              <span class="icon">⚙️</span>
+              <b>data_prep</b>
+              <small>standardize + Gold</small>
+            </button>
+
+            <button class="agent-card doc" onclick="selectAgent(this)"
+                    data-stage="stage 4"
+                    data-reads="manifest.json + configs/&lt;subdomain&gt;/*.json (ingestion fans out per subdomain) + spec.md"
+                    data-writes="ingestion_info.md · dataprep_info.md · runbook.md (per mode)"
+                    data-spec="specs/docs/&lt;name&gt;/spec.md"
+                    data-agent-file="agents/data_doc.md">
+              <span class="stage-pill">stage 4</span>
+              <span class="icon">📋</span>
+              <b>data_doc</b>
+              <small>3 modes</small>
+            </button>
+
+            <button class="agent-card lineage" onclick="selectAgent(this)"
+                    data-stage="stage 5 · cross-cutting"
+                    data-reads="every spec + manifest in the project"
+                    data-writes="lineage.md · lineage_diagram.mmd · column_index.md · impact_&lt;col&gt;.md"
+                    data-spec="specs/lineage/&lt;scope&gt;/spec.md"
+                    data-agent-file="agents/data_lineage.md">
+              <span class="cross-badge">⊥ cross-cutting</span>
+              <span class="stage-pill cross">stage 5</span>
+              <span class="icon">🗺</span>
+              <b>data_lineage</b>
+              <small>whole-project DAG</small>
+            </button>
+
+          </div>
+
+          <!-- Master-detail · shared panel populated by selectAgent() on click -->
+          <div class="agent-details" id="agentDetails">
+            <div class="ad-head">
+              <span class="ad-icon">📥</span>
+              <span class="ad-title">data_ingest</span>
+              <span class="ad-stage">stage 1</span>
+            </div>
+            <!-- Animated 4-step runtime flow · READ → SPEC → AGENT → WRITE
+                 Each step = yellow CIRCLE (icon + number) above a RECTANGLE
+                 listing the step's responsibilities as bullets.
+                 selectAgent() (below) re-renders this block on every card click. -->
+            <div class="agent-flow" id="agentFlow">
+              <div class="flow-step fn-read">
+                <div class="flow-circle"><span class="circle-num">1</span><span class="circle-ico">📖</span></div>
+                <div class="flow-step-label">Read</div>
+                <div class="flow-rect"><ul>
+                  <li>JDBC / ADLS source</li>
+                  <li>source_db_schema (BANK.DBO or raw/path/prefix)</li>
+                  <li>per-subdomain load_query OR query_path (UC volume)</li>
+                </ul></div>
+              </div>
+              <div class="flow-arrow"><div class="flow-pulse"></div></div>
+              <div class="flow-step fn-spec">
+                <div class="flow-circle"><span class="circle-num">2</span><span class="circle-ico">📄</span></div>
+                <div class="flow-step-label">Spec</div>
+                <div class="flow-rect"><ul>
+                  <li>specs/ingestion/&lt;name&gt;/spec.md</li>
+                  <li>user-authored · the contract</li>
+                  <li>generated by Studio form</li>
+                </ul></div>
+              </div>
+              <div class="flow-arrow"><div class="flow-pulse"></div></div>
+              <div class="flow-step fn-agent">
+                <div class="flow-circle"><span class="circle-num">3</span><span class="circle-ico">🤖</span></div>
+                <div class="flow-step-label">Agent</div>
+                <div class="flow-rect"><ul>
+                  <li>agents/data_ingest.md</li>
+                  <li>consults .github/skills/ingestion/ skills</li>
+                  <li>applies .github/rules/ (38 rules · 10 categories)</li>
+                </ul></div>
+              </div>
+              <div class="flow-arrow"><div class="flow-pulse"></div></div>
+              <div class="flow-step fn-write">
+                <div class="flow-circle"><span class="circle-num">4</span><span class="circle-ico">📦</span></div>
+                <div class="flow-step-label">Write</div>
+                <div class="flow-rect"><ul>
+                  <li>N Bronze Delta tables (1 per subdomain)</li>
+                  <li>per-subdomain profile.json</li>
+                  <li>top-level manifest.json chaining 2N stages</li>
+                </ul></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Animated lifecycle strip · single flowing line + numbered tick marks -->
+          <div class="lifecycle-strip" aria-hidden="true">
+            <div class="strip-line"></div>
+            <div class="strip-pulse"></div>
+            <div class="strip-tick" style="left:10%">1</div>
+            <div class="strip-tick" style="left:30%">2</div>
+            <div class="strip-tick" style="left:50%">3</div>
+            <div class="strip-tick" style="left:70%">4</div>
+            <div class="strip-tick cross" style="left:90%">5</div>
+          </div>
+        </div>
+      </div>
+      <div class="v-flow"><span class="bolt">▼</span></div>
+
+      <!-- TIER 4 · Concrete artifacts the framework writes to disk · 5 tiles
+           with UNIFORM sizing (equal width via flex:1, equal min-height, body
+           text aligned top). No "solves" chips — the deliverable titles speak
+           for themselves and the prior chip layout caused uneven tile heights. -->
+      <div class="tier t4 t4-uniform">
+        <span class="tier-label"><span class="em">📦</span>Deliverables<br><span style="font-weight:500;letter-spacing:.5px;color:var(--fg-dim);text-transform:none">what we generate</span></span>
+
+        <div class="tile deliv cfg">
+          <span class="icon">📦</span>
+          <div class="text">
+            <b>One-form Job Profiles</b>
+            <small>ingestion + data-prep configs · per-subdomain · schema-checked · zero hand-edit</small>
+          </div>
+        </div>
+
+        <div class="tile deliv prof">
+          <span class="icon">🔬</span>
+          <div class="text">
+            <b>Auto-tuned Profiling</b>
+            <small>column classifier picks targets · auto-derives expectations · drift · freshness · 38-rule catalog</small>
+          </div>
+        </div>
+
+        <div class="tile deliv eda">
+          <span class="icon">🧬</span>
+          <div class="text">
+            <b>Reusable EDA + Golden Record</b>
+            <small>consumer_header_query.sql bridges EDA → Data Prep · ER diagram · profile once, reuse downstream</small>
+          </div>
+        </div>
+
+        <div class="tile deliv doc">
+          <span class="icon">📚</span>
+          <div class="text">
+            <b>Auto-generated Docs + Runbooks</b>
+            <small>ingestion_info · dataprep_info · 16-section runbook · emitted from manifest · always in sync</small>
+          </div>
+        </div>
+
+        <div class="tile deliv std">
+          <span class="icon">🧭</span>
+          <div class="text">
+            <b>Shared Spec Format &amp; Catalog</b>
+            <small>one spec template · one 38-rule catalog · one output-path contract · every team, every pipeline</small>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════════
+         ROADMAP · v1.1+ next phase · 5 themes × 2 items = 10 items
+         Forward-looking violet/cyan palette to differentiate from the
+         red Problem panel and orange Solution flow above. Animated
+         milestone track + per-theme staggered breathing glow.
+         ═══════════════════════════════════════════════════════════════ -->
+    <section class="roadmap-section" id="roadmap">
+      <div class="roadmap-header">
+        <span class="rm-icon">📍</span>
+        <div>
+          <div class="rm-title">Roadmap · what's next</div>
+          <div class="rm-sub">Next phase · v1.1 → v2.0</div>
+        </div>
+        <span class="rm-badge">8 items · 4 themes</span>
+      </div>
+
+      <div class="roadmap-track" aria-hidden="true"></div>
+
+      <div class="roadmap-themes">
+
+        <!-- THEME 1 · Foundation (violet) -->
+        <div class="rm-theme t-1">
+          <div class="rmt-head">
+            <span class="rmt-num">1</span>
+            <span class="rmt-title">Foundation</span>
+          </div>
+          <div class="rmt-body">
+            <div class="rm-card">
+              <div class="rmc-row">
+                <span class="rmc-ico">🎨</span>
+                <span class="rmc-name">Enhance UI Look &amp; Feel</span>
+                <span class="rmc-pill next">Next</span>
+              </div>
+              <div class="rmc-desc">Visual polish across all 6 tabs · richer micro-interactions · accessibility pass · dark/light theme toggle</div>
+            </div>
+            <div class="rm-card">
+              <div class="rmc-row">
+                <span class="rmc-ico">📚</span>
+                <span class="rmc-name">Richer Framework Context</span>
+                <span class="rmc-pill next">Next</span>
+              </div>
+              <div class="rmc-desc">In-studio help drawer · inline glossary · per-tab tutorials · video walkthroughs embedded</div>
+            </div>
+          </div>
+          <span class="rm-connector" aria-hidden="true"></span>
+        </div>
+
+        <!-- THEME 2 · Agentic AI (cyan/teal) -->
+        <div class="rm-theme t-2">
+          <div class="rmt-head">
+            <span class="rmt-num">2</span>
+            <span class="rmt-title">Agentic AI</span>
+          </div>
+          <div class="rmt-body">
+            <div class="rm-card">
+              <div class="rmc-row">
+                <span class="rmc-ico">🤖</span>
+                <span class="rmc-name">Multi-agent + Databricks model endpoints</span>
+                <span class="rmc-pill soon">Soon</span>
+              </div>
+              <div class="rmc-desc">Route specific agents to Databricks-hosted Opus / Llama / Mistral endpoints for cost &amp; latency control · per-phase model picker</div>
+            </div>
+            <div class="rm-card">
+              <div class="rmc-row">
+                <span class="rmc-ico">🧠</span>
+                <span class="rmc-name">Agent Memory for deterministic output</span>
+                <span class="rmc-pill soon">Soon</span>
+              </div>
+              <div class="rmc-desc">Per-pipeline memory store · captures past decisions · agents reference prior runs · regenerations stay byte-identical</div>
+            </div>
+          </div>
+          <span class="rm-connector" aria-hidden="true"></span>
+        </div>
+
+        <!-- THEME 3 · Integrations (green) -->
+        <div class="rm-theme t-3">
+          <div class="rmt-head">
+            <span class="rmt-num">3</span>
+            <span class="rmt-title">Integrations</span>
+          </div>
+          <div class="rmt-body">
+            <div class="rm-card">
+              <div class="rmc-row">
+                <span class="rmc-ico">✅</span>
+                <span class="rmc-name">KNL Validation Integration</span>
+                <span class="rmc-pill soon">Soon</span>
+              </div>
+              <div class="rmc-desc">Pipe data_prep conversion output through KNL · validation results fold into the manifest · auto-quarantine on failure</div>
+            </div>
+            <div class="rm-card">
+              <div class="rmc-row">
+                <span class="rmc-ico">📖</span>
+                <span class="rmc-name">Confluence Integration for Runbook</span>
+                <span class="rmc-pill soon">Soon</span>
+              </div>
+              <div class="rmc-desc">data_doc runbook auto-publishes to Confluence space · diff-aware updates · per-team page hierarchy</div>
+            </div>
+          </div>
+          <span class="rm-connector" aria-hidden="true"></span>
+        </div>
+
+        <!-- THEME 4 · Operations (orange) · merged from old Observability + Handover.
+             ONE super-card for Pipeline Dashboarding & Health Score that rolls up:
+             alert/monitoring setup status · runbook setup · data setup completion ·
+             continuous profiling rollup. Companion card is the single AppOps Handover. -->
+        <div class="rm-theme t-4">
+          <div class="rmt-head">
+            <span class="rmt-num">4</span>
+            <span class="rmt-title">Operations</span>
+          </div>
+          <div class="rmt-body">
+            <div class="rm-card rm-card-hero">
+              <div class="rmc-row">
+                <span class="rmc-ico">📊</span>
+                <span class="rmc-name">Pipeline Dashboarding &amp; Health Score</span>
+                <span class="rmc-pill next">Next</span>
+              </div>
+              <div class="rmc-desc">
+                One operational view across <b>every pipeline</b> · live health score 0–100 derived from a single checklist:
+                <ul class="rmc-list">
+                  <li>✅ Alert / monitoring setup configured</li>
+                  <li>📖 Runbook present + in sync with current manifest</li>
+                  <li>📦 Data setup complete (ingestion + prep profiling done)</li>
+                  <li>🔍 Continuous data profiling fresh (last run &lt; 24h)</li>
+                  <li>🚨 No active drift / freshness / row-count alerts</li>
+                </ul>
+                Each ticked box adds points · score colour-codes the card (green ≥80 · amber 60–79 · red &lt;60).
+              </div>
+            </div>
+            <div class="rm-card">
+              <div class="rmc-row">
+                <span class="rmc-ico">🔄</span>
+                <span class="rmc-name">AppOps Handover Package</span>
+                <span class="rmc-pill future">Future</span>
+              </div>
+              <div class="rmc-desc">One-click on-call package · runbook + SOP + escalation matrix + access checklist + signed handoff record · only enabled when health score ≥ 80</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- value props -->
+    <div class="props">
+      <div class="prop orange"><span class="ico">⚡</span>Spec → production in minutes, not weeks</div>
+      <div class="prop teal"><span class="ico">🤖</span>5 specialized agents · 19 pluggable skills</div>
+      <div class="prop green"><span class="ico">🛡</span>38-rule catalog · auto-derived expectations · drift · freshness · quarantine</div>
+      <div class="prop amber"><span class="ico">🎯</span>Production-ready · Databricks-native · zero install</div>
+      <div class="prop purple"><span class="ico">🗺</span>Self-documenting · lineage-aware · governance-first</div>
+    </div>
+
+    <footer>
+      <span>📑 Architecture · v1.0 · 5 agents + 1 orchestrator · 19 skills · 38-rule catalog · multi-subdomain ingestion · Home Dashboard · sticky toolbar + collapsible sections · 📍 v1.1+ roadmap below</span>
+      <span class="right">DCS Data Factory · Pipeline Studio</span>
+    </footer>
+
+  </div>   <!-- end .slide · sibling of .stage so it's in normal document flow -->
+
+<script>
+// ── Bullet helper · split a "·"-separated data-* attr into <li> items.
+// Falls back to a single bullet if no separator. Trims · escapes HTML.
+function _bullets(raw, extra){
+  const parts = String(raw || '')
+    .split(/\s+·\s+|\s+\|\s+/)
+    .map(s => s.trim())
+    .filter(Boolean);
+  const all = parts.concat(extra || []);
+  return all.map(p => '<li>' + _esc(p) + '</li>').join('');
+}
+function _esc(s){
+  return String(s).replace(/[&<>]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+}
+
+// Per-agent phase (so we can render the right skill-folder bullet under AGENT step)
+function _phaseFromCard(card){
+  if (card.classList.contains('ing'))     return 'ingestion';
+  if (card.classList.contains('eda'))     return 'eda';
+  if (card.classList.contains('prep'))    return 'dataprep';
+  if (card.classList.contains('doc'))     return 'docs';
+  if (card.classList.contains('lineage')) return 'lineage';
+  return 'custom';
+}
+
+// Master-detail handler · click any agent card → update the shared details panel.
+// Re-renders the 4-step animated flow (Read → Spec → Agent → Write) from data-* attrs.
+function selectAgent(card){
+  document.querySelectorAll('.agent-card').forEach(c => c.classList.remove('active'));
+  card.classList.add('active');
+
+  const panel = document.getElementById('agentDetails');
+  const icon  = card.querySelector('.icon').textContent;
+  const name  = card.querySelector('b').textContent;
+  const stage = card.dataset.stage || 'cross-cutting';
+  const isLineage = card.classList.contains('lineage');
+  const phase  = _phaseFromCard(card);
+
+  panel.classList.toggle('lineage-active', isLineage);
+  panel.innerHTML = `
+    <div class="ad-head">
+      <span class="ad-icon">${_esc(icon)}</span>
+      <span class="ad-title">${_esc(name)}</span>
+      <span class="ad-stage">${_esc(stage)}</span>
+    </div>
+    <div class="agent-flow" id="agentFlow">
+
+      <div class="flow-step fn-read">
+        <div class="flow-circle"><span class="circle-num">1</span><span class="circle-ico">📖</span></div>
+        <div class="flow-step-label">Read</div>
+        <div class="flow-rect"><ul>${_bullets(card.dataset.reads)}</ul></div>
+      </div>
+
+      <div class="flow-arrow"><div class="flow-pulse"></div></div>
+
+      <div class="flow-step fn-spec">
+        <div class="flow-circle"><span class="circle-num">2</span><span class="circle-ico">📄</span></div>
+        <div class="flow-step-label">Spec</div>
+        <div class="flow-rect"><ul>${_bullets(card.dataset.spec, ['user-authored · the contract', 'generated by Studio form'])}</ul></div>
+      </div>
+
+      <div class="flow-arrow"><div class="flow-pulse"></div></div>
+
+      <div class="flow-step fn-agent">
+        <div class="flow-circle"><span class="circle-num">3</span><span class="circle-ico">🤖</span></div>
+        <div class="flow-step-label">Agent</div>
+        <div class="flow-rect"><ul>${_bullets(
+          card.dataset.agentFile,
+          [
+            'consults .github/skills/' + phase + '/ skills',
+            'applies .github/rules/ (38 rules · 10 categories)'
+          ]
+        )}</ul></div>
+      </div>
+
+      <div class="flow-arrow"><div class="flow-pulse"></div></div>
+
+      <div class="flow-step fn-write">
+        <div class="flow-circle"><span class="circle-num">4</span><span class="circle-ico">📦</span></div>
+        <div class="flow-step-label">Write</div>
+        <div class="flow-rect"><ul>${_bullets(card.dataset.writes)}</ul></div>
+      </div>
+
+    </div>
+  `;
+  startFlowSequence();
+}
+
+// Apply the "active" class to every step so all 4 boxes (Read · Spec · Agent · Write)
+// stay lit simultaneously — auto-cycling is intentionally OFF so a presenter can talk
+// about Data Ingestion (or any single step) without the highlight moving away.
+// Connector pulse dots (CSS-only) keep traveling between cards to show flow direction;
+// only the JS-driven card-to-card spotlight rotation is disabled.
+let _flowTimer = null;   // kept for back-compat; never used to schedule rotation now
+function startFlowSequence(){
+  if (_flowTimer) { clearInterval(_flowTimer); _flowTimer = null; }   // belt-and-braces
+  const nodes = ['fn-read','fn-spec','fn-agent','fn-write']
+    .map(c => document.querySelector('#agentFlow .' + c))
+    .filter(Boolean);
+  if (!nodes.length) return;
+  // Static-lit mode: every step stays in its bright "active" treatment.
+  nodes.forEach(n => n.classList.add('is-active'));
+}
+
+// Kick off the sequence on first page load (initial card is data_ingest)
+document.addEventListener('DOMContentLoaded', startFlowSequence);
+</script>
+</body>
+</html>
