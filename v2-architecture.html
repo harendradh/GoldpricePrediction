@@ -1,0 +1,1040 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>DCS Data Factory Pipeline Studio — v2.0 Architecture</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+  :root{
+    --bg-deep:#04101c; --bg:#06121f; --bg-surface:#0b1c2d; --bg-raised:#14293d;
+    --fg:#f0f4f8; --fg-dim:#7d8fa3; --fg-soft:#b0bcc8; --fg-mute:#5a6f85;
+    --line:#1f3a57;
+    --fiserv-orange:#FF6200; --fiserv-orange-soft:#FF8533;
+    --fiserv-orange-deep:#e04500;
+    --fiserv-amber:#FFB300;
+    --fiserv-teal:#0E9BAD; --fiserv-green:#00A572; --docs:#a978ff;
+    --dbx-red:#FF3621;   /* Databricks brand */
+    --dbx-blue:#1B3139;  /* Databricks deep */
+    --react-cyan:#61DAFB;
+    --font:'Inter','Segoe UI',-apple-system,Roboto,Helvetica,Arial,sans-serif;
+    --mono:'JetBrains Mono',Consolas,'SF Mono',Menlo,monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+
+  /* Scrollable shell · same approach as v1 architecture · forced orange gutter. */
+  html,body{min-height:100%;width:100%;background:var(--bg-deep);color:var(--fg);
+    font-family:var(--font);-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;
+    font-feature-settings:"cv02","cv03","cv04","cv11"}
+  html{scroll-behavior:smooth;overflow-y:scroll}
+  body{overflow-x:hidden;overflow-y:scroll}
+
+  body::-webkit-scrollbar,
+  html::-webkit-scrollbar           { width:16px; background:rgba(11,28,45,.92); -webkit-appearance:none }
+  body::-webkit-scrollbar-track,
+  html::-webkit-scrollbar-track     {
+    background:linear-gradient(180deg, rgba(11,28,45,.92), rgba(20,40,60,.92));
+    border-left:1px solid rgba(255,255,255,.06);
+  }
+  body::-webkit-scrollbar-thumb,
+  html::-webkit-scrollbar-thumb     {
+    background:linear-gradient(180deg, #ff8c1e 0%, var(--fiserv-orange) 50%, var(--fiserv-orange-deep) 100%);
+    border-radius:8px;border:2px solid rgba(11,28,45,.92);
+    box-shadow:0 0 10px rgba(255,98,0,.55) inset, 0 0 6px rgba(255,140,30,.40);
+    min-height:80px;
+  }
+  body::-webkit-scrollbar-thumb:hover,
+  html::-webkit-scrollbar-thumb:hover{
+    background:linear-gradient(180deg, #ffa040 0%, #ff8c1e 50%, var(--fiserv-orange) 100%);
+    box-shadow:0 0 14px rgba(255,140,30,.75) inset, 0 0 10px rgba(255,140,30,.55);
+  }
+  html{scrollbar-width:auto;scrollbar-color:var(--fiserv-orange) rgba(11,28,45,.92)}
+
+  /* ── ambient backdrop ────────────────────────────────────────── */
+  .stage{
+    position:fixed;inset:0;overflow:hidden;
+    z-index:0;pointer-events:none;
+    background:
+      radial-gradient(1400px 800px at 15% -5%,  rgba(255,98,0,.14),  transparent 55%),
+      radial-gradient(1200px 700px at 92% 8%,   rgba(27,49,57,.30),  transparent 55%),
+      radial-gradient(1100px 600px at 50% 110%, rgba(0,165,114,.09), transparent 60%),
+      radial-gradient(1000px 600px at 85% 95%,  rgba(169,120,255,.09),transparent 60%),
+      var(--bg);
+  }
+  .stage::before{
+    content:"";position:absolute;inset:0;pointer-events:none;
+    background-image:radial-gradient(rgba(255,255,255,.025) 1px, transparent 1px);
+    background-size:32px 32px;animation:driftDots 60s linear infinite
+  }
+  @keyframes driftDots { to { background-position:-320px 320px } }
+
+  /* ── slide ───────────────────────────────────────────────────── */
+  .slide{position:relative;width:100%;min-height:100vh;
+    display:flex;flex-direction:column;align-items:center;justify-content:flex-start;
+    padding:3.2vh 4vw 6vh;z-index:1;max-width:1600px;margin:0 auto}
+
+  /* ── header ──────────────────────────────────────────────────── */
+  header{text-align:center;width:100%;animation:fadeDown .9s cubic-bezier(.2,.8,.4,1) both}
+  @keyframes fadeDown { from { opacity:0; transform:translateY(-20px) } to { opacity:1; transform:translateY(0) } }
+
+  .topbar{
+    width:100%;display:flex;justify-content:space-between;align-items:center;
+    min-height:28px;margin-bottom:10px;animation:fadeDown .9s cubic-bezier(.2,.8,.4,1) both
+  }
+  .breadcrumb{
+    font-size:11.5px;letter-spacing:1.2px;color:var(--fg-dim);font-weight:600
+  }
+  .breadcrumb a{color:var(--fiserv-orange);text-decoration:none;border-bottom:1px dotted rgba(255,98,0,.4)}
+  .breadcrumb a:hover{color:var(--fiserv-orange-soft)}
+  .brandmark{
+    display:inline-flex;align-items:center;gap:7px;
+    padding:5px 14px 5px 12px;border-radius:99px;
+    background:linear-gradient(135deg,var(--fiserv-orange) 0%,#CC4E00 100%);
+    color:#fff;font-size:10.5px;font-weight:800;letter-spacing:1.4px;text-transform:uppercase;
+    box-shadow:0 4px 14px rgba(255,98,0,.42), inset 0 1px 0 rgba(255,255,255,.18)
+  }
+  .brandmark .spark{animation:sparkle 2.2s ease-in-out infinite;display:inline-block;font-size:12px}
+  @keyframes sparkle { 0%,100% {opacity:.7; transform:rotate(0)} 50% {opacity:1;transform:rotate(15deg) scale(1.15)} }
+
+  h1{font-size:clamp(34px,4.6vw,56px);font-weight:800;letter-spacing:-.5px;line-height:1.05;
+    display:inline-flex;align-items:center;gap:18px;justify-content:center;
+    text-shadow:0 4px 40px rgba(255,98,0,.25)}
+  h1 .gradient{
+    background:linear-gradient(90deg,var(--fiserv-orange) 0%, var(--fiserv-amber) 35%, var(--fiserv-teal) 65%, var(--docs) 100%);
+    background-size:200% 100%;
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+    animation:gradientShift 6s ease infinite
+  }
+  @keyframes gradientShift { 0%,100% {background-position:0% 50%} 50% {background-position:100% 50%} }
+
+  .version-pill{
+    display:inline-block;margin-left:6px;
+    padding:6px 14px;border-radius:99px;
+    background:linear-gradient(135deg, rgba(255,98,0,.18), rgba(255,179,0,.10));
+    border:1px solid rgba(255,98,0,.45);
+    font-size:14px;font-weight:800;letter-spacing:1.2px;color:#ffba70;
+    text-shadow:0 0 8px rgba(255,98,0,.4);
+    box-shadow:0 0 16px rgba(255,98,0,.18), inset 0 1px 0 rgba(255,255,255,.06);
+  }
+
+  .tagline{margin-top:10px;color:var(--fg-soft);font-size:clamp(13px,1.3vw,17px);
+    letter-spacing:1.3px;text-transform:uppercase;font-weight:600}
+  .tagline .pip{color:var(--fiserv-orange);margin:0 12px;font-size:.6em;vertical-align:middle}
+
+  /* ── Common section header ───────────────────────────────────── */
+  .sec-head{
+    width:100%;display:flex;align-items:baseline;gap:14px;margin:38px 0 16px;
+    animation:fadeDown .9s cubic-bezier(.2,.8,.4,1) both
+  }
+  .sec-num{
+    font-family:var(--mono);font-size:14px;font-weight:800;
+    background:linear-gradient(135deg, var(--fiserv-orange), var(--fiserv-amber));
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+    letter-spacing:1.4px;
+  }
+  .sec-title{
+    font-size:clamp(20px,2vw,26px);font-weight:800;letter-spacing:-.2px;color:var(--fg);
+  }
+  .sec-title .pin{color:var(--fiserv-orange);margin-right:8px}
+  .sec-tail{
+    flex:1;height:1px;align-self:center;
+    background:linear-gradient(90deg, rgba(255,98,0,.45), rgba(255,98,0,0));
+  }
+
+  /* ── v1 → v2 comparison bar ──────────────────────────────────── */
+  .compare{
+    width:100%;display:grid;grid-template-columns: 1fr 60px 1fr;gap:14px;
+    margin-top:6px;
+  }
+  .col-box{
+    position:relative;border-radius:12px;padding:16px 18px 14px;
+    background:linear-gradient(180deg,rgba(18,34,52,.88) 0%,rgba(10,20,32,.94) 100%);
+    border:1px solid var(--line);
+    box-shadow:0 6px 18px rgba(0,0,0,.42), inset 0 1px 0 rgba(255,255,255,.05);
+  }
+  .col-box.v1{ --accent:#7d8fa3; }
+  .col-box.v2{ --accent:var(--fiserv-orange); }
+  .col-box::before{
+    content:"";position:absolute;top:0;left:0;right:0;height:3px;
+    background:var(--accent);border-radius:12px 12px 0 0;
+    box-shadow:0 0 12px var(--accent);opacity:.9
+  }
+  .col-head{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+  .col-head .badge{
+    font-size:10px;font-weight:800;letter-spacing:1.4px;text-transform:uppercase;
+    padding:4px 10px;border-radius:99px;color:var(--accent);
+    background:rgba(255,255,255,.04);border:1px solid var(--accent);
+  }
+  .col-head .name{font-size:13px;font-weight:700;letter-spacing:.4px;color:var(--fg)}
+  .col-list{list-style:none;display:flex;flex-direction:column;gap:7px}
+  .col-list li{
+    font-size:12px;line-height:1.5;color:var(--fg-soft);font-family:var(--mono);
+    position:relative;padding-left:18px;
+  }
+  .col-list li::before{
+    content:'▸';position:absolute;left:2px;top:-1px;
+    color:var(--accent);font-weight:800;
+  }
+  .col-arrow{
+    display:flex;align-items:center;justify-content:center;
+    font-size:38px;color:var(--fiserv-orange);
+    filter:drop-shadow(0 0 12px rgba(255,98,0,.6));
+    animation:arrowPulse 2.4s ease-in-out infinite;
+  }
+  @keyframes arrowPulse {
+    0%,100% { transform:translateX(0);   opacity:.7 }
+    50%     { transform:translateX(4px); opacity:1  }
+  }
+
+  /* ── Layers (the heart of v2) ────────────────────────────────── */
+  .layers{width:100%;display:flex;flex-direction:column;gap:18px;margin-top:6px}
+  .layer{
+    position:relative;display:grid;grid-template-columns: 200px 1fr; gap:18px;
+    animation:tierIn .9s cubic-bezier(.2,.8,.4,1) both
+  }
+  .layer.l1{animation-delay:.15s}
+  .layer.l2{animation-delay:.30s}
+  .layer.l3{animation-delay:.45s}
+  .layer.l4{animation-delay:.60s}
+  .layer.l5{animation-delay:.75s}
+  @keyframes tierIn { from { opacity:0; transform:translateY(20px) } to { opacity:1; transform:translateY(0) } }
+
+  .layer-label{
+    position:relative;border-radius:12px;
+    padding:18px 14px;display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:6px;
+    background:linear-gradient(160deg, rgba(255,98,0,.12), rgba(255,98,0,.02));
+    border:1px solid rgba(255,98,0,.30);
+    box-shadow:0 6px 18px rgba(0,0,0,.30), inset 0 1px 0 rgba(255,255,255,.04);
+  }
+  .layer-label .ll-num{
+    font-family:var(--mono);font-size:11px;font-weight:800;
+    color:var(--fiserv-orange);letter-spacing:1.6px;
+  }
+  .layer-label .ll-name{
+    font-size:15px;font-weight:800;color:var(--fg);letter-spacing:.2px;line-height:1.2
+  }
+  .layer-label .ll-tech{
+    font-family:var(--mono);font-size:10.5px;color:var(--fg-dim);
+    word-break:break-word;line-height:1.4
+  }
+
+  /* layer-specific accent */
+  .layer.l1 .layer-label{ background:linear-gradient(160deg, rgba(97,218,251,.14), rgba(97,218,251,.02));
+    border-color:rgba(97,218,251,.40) }
+  .layer.l1 .layer-label .ll-num{ color:var(--react-cyan) }
+
+  .layer.l2 .layer-label{ background:linear-gradient(160deg, rgba(255,98,0,.14), rgba(255,98,0,.02));
+    border-color:rgba(255,98,0,.45) }
+  .layer.l2 .layer-label .ll-num{ color:var(--fiserv-orange) }
+
+  .layer.l3 .layer-label{ background:linear-gradient(160deg, rgba(169,120,255,.14), rgba(169,120,255,.02));
+    border-color:rgba(169,120,255,.45) }
+  .layer.l3 .layer-label .ll-num{ color:var(--docs) }
+
+  .layer.l4 .layer-label{ background:linear-gradient(160deg, rgba(255,54,33,.14), rgba(255,54,33,.02));
+    border-color:rgba(255,54,33,.45) }
+  .layer.l4 .layer-label .ll-num{ color:var(--dbx-red) }
+
+  .layer.l5 .layer-label{ background:linear-gradient(160deg, rgba(0,165,114,.14), rgba(0,165,114,.02));
+    border-color:rgba(0,165,114,.45) }
+  .layer.l5 .layer-label .ll-num{ color:var(--fiserv-green) }
+
+  .layer-body{
+    position:relative;display:grid;gap:12px;
+    grid-template-columns:repeat(auto-fit, minmax(230px, 1fr));
+  }
+
+  .lbox{
+    position:relative;border-radius:10px;padding:12px 14px 12px;
+    background:linear-gradient(180deg,rgba(18,34,52,.88) 0%,rgba(10,20,32,.94) 100%);
+    border:1px solid var(--line);
+    box-shadow:0 6px 18px rgba(0,0,0,.42), inset 0 1px 0 rgba(255,255,255,.05);
+    backdrop-filter:blur(8px);
+    transition:transform .35s cubic-bezier(.2,.8,.4,1), box-shadow .35s, border-color .25s;
+    --accent: var(--fiserv-orange);
+  }
+  .lbox::before{
+    content:"";position:absolute;top:0;left:0;right:0;height:3px;
+    background:var(--accent);border-radius:10px 10px 0 0;
+    box-shadow:0 0 10px var(--accent);opacity:.85;
+  }
+  .lbox:hover{transform:translateY(-3px);border-color:var(--accent);
+    box-shadow:0 12px 32px rgba(0,0,0,.48), inset 0 1px 0 rgba(255,255,255,.06)}
+  .lbox .lb-head{display:flex;align-items:center;gap:9px;margin-bottom:6px}
+  .lbox .lb-icon{font-size:22px;color:var(--accent);filter:drop-shadow(0 0 6px var(--accent))}
+  .lbox .lb-name{font-size:13px;font-weight:800;color:var(--fg);letter-spacing:.2px;line-height:1.2;flex:1}
+  .lbox .lb-pill{
+    font-family:var(--mono);font-size:9px;font-weight:800;letter-spacing:1px;
+    padding:2px 7px;border-radius:99px;text-transform:uppercase;
+    color:var(--accent);border:1px solid var(--accent);background:rgba(255,255,255,.04)
+  }
+  .lbox .lb-desc{font-size:11.5px;line-height:1.5;color:var(--fg-soft)}
+  .lbox .lb-tech{
+    margin-top:7px;font-family:var(--mono);font-size:10.5px;color:var(--fg-dim);
+    border-top:1px dashed rgba(255,255,255,.07);padding-top:6px;line-height:1.5
+  }
+
+  /* layer-specific lbox accents */
+  .layer.l1 .lbox{ --accent:var(--react-cyan) }
+  .layer.l2 .lbox{ --accent:var(--fiserv-orange) }
+  .layer.l3 .lbox{ --accent:var(--docs) }
+  .layer.l4 .lbox{ --accent:var(--dbx-red) }
+  .layer.l5 .lbox{ --accent:var(--fiserv-green) }
+
+  /* Vertical flow connector between layers · animated pulse */
+  .layer-connector{
+    position:relative;width:200px;height:32px;margin:0 0 -4px 0;
+    align-self:flex-start;
+  }
+  .layer-connector::before{
+    content:'';position:absolute;left:50%;top:0;bottom:0;width:2px;transform:translateX(-50%);
+    background:linear-gradient(180deg, rgba(255,98,0,.45), rgba(255,98,0,.05));
+  }
+  .layer-connector::after{
+    content:'⌄';position:absolute;left:50%;bottom:-4px;transform:translateX(-50%);
+    color:var(--fiserv-orange);font-size:18px;line-height:0;font-weight:800;
+    text-shadow:0 0 6px rgba(255,98,0,.4)
+  }
+  .layer-connector .conn-pulse{
+    position:absolute;left:50%;top:0;transform:translateX(-50%);
+    width:10px;height:10px;border-radius:50%;
+    background:#ffe98c;
+    box-shadow:0 0 12px rgba(255,213,79,.95), 0 0 4px #fff8d0 inset;
+    animation:connTravel 3.4s ease-in-out infinite;opacity:0
+  }
+  @keyframes connTravel {
+    0%   { top:-4px; opacity:0 }
+    10%  { top:0;    opacity:1 }
+    90%  { top:100%; opacity:1 }
+    100% { top:110%; opacity:0 }
+  }
+
+  /* ── Memory tier diagram ─────────────────────────────────────── */
+  .memory-wrap{
+    width:100%;display:grid;grid-template-columns: repeat(3, 1fr);gap:16px;
+    align-items:stretch;
+  }
+  .mem-card{
+    position:relative;border-radius:12px;padding:18px 18px 16px;
+    background:linear-gradient(180deg,rgba(18,34,52,.92) 0%,rgba(10,20,32,.96) 100%);
+    border:1px solid var(--line);
+    box-shadow:0 6px 18px rgba(0,0,0,.42), inset 0 1px 0 rgba(255,255,255,.05);
+    transition:transform .25s ease, box-shadow .25s;
+    --accent:var(--fiserv-orange);
+  }
+  .mem-card.t1{ --accent:var(--react-cyan) }
+  .mem-card.t2{ --accent:var(--fiserv-orange) }
+  .mem-card.t3{ --accent:var(--docs) }
+  .mem-card::before{
+    content:"";position:absolute;top:0;left:0;right:0;height:4px;
+    background:var(--accent);border-radius:12px 12px 0 0;
+    box-shadow:0 0 14px var(--accent);
+  }
+  .mem-card:hover{transform:translateY(-3px);border-color:var(--accent)}
+  .mem-card .mem-head{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+  .mem-card .mem-tier{
+    font-family:var(--mono);font-size:11px;font-weight:800;letter-spacing:1.6px;
+    color:var(--accent);text-transform:uppercase;
+  }
+  .mem-card .mem-name{font-size:15px;font-weight:800;color:var(--fg);letter-spacing:.2px}
+  .mem-card .mem-icon{
+    font-size:32px;line-height:1;color:var(--accent);
+    filter:drop-shadow(0 4px 10px var(--accent));margin-bottom:6px
+  }
+  .mem-card .mem-desc{font-size:12px;line-height:1.5;color:var(--fg-soft);margin-bottom:10px}
+  .mem-card .mem-meta{
+    font-family:var(--mono);font-size:10.5px;color:var(--fg-dim);line-height:1.6;
+    border-top:1px dashed rgba(255,255,255,.07);padding-top:8px
+  }
+  .mem-card .mem-meta b{color:var(--fg-soft);font-weight:600}
+
+  /* ── Storage detail · UC catalog explorer ────────────────────── */
+  .uc-grid{
+    width:100%;display:grid;grid-template-columns: 1fr 1fr;gap:16px;align-items:stretch
+  }
+  .uc-box{
+    position:relative;border-radius:12px;padding:16px 18px 14px;
+    background:linear-gradient(180deg,rgba(18,34,52,.92) 0%,rgba(10,20,32,.96) 100%);
+    border:1px solid var(--line);
+    box-shadow:0 6px 18px rgba(0,0,0,.42), inset 0 1px 0 rgba(255,255,255,.05);
+    --accent:var(--dbx-red);
+  }
+  .uc-box.tables{ --accent:var(--fiserv-orange) }
+  .uc-box.volume{ --accent:var(--fiserv-teal) }
+  .uc-box.vs{ --accent:var(--docs) }
+  .uc-box.security{ --accent:var(--fiserv-green) }
+  .uc-box::before{
+    content:"";position:absolute;top:0;left:0;right:0;height:3px;
+    background:var(--accent);border-radius:12px 12px 0 0;
+    box-shadow:0 0 12px var(--accent);
+  }
+  .uc-box .uc-head{
+    display:flex;align-items:center;gap:10px;margin-bottom:10px;
+    padding-bottom:8px;border-bottom:1px solid rgba(255,255,255,.07)
+  }
+  .uc-box .uc-icon{font-size:24px;color:var(--accent);filter:drop-shadow(0 0 8px var(--accent))}
+  .uc-box .uc-name{font-size:14px;font-weight:800;letter-spacing:.3px;color:var(--fg);flex:1}
+  .uc-box .uc-pill{
+    font-family:var(--mono);font-size:9.5px;font-weight:800;letter-spacing:1px;
+    padding:3px 8px;border-radius:99px;text-transform:uppercase;
+    color:var(--accent);border:1px solid var(--accent);background:rgba(255,255,255,.04)
+  }
+  .uc-tree{
+    list-style:none;font-family:var(--mono);font-size:11.5px;line-height:1.7;
+    color:var(--fg-soft)
+  }
+  .uc-tree li{position:relative;padding-left:18px}
+  .uc-tree li::before{
+    content:'├';position:absolute;left:2px;top:0;color:var(--accent);font-size:11px
+  }
+  .uc-tree li.last::before{content:'└'}
+  .uc-tree li .lbl{color:var(--fg);font-weight:700}
+  .uc-tree li .meta{color:var(--fg-mute);font-size:10.5px;margin-left:6px}
+  .uc-tree ul{
+    list-style:none;font-size:10.8px;
+    margin-left:14px;border-left:1px dashed rgba(255,255,255,.10);
+    padding-left:10px;padding-top:4px
+  }
+  .uc-tree ul li::before{content:'·';font-size:14px}
+
+  /* ── Migration timeline ─────────────────────────────────────── */
+  .timeline{
+    position:relative;width:100%;display:flex;flex-direction:column;gap:18px;
+  }
+  .tl-rail{
+    position:absolute;left:90px;top:0;bottom:0;width:3px;
+    background:linear-gradient(180deg,
+      var(--fiserv-orange) 0%,
+      var(--fiserv-amber) 25%,
+      var(--fiserv-teal) 50%,
+      var(--docs) 75%,
+      var(--fiserv-green) 100%);
+    border-radius:2px;opacity:.55
+  }
+  .tl-rail::after{
+    content:'';position:absolute;left:50%;top:0;width:16px;height:16px;
+    transform:translate(-50%, -2px);
+    background:radial-gradient(circle,#fff 0%,rgba(255,255,255,0) 70%);
+    animation:railFlow 6s linear infinite;border-radius:50%
+  }
+  @keyframes railFlow {
+    0%   { top:0;    opacity:0 }
+    8%   {           opacity:1 }
+    92%  {           opacity:1 }
+    100% { top:100%; opacity:0 }
+  }
+  .tl-row{
+    position:relative;display:grid;grid-template-columns: 90px 1fr;gap:24px;align-items:flex-start;
+    animation:tierIn .9s cubic-bezier(.2,.8,.4,1) both
+  }
+  .tl-row.p0{animation-delay:.05s}
+  .tl-row.p1{animation-delay:.15s}
+  .tl-row.p2{animation-delay:.25s}
+  .tl-row.p3{animation-delay:.35s}
+  .tl-row.p4{animation-delay:.45s}
+  .tl-row.p5{animation-delay:.55s}
+  .tl-row.p6{animation-delay:.65s}
+
+  .tl-tag{
+    position:relative;text-align:right;padding-right:14px;
+    font-family:var(--mono);font-size:11.5px;font-weight:800;letter-spacing:1px;
+    color:var(--fg-dim);padding-top:14px;
+  }
+  .tl-tag .tl-num{
+    display:inline-block;
+    background:linear-gradient(135deg, var(--fiserv-orange), var(--fiserv-amber));
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+    font-size:16px;font-weight:900;
+  }
+  .tl-tag .tl-dot{
+    position:absolute;right:-10px;top:13px;
+    width:18px;height:18px;border-radius:50%;
+    background:radial-gradient(circle at 30% 30%, var(--fiserv-amber), var(--fiserv-orange));
+    border:3px solid var(--bg-deep);
+    box-shadow:0 0 0 2px rgba(255,98,0,.5), 0 0 16px rgba(255,98,0,.6);
+    z-index:2
+  }
+  .tl-card{
+    position:relative;border-radius:10px;padding:14px 18px 14px;
+    background:linear-gradient(180deg,rgba(18,34,52,.88) 0%,rgba(10,20,32,.94) 100%);
+    border:1px solid var(--line);
+    box-shadow:0 6px 18px rgba(0,0,0,.42), inset 0 1px 0 rgba(255,255,255,.05);
+    transition:transform .25s ease, border-color .25s;
+    --accent:var(--fiserv-orange)
+  }
+  .tl-card:hover{transform:translateX(4px);border-color:var(--accent)}
+  .tl-card::before{
+    content:'';position:absolute;left:0;top:0;bottom:0;width:3px;
+    background:var(--accent);border-radius:10px 0 0 10px;
+    box-shadow:0 0 10px var(--accent)
+  }
+  .tl-card .tl-title{
+    font-size:15px;font-weight:800;color:var(--fg);letter-spacing:.2px;
+    display:flex;align-items:center;gap:10px
+  }
+  .tl-card .tl-dur{
+    font-family:var(--mono);font-size:10.5px;font-weight:700;letter-spacing:1.1px;
+    color:var(--accent);background:rgba(255,255,255,.04);
+    padding:3px 9px;border-radius:99px;border:1px solid var(--accent);text-transform:uppercase
+  }
+  .tl-card .tl-body{margin-top:8px;font-size:12px;line-height:1.6;color:var(--fg-soft)}
+  .tl-card .tl-exit{
+    margin-top:8px;font-family:var(--mono);font-size:11px;color:var(--fiserv-green);
+    background:rgba(0,165,114,.08);padding:7px 10px;border-radius:6px;
+    border-left:2px solid var(--fiserv-green);line-height:1.5
+  }
+  .tl-card .tl-exit b{color:var(--fiserv-green);font-weight:700;letter-spacing:.4px}
+
+  /* color the per-phase accent */
+  .tl-row.p0 .tl-card{--accent:#7d8fa3}
+  .tl-row.p1 .tl-card{--accent:var(--react-cyan)}
+  .tl-row.p2 .tl-card{--accent:var(--fiserv-orange)}
+  .tl-row.p3 .tl-card{--accent:var(--docs)}
+  .tl-row.p4 .tl-card{--accent:var(--dbx-red)}
+  .tl-row.p5 .tl-card{--accent:var(--fiserv-teal)}
+  .tl-row.p6 .tl-card{--accent:var(--fiserv-green)}
+
+  /* ── value strip ─────────────────────────────────────────────── */
+  .props{
+    margin-top:34px;display:flex;flex-wrap:wrap;gap:12px;justify-content:center
+  }
+  .prop{
+    display:inline-flex;align-items:center;gap:8px;
+    padding:8px 14px;border-radius:99px;
+    background:linear-gradient(135deg, rgba(255,98,0,.10), rgba(0,0,0,.4));
+    border:1px solid rgba(255,98,0,.30);
+    color:var(--fg-soft);font-size:11.5px;font-weight:600;letter-spacing:.4px;
+    box-shadow:0 4px 12px rgba(0,0,0,.3)
+  }
+  .prop.cyan{   background:linear-gradient(135deg, rgba(97,218,251,.10), rgba(0,0,0,.4)); border-color:rgba(97,218,251,.30)}
+  .prop.purple{ background:linear-gradient(135deg, rgba(169,120,255,.10), rgba(0,0,0,.4)); border-color:rgba(169,120,255,.30)}
+  .prop.red{    background:linear-gradient(135deg, rgba(255,54,33,.10), rgba(0,0,0,.4)); border-color:rgba(255,54,33,.30)}
+  .prop.green{  background:linear-gradient(135deg, rgba(0,165,114,.10), rgba(0,0,0,.4)); border-color:rgba(0,165,114,.30)}
+  .prop .ico{font-size:14px}
+
+  /* ── footer ─────────────────────────────────────────────────── */
+  footer{
+    width:100%;margin-top:38px;padding:16px 20px 0;
+    display:flex;justify-content:space-between;align-items:center;
+    border-top:1px solid var(--line);
+    font-size:11px;letter-spacing:.5px;color:var(--fg-dim);
+    flex-wrap:wrap;gap:8px
+  }
+  footer .right{font-family:var(--mono);color:var(--fiserv-orange);font-weight:700}
+
+  /* ── responsive ─────────────────────────────────────────────── */
+  @media (max-width: 1100px){
+    .compare{ grid-template-columns:1fr; gap:8px }
+    .col-arrow{ transform:rotate(90deg); margin:6px auto }
+    .layer{ grid-template-columns:1fr }
+    .layer-label{ flex-direction:row; gap:14px; align-items:center }
+    .layer-connector{ display:none }
+    .memory-wrap{ grid-template-columns:1fr }
+    .uc-grid{ grid-template-columns:1fr }
+    .tl-rail{ left:60px }
+    .tl-row{ grid-template-columns: 60px 1fr; gap:18px }
+  }
+  @media (max-width: 680px){
+    .tl-rail{ left:32px }
+    .tl-row{ grid-template-columns: 32px 1fr; gap:12px }
+    .tl-tag{ font-size:10px }
+  }
+
+  /* ── prefers-reduced-motion ─────────────────────────────────── */
+  @media (prefers-reduced-motion: reduce){
+    *,*::before,*::after{ animation:none !important; transition:none !important }
+  }
+</style>
+</head>
+<body>
+
+<!-- ambient backdrop (fixed · always-on) -->
+<div class="stage" aria-hidden="true"></div>
+
+<!-- scrollable content -->
+<div class="slide">
+
+  <!-- top bar · breadcrumb back to v1 + brand pill -->
+  <div class="topbar">
+    <div class="breadcrumb">
+      <a href="data-factory-pipeline-architecture.html">← v1.0 Architecture</a>
+      &nbsp;·&nbsp;
+      <a href="v2-REQUIREMENTS.md">📑 v2.0 SRS</a>
+    </div>
+    <span class="brandmark"><span class="spark">✦</span> Fiserv · DCS Data Factory</span>
+  </div>
+
+  <!-- header -->
+  <header>
+    <h1>
+      <span class="gradient">DCS Data Factory Pipeline Studio</span>
+      <span class="version-pill">v2.0</span>
+    </h1>
+    <div class="tagline">
+      React frontend
+      <span class="pip">●</span>
+      Databricks-native agent runtime
+      <span class="pip">●</span>
+      Persistent agent memory
+      <span class="pip">●</span>
+      Conversational + form-driven authoring
+    </div>
+  </header>
+
+  <!-- ── 1 · what changed from v1 → v2 ─────────────────────── -->
+  <div class="sec-head">
+    <span class="sec-num">01</span>
+    <span class="sec-title"><span class="pin">▸</span>What changes from v1.0 → v2.0</span>
+    <span class="sec-tail"></span>
+  </div>
+
+  <div class="compare">
+    <div class="col-box v1">
+      <div class="col-head">
+        <span class="badge">v1.0</span>
+        <span class="name">Today · laptop scale</span>
+      </div>
+      <ul class="col-list">
+        <li>Single-HTML browser tool · File System Access API</li>
+        <li>GitHub Copilot Chat (clipboard hand-off)</li>
+        <li>localStorage drafts · per-user only</li>
+        <li>No agent memory · re-runs non-deterministic</li>
+        <li>No audit trail · no RBAC</li>
+        <li>Form-driven only · no conversational UI</li>
+        <li>Manual VS Code launch via vscode:// protocol</li>
+      </ul>
+    </div>
+
+    <div class="col-arrow" aria-hidden="true">⟶</div>
+
+    <div class="col-box v2">
+      <div class="col-head">
+        <span class="badge">v2.0</span>
+        <span class="name">Tomorrow · org scale</span>
+      </div>
+      <ul class="col-list">
+        <li>React SPA · TanStack Router · shadcn/ui</li>
+        <li>FastAPI on Databricks App · workspace-scoped auth</li>
+        <li>Unity Catalog Delta tables · multi-user state</li>
+        <li>3-tier agent memory · byte-identical regeneration</li>
+        <li>Immutable audit log · UC-grant RBAC</li>
+        <li>Right-rail chatbot · SSE streaming · form ↔ chat</li>
+        <li>Databricks model serving · Claude family + fallbacks</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ── 2 · the five layers ────────────────────────────────── -->
+  <div class="sec-head">
+    <span class="sec-num">02</span>
+    <span class="sec-title"><span class="pin">▸</span>The five layers</span>
+    <span class="sec-tail"></span>
+  </div>
+
+  <div class="layers">
+
+    <!-- L1 · Frontend -->
+    <div class="layer l1">
+      <div class="layer-label">
+        <span class="ll-num">L1 · FRONTEND</span>
+        <span class="ll-name">React SPA</span>
+        <span class="ll-tech">Vite · TanStack Router · Zustand · react-hook-form · Zod · shadcn/ui</span>
+      </div>
+      <div class="layer-body">
+        <div class="lbox">
+          <div class="lb-head"><span class="lb-icon">🏠</span><span class="lb-name">Home Dashboard</span><span class="lb-pill">SPA</span></div>
+          <div class="lb-desc">KPI tiles · pipeline-health table · activity feed · governance progress · quick lineage entry-point</div>
+          <div class="lb-tech">routes: /portfolio · /lineage</div>
+        </div>
+        <div class="lbox">
+          <div class="lb-head"><span class="lb-icon">📝</span><span class="lb-name">Form pages</span><span class="lb-pill">SPA</span></div>
+          <div class="lb-desc">Ingestion · EDA · Data Prep · Document · Onboard · same 6 surfaces as v1.0 · sticky toolbar + collapsible sections</div>
+          <div class="lb-tech">routes: /ingest/:id · /eda/:id · /dataprep/:id · /docs/:id · /onboard</div>
+        </div>
+        <div class="lbox">
+          <div class="lb-head"><span class="lb-icon">💬</span><span class="lb-name">Chatbot panel</span><span class="lb-pill">SSE</span></div>
+          <div class="lb-desc">Right rail · 360px default · resizable · pipeline-scoped history · slash commands · chat → form fill</div>
+          <div class="lb-tech">EventSource('/api/v1/chat/{id}/turn')</div>
+        </div>
+        <div class="lbox">
+          <div class="lb-head"><span class="lb-icon">👁</span><span class="lb-name">Review panel</span><span class="lb-pill">SPA</span></div>
+          <div class="lb-desc">Recursive output viewer · syntax-highlighted JSON · rendered Markdown · click any artifact</div>
+          <div class="lb-tech">Monaco editor · react-markdown</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="layer-connector"><span class="conn-pulse"></span></div>
+
+    <!-- L2 · Backend API -->
+    <div class="layer l2">
+      <div class="layer-label">
+        <span class="ll-num">L2 · BACKEND API</span>
+        <span class="ll-name">FastAPI on Databricks App</span>
+        <span class="ll-tech">Python 3.12 · Pydantic v2 · OAuth via Databricks SSO · auto-mounted UC Volumes</span>
+      </div>
+      <div class="layer-body">
+        <div class="lbox">
+          <div class="lb-head"><span class="lb-icon">🛣</span><span class="lb-name">REST surface</span><span class="lb-pill">~25 routes</span></div>
+          <div class="lb-desc">Pipelines · Specs · Runs · Chat · Catalog · Dashboard · Onboard · Lineage · Memory</div>
+          <div class="lb-tech">OpenAPI at /docs</div>
+        </div>
+        <div class="lbox">
+          <div class="lb-head"><span class="lb-icon">📡</span><span class="lb-name">SSE streaming</span><span class="lb-pill">push</span></div>
+          <div class="lb-desc">Streams agent tokens + phase progress to React · cancellable mid-run · first token &lt; 3s</div>
+          <div class="lb-tech">/runs/{id}/stream · /chat/{id}/turn</div>
+        </div>
+        <div class="lbox">
+          <div class="lb-head"><span class="lb-icon">🛡</span><span class="lb-name">Authz + audit</span><span class="lb-pill">RBAC</span></div>
+          <div class="lb-desc">Per-team RBAC via UC group lookup · immutable audit row on every state-change · CDC enabled</div>
+          <div class="lb-tech">audit_log Delta + Change Data Feed</div>
+        </div>
+        <div class="lbox">
+          <div class="lb-head"><span class="lb-icon">⚙</span><span class="lb-name">Background jobs</span><span class="lb-pill">DBX Workflows</span></div>
+          <div class="lb-desc">Nightly health-score Workflow · continuous profiling triggers · Lakehouse Monitoring on health_scores</div>
+          <div class="lb-tech">Databricks Workflows REST</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="layer-connector"><span class="conn-pulse"></span></div>
+
+    <!-- L3 · Agent runtime -->
+    <div class="layer l3">
+      <div class="layer-label">
+        <span class="ll-num">L3 · AGENT RUNTIME</span>
+        <span class="ll-name">LangGraph + Claude on Databricks</span>
+        <span class="ll-tech">6 agents · 19 skills · 38-rule catalog · memory-aware tool-use loop</span>
+      </div>
+      <div class="layer-body">
+        <div class="lbox">
+          <div class="lb-head"><span class="lb-icon">🤖</span><span class="lb-name">Orchestrator</span><span class="lb-pill">LangGraph</span></div>
+          <div class="lb-desc">Loads agent prompts from UC Volume · YAML frontmatter drives model + fallback chain · streams tokens</div>
+          <div class="lb-tech">data_pipeline_master + 5 phase agents</div>
+        </div>
+        <div class="lbox">
+          <div class="lb-head"><span class="lb-icon">🧰</span><span class="lb-name">Skill tools</span><span class="lb-pill">19 tools</span></div>
+          <div class="lb-desc">Every skill (bronze_load · profiler · extraction · …) exposed as a Python tool the agent can call</div>
+          <div class="lb-tech">tool name = skill ID (e.g. ingestion.bronze_load)</div>
+        </div>
+        <div class="lbox">
+          <div class="lb-head"><span class="lb-icon">🎯</span><span class="lb-name">Model serving</span><span class="lb-pill">DBX</span></div>
+          <div class="lb-desc">Calls databricks-claude-3-7-sonnet · automatic failover to claude-3.5-sonnet → gpt-4o → claude-3.5-haiku</div>
+          <div class="lb-tech">/serving-endpoints/databricks-claude-*/invocations</div>
+        </div>
+        <div class="lbox">
+          <div class="lb-head"><span class="lb-icon">📋</span><span class="lb-name">Rule catalog</span><span class="lb-pill">38 rules</span></div>
+          <div class="lb-desc">10 categories from .github/rules/categories/*.yaml · cached 60s · auto-derives expectations</div>
+          <div class="lb-tech">loaded from /Volumes/df_studio/rules/</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="layer-connector"><span class="conn-pulse"></span></div>
+
+    <!-- L4 · Storage -->
+    <div class="layer l4">
+      <div class="layer-label">
+        <span class="ll-num">L4 · STORAGE</span>
+        <span class="ll-name">Unity Catalog · single source of truth</span>
+        <span class="ll-tech">10 Delta tables · 1 Volume · 4 Vector Search indexes · governed by UC grants</span>
+      </div>
+      <div class="layer-body">
+        <div class="lbox">
+          <div class="lb-head"><span class="lb-icon">🗄</span><span class="lb-name">Delta tables</span><span class="lb-pill">df_studio.metadata</span></div>
+          <div class="lb-desc">pipelines · spec_versions · spec_overrides · runs · agent_memory · health_scores · chat_turns · audit_log · teams · custom_pipeline_types</div>
+          <div class="lb-tech">CDC enabled on pipelines + audit_log</div>
+        </div>
+        <div class="lbox">
+          <div class="lb-head"><span class="lb-icon">📦</span><span class="lb-name">UC Volume</span><span class="lb-pill">managed</span></div>
+          <div class="lb-desc">/Volumes/df_studio/metadata/files/ · agents/ skills/ rules/ specs/ output/ templates/ query_libraries/</div>
+          <div class="lb-tech">single mount point · auto-attached to Databricks App</div>
+        </div>
+        <div class="lbox">
+          <div class="lb-head"><span class="lb-icon">🔍</span><span class="lb-name">Vector Search</span><span class="lb-pill">4 indexes</span></div>
+          <div class="lb-desc">skill_corpus · past_specs · rule_catalog · runbook_history — agent retrieves context before composing</div>
+          <div class="lb-tech">embed: databricks-gte-large-en</div>
+        </div>
+        <div class="lbox">
+          <div class="lb-head"><span class="lb-icon">🔒</span><span class="lb-name">RBAC</span><span class="lb-pill">UC grants</span></div>
+          <div class="lb-desc">Per-team SELECT/MODIFY on Delta + Volume · no app-level permission logic · UC enforces everything</div>
+          <div class="lb-tech">GRANT SELECT ON SCHEMA … TO team_*</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="layer-connector"><span class="conn-pulse"></span></div>
+
+    <!-- L5 · Observability -->
+    <div class="layer l5">
+      <div class="layer-label">
+        <span class="ll-num">L5 · OBSERVABILITY</span>
+        <span class="ll-name">Workflows · alerts · dashboards</span>
+        <span class="ll-tech">Health scoring · drift detection · Slack + PagerDuty hooks · Confluence sync</span>
+      </div>
+      <div class="layer-body">
+        <div class="lbox">
+          <div class="lb-head"><span class="lb-icon">📊</span><span class="lb-name">Health scoring</span><span class="lb-pill">nightly</span></div>
+          <div class="lb-desc">0-100 score · 5 inputs: alerts ok · runbook ok · data setup ok · profiling fresh · no active alerts</div>
+          <div class="lb-tech">computed by Databricks Workflow</div>
+        </div>
+        <div class="lbox">
+          <div class="lb-head"><span class="lb-icon">📈</span><span class="lb-name">Lakehouse Monitoring</span><span class="lb-pill">native</span></div>
+          <div class="lb-desc">Auto-anomaly detection on health_scores Delta · alerts on score drop below 60</div>
+          <div class="lb-tech">df_studio.metadata.health_scores</div>
+        </div>
+        <div class="lbox">
+          <div class="lb-head"><span class="lb-icon">🔔</span><span class="lb-name">Alert hooks</span><span class="lb-pill">webhooks</span></div>
+          <div class="lb-desc">Slack + PagerDuty on drift detected · freshness violation · health-score regression · run failure</div>
+          <div class="lb-tech">webhook tokens in DBX Secrets</div>
+        </div>
+        <div class="lbox">
+          <div class="lb-head"><span class="lb-icon">📖</span><span class="lb-name">Confluence sync</span><span class="lb-pill">SHOULD</span></div>
+          <div class="lb-desc">data_doc runbook auto-publishes · diff-aware updates · per-team space hierarchy</div>
+          <div class="lb-tech">confluence_page_id stored in agent_memory</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ── 3 · agent memory diagram ──────────────────────────── -->
+  <div class="sec-head">
+    <span class="sec-num">03</span>
+    <span class="sec-title"><span class="pin">▸</span>3-tier agent memory · the determinism engine</span>
+    <span class="sec-tail"></span>
+  </div>
+
+  <div class="memory-wrap">
+    <div class="mem-card t1">
+      <div class="mem-icon">💭</div>
+      <div class="mem-head">
+        <span class="mem-tier">Tier 1</span>
+      </div>
+      <div class="mem-name" style="margin-bottom:8px">Conversational · ephemeral</div>
+      <div class="mem-desc">Current chat session · last 10 turns · tool-call intermediate state · vanishes on page reload</div>
+      <div class="mem-meta">
+        <b>Backed by:</b> Redis or in-process dict<br>
+        <b>TTL:</b> chat session lifetime<br>
+        <b>Scope:</b> per (user, pipeline)
+      </div>
+    </div>
+
+    <div class="mem-card t2">
+      <div class="mem-icon">🧠</div>
+      <div class="mem-head">
+        <span class="mem-tier">Tier 2 ★</span>
+      </div>
+      <div class="mem-name" style="margin-bottom:8px">Pipeline-scoped · durable</div>
+      <div class="mem-desc">Prior decisions per pipeline · loaded as a "## Prior decisions" section before every new run · the reason a re-run produces byte-identical output</div>
+      <div class="mem-meta">
+        <b>Backed by:</b> df_studio.metadata.agent_memory (Delta)<br>
+        <b>Keys:</b> defined per agent in YAML frontmatter<br>
+        <b>Scope:</b> per (pipeline_id, agent, memory_key)<br>
+        <b>User-visible:</b> yes — editable in UI
+      </div>
+    </div>
+
+    <div class="mem-card t3">
+      <div class="mem-icon">🌐</div>
+      <div class="mem-head">
+        <span class="mem-tier">Tier 3</span>
+      </div>
+      <div class="mem-name" style="margin-bottom:8px">Org-wide patterns · learned</div>
+      <div class="mem-desc">Vector search over all past pipelines · agent retrieves top-3 similar specs as background context · never enforced, only advisory</div>
+      <div class="mem-meta">
+        <b>Backed by:</b> df_studio.vs.past_specs<br>
+        <b>Embed:</b> databricks-gte-large-en<br>
+        <b>Scope:</b> workspace-wide (RBAC-filtered)<br>
+        <b>User-control:</b> "use patterns" toggle per pipeline
+      </div>
+    </div>
+  </div>
+
+  <!-- ── 4 · UC storage explorer ──────────────────────────── -->
+  <div class="sec-head">
+    <span class="sec-num">04</span>
+    <span class="sec-title"><span class="pin">▸</span>Unity Catalog layout · where everything lives</span>
+    <span class="sec-tail"></span>
+  </div>
+
+  <div class="uc-grid">
+    <div class="uc-box tables">
+      <div class="uc-head">
+        <span class="uc-icon">🗄</span>
+        <span class="uc-name">df_studio.metadata · Delta tables</span>
+        <span class="uc-pill">10 tables</span>
+      </div>
+      <ul class="uc-tree">
+        <li><span class="lbl">pipelines</span><span class="meta">master · 1 row per pipeline</span></li>
+        <li><span class="lbl">spec_versions</span><span class="meta">audit trail · every save = new row</span></li>
+        <li><span class="lbl">spec_overrides</span><span class="meta">user edits separate from generated</span></li>
+        <li><span class="lbl">runs</span><span class="meta">agent invocation log · 90d retention</span></li>
+        <li><span class="lbl">agent_memory</span><span class="meta">★ Tier 2 memory · the determinism engine</span></li>
+        <li><span class="lbl">health_scores</span><span class="meta">nightly · feeds Lakehouse Monitoring</span></li>
+        <li><span class="lbl">custom_pipeline_types</span><span class="meta">team-onboarded new tabs</span></li>
+        <li><span class="lbl">chat_turns</span><span class="meta">conversational history · pipeline-scoped</span></li>
+        <li><span class="lbl">audit_log</span><span class="meta">immutable · CDC · 7y retention</span></li>
+        <li class="last"><span class="lbl">teams</span><span class="meta">RBAC source-of-truth</span></li>
+      </ul>
+    </div>
+
+    <div class="uc-box volume">
+      <div class="uc-head">
+        <span class="uc-icon">📦</span>
+        <span class="uc-name">/Volumes/df_studio/metadata/files</span>
+        <span class="uc-pill">managed</span>
+      </div>
+      <ul class="uc-tree">
+        <li>
+          <span class="lbl">agents/</span><span class="meta">6 .md files · YAML frontmatter</span>
+          <ul>
+            <li>data_ingest.md · data_forge.md · data_prep.md</li>
+            <li>data_doc.md · data_lineage.md · data_pipeline_master.md</li>
+          </ul>
+        </li>
+        <li>
+          <span class="lbl">skills/</span><span class="meta">19 SKILL.md + references/</span>
+          <ul>
+            <li>ingestion/ eda/ dataprep/ docs/ lineage/</li>
+          </ul>
+        </li>
+        <li>
+          <span class="lbl">rules/</span><span class="meta">38 rules · 10 categories</span>
+          <ul><li>catalog.yaml + categories/*.yaml</li></ul>
+        </li>
+        <li>
+          <span class="lbl">specs/&lt;phase&gt;/&lt;name&gt;/</span><span class="meta">spec.md (current + override)</span>
+        </li>
+        <li>
+          <span class="lbl">output/&lt;phase&gt;/&lt;name&gt;/</span><span class="meta">configs/ + reports/</span>
+        </li>
+        <li><span class="lbl">templates/</span><span class="meta">spec templates · onboard form blueprints</span></li>
+        <li class="last"><span class="lbl">query_libraries/&lt;team&gt;/&lt;subdomain&gt;/</span><span class="meta">user-uploaded .sql</span></li>
+      </ul>
+    </div>
+
+    <div class="uc-box vs">
+      <div class="uc-head">
+        <span class="uc-icon">🔍</span>
+        <span class="uc-name">df_studio.vs · Vector Search</span>
+        <span class="uc-pill">4 indexes</span>
+      </div>
+      <ul class="uc-tree">
+        <li><span class="lbl">skill_corpus</span><span class="meta">→ agent finds top-3 relevant skills</span></li>
+        <li><span class="lbl">past_specs</span><span class="meta">→ "pipelines like this one"</span></li>
+        <li><span class="lbl">rule_catalog</span><span class="meta">→ column tags → applicable rules</span></li>
+        <li class="last"><span class="lbl">runbook_history</span><span class="meta">→ draft new runbooks from past learnings</span></li>
+      </ul>
+      <div class="lb-tech" style="margin-top:12px">All indexes use <code style="color:var(--docs)">databricks-gte-large-en</code> · refresh on content-change only (not nightly) to control cost</div>
+    </div>
+
+    <div class="uc-box security">
+      <div class="uc-head">
+        <span class="uc-icon">🔒</span>
+        <span class="uc-name">Security · governance · compliance</span>
+        <span class="uc-pill">UC-native</span>
+      </div>
+      <ul class="uc-tree">
+        <li><span class="lbl">Auth</span><span class="meta">OAuth via Databricks SSO · no app passwords</span></li>
+        <li><span class="lbl">RBAC</span><span class="meta">UC grants per team · no app-level checks</span></li>
+        <li><span class="lbl">PII</span><span class="meta">Fiserv Protector at source · framework treats data as already-tokenized</span></li>
+        <li><span class="lbl">Audit</span><span class="meta">Delta CDC · immutable · 7-year retention</span></li>
+        <li><span class="lbl">Secrets</span><span class="meta">Databricks Secret Scopes only · never in prompts</span></li>
+        <li class="last"><span class="lbl">Lineage</span><span class="meta">UC system tables · combined with data_lineage agent output</span></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ── 5 · migration timeline ──────────────────────────── -->
+  <div class="sec-head">
+    <span class="sec-num">05</span>
+    <span class="sec-title"><span class="pin">▸</span>Migration timeline · 7 phases · ~3–4 months</span>
+    <span class="sec-tail"></span>
+  </div>
+
+  <div class="timeline">
+    <div class="tl-rail" aria-hidden="true"></div>
+
+    <div class="tl-row p0">
+      <div class="tl-tag"><span class="tl-num">P0</span><br>1–2 wk<span class="tl-dot"></span></div>
+      <div class="tl-card">
+        <div class="tl-title">Foundation <span class="tl-dur">UC + Volume + loaders</span></div>
+        <div class="tl-body">Create df_studio catalog · 10 Delta tables · the managed Volume · bulk-upload current agents/ skills/ rules/ from v1.0 repo · write loaders.py reading YAML frontmatter</div>
+        <div class="tl-exit"><b>Exit:</b> <code>python -c "from loaders import *; print(list_all_agents())"</code> returns the 6 agents from UC Volume</div>
+      </div>
+    </div>
+
+    <div class="tl-row p1">
+      <div class="tl-tag"><span class="tl-num">P1</span><br>3–4 wk<span class="tl-dot"></span></div>
+      <div class="tl-card">
+        <div class="tl-title">Backend API <span class="tl-dur">FastAPI on Databricks App</span></div>
+        <div class="tl-body">Scaffold FastAPI · implement Pipelines + Specs + Catalog read-only endpoints · point existing v1.0 HTML studio at the new API just for spec save/load — proves backend works while UI is untouched</div>
+        <div class="tl-exit"><b>Exit:</b> v1.0 HTML studio runs against the API · specs persist in spec_versions Delta</div>
+      </div>
+    </div>
+
+    <div class="tl-row p2">
+      <div class="tl-tag"><span class="tl-num">P2</span><br>3–4 wk<span class="tl-dot"></span></div>
+      <div class="tl-card">
+        <div class="tl-title">Agent runtime <span class="tl-dur">LangGraph + Claude</span></div>
+        <div class="tl-body">LangGraph orchestrator · wrap 19 skills as Python tools · wire to Databricks model serving (databricks-claude-3-7-sonnet + fallbacks) · SSE streaming endpoint · POST /runs</div>
+        <div class="tl-exit"><b>Exit:</b> data_ingest run from API · output lands in /Volumes/df_studio/output/ingestion/&lt;test&gt;/configs/...</div>
+      </div>
+    </div>
+
+    <div class="tl-row p3">
+      <div class="tl-tag"><span class="tl-num">P3</span><br>4–6 wk<span class="tl-dot"></span></div>
+      <div class="tl-card">
+        <div class="tl-title">React frontend <span class="tl-dur">Vite + shadcn/ui</span></div>
+        <div class="tl-body">Scaffold Vite · port all 6 tabs · sticky toolbar + collapsible sections + spec preview + edit override · Run-All Stages wizard · real-time SSE stream view (replaces Copilot clipboard hand-off)</div>
+        <div class="tl-exit"><b>Exit:</b> a new pipeline authored entirely in React · spec saves to backend · run completes · outputs visible in Review</div>
+      </div>
+    </div>
+
+    <div class="tl-row p4">
+      <div class="tl-tag"><span class="tl-num">P4</span><br>2–3 wk<span class="tl-dot"></span></div>
+      <div class="tl-card">
+        <div class="tl-title">Memory + Vector Search <span class="tl-dur">determinism</span></div>
+        <div class="tl-body">Tier 2 agent_memory table wired into runtime · 4 VS indexes set up · "Regenerate" button replays memory · Memory panel in UI surfaces prior decisions per pipeline</div>
+        <div class="tl-exit"><b>Exit:</b> regenerating an unchanged spec produces byte-identical output 3 times in a row</div>
+      </div>
+    </div>
+
+    <div class="tl-row p5">
+      <div class="tl-tag"><span class="tl-num">P5</span><br>3–4 wk<span class="tl-dot"></span></div>
+      <div class="tl-card">
+        <div class="tl-title">Chatbot + Observability <span class="tl-dur">dashboards live</span></div>
+        <div class="tl-body">Right-rail chatbot panel with SSE · chat → form one-way population · Home Dashboard with KPIs · health table · activity · governance · quick lineage · nightly health-score Workflow</div>
+        <div class="tl-exit"><b>Exit:</b> dashboard populated · chatbot can fill 80% of a typical ingestion spec from a 3-turn conversation</div>
+      </div>
+    </div>
+
+    <div class="tl-row p6">
+      <div class="tl-tag"><span class="tl-num">P6</span><br>4–6 wk<span class="tl-dot"></span></div>
+      <div class="tl-card">
+        <div class="tl-title">Roadmap items <span class="tl-dur">integrations</span></div>
+        <div class="tl-body">KNL Validation Integration · Confluence Runbook publish · Slack + PagerDuty alerts · AppOps Handover Package · GitHub PR opener (v2.1 candidate)</div>
+        <div class="tl-exit"><b>Exit:</b> roadmap section on v1 architecture HTML moves to ✅ Done</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- value strip -->
+  <div class="props">
+    <div class="prop cyan"><span class="ico">⚛</span>React SPA · TanStack Router · shadcn/ui</div>
+    <div class="prop"><span class="ico">⚡</span>FastAPI on Databricks App · workspace-scoped auth</div>
+    <div class="prop purple"><span class="ico">🤖</span>LangGraph + Claude · model serving · automatic fallback</div>
+    <div class="prop red"><span class="ico">🗄</span>Unity Catalog · 10 Delta tables · 1 Volume · 4 VS indexes</div>
+    <div class="prop green"><span class="ico">🛡</span>UC-grant RBAC · immutable audit · 7y retention</div>
+    <div class="prop"><span class="ico">🧠</span>3-tier memory · byte-identical regeneration</div>
+  </div>
+
+  <footer>
+    <span>📑 Architecture · v2.0 · React + Databricks-native · 6 agents · 19 skills · 38 rules · 10 Delta tables · 4 VS indexes · 3-tier agent memory</span>
+    <span class="right">DCS Data Factory · Pipeline Studio · v2.0 SRS</span>
+  </footer>
+
+</div>  <!-- end .slide -->
+
+</body>
+</html>
