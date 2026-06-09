@@ -1,0 +1,52 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "ChangePilot · Start full stack",
+      "type": "shell",
+      "command": "${workspaceFolder}/start.ps1",
+      "options": { "cwd": "${workspaceFolder}" },
+      "problemMatcher": [],
+      "group": { "kind": "build", "isDefault": true }
+    },
+    {
+      "label": "ChangePilot · Stop servers",
+      "type": "shell",
+      "command": "${workspaceFolder}/start.ps1",
+      "args": ["-Stop"],
+      "options": { "cwd": "${workspaceFolder}" },
+      "problemMatcher": []
+    },
+    {
+      "label": "ChangePilot · First-time setup",
+      "type": "shell",
+      "command": "${workspaceFolder}/setup.ps1",
+      "options": { "cwd": "${workspaceFolder}" },
+      "problemMatcher": []
+    },
+    {
+      "label": "Run consistency tests",
+      "type": "shell",
+      "command": "${workspaceFolder}/backend/.venv/Scripts/python.exe",
+      "args": ["${workspaceFolder}/Tests/consistency/consistency_tests.py"],
+      "options": { "cwd": "${workspaceFolder}" },
+      "problemMatcher": []
+    },
+    {
+      "label": "Frontend · TypeScript check",
+      "type": "shell",
+      "command": "${workspaceFolder}/.tools/node-v20.18.0-win-x64/npx.cmd",
+      "args": ["tsc", "--noEmit"],
+      "options": { "cwd": "${workspaceFolder}/frontend" },
+      "problemMatcher": ["$tsc"]
+    },
+    {
+      "label": "Backend · pytest",
+      "type": "shell",
+      "command": "${workspaceFolder}/backend/.venv/Scripts/python.exe",
+      "args": ["-m", "pytest", "tests/", "-v"],
+      "options": { "cwd": "${workspaceFolder}/backend" },
+      "problemMatcher": []
+    }
+  ]
+}

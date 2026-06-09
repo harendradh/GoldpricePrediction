@@ -1,0 +1,29 @@
+{
+  "folders": [
+    { "name": "ChangePilot Studio (root)", "path": "." },
+    { "name": "Backend",                    "path": "./backend" },
+    { "name": "Frontend",                   "path": "./frontend" },
+    { "name": "Agents (canonical prompts)", "path": "./Agents" },
+    { "name": "ReviewEngines (rule packs)", "path": "./ReviewEngines" },
+    { "name": "Specs (output contracts)",   "path": "./Specs" },
+    { "name": "Shared (cross-cutting)",     "path": "./Shared" },
+    { "name": "Docs",                       "path": "./Docs" }
+  ],
+  "settings": {
+    "python.defaultInterpreterPath": "${workspaceFolder:Backend}/.venv/Scripts/python.exe",
+    "terminal.integrated.cwd": "${workspaceFolder:ChangePilot Studio (root)}"
+  },
+  "extensions": {
+    "recommendations": [
+      "ms-python.python",
+      "ms-python.vscode-pylance",
+      "charliermarsh.ruff",
+      "esbenp.prettier-vscode",
+      "bradlc.vscode-tailwindcss",
+      "redhat.vscode-yaml",
+      "ms-vscode.powershell",
+      "github.copilot",
+      "github.copilot-chat"
+    ]
+  }
+}

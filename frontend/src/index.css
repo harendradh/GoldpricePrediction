@@ -1,0 +1,54 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html, body, #root { height: 100%; }
+  body {
+    font-family: theme('fontFamily.sans');
+    color: theme('colors.ink.900');
+    background: theme('colors.ink.50');
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  ::selection { background: theme('colors.brand.100'); color: theme('colors.brand.700'); }
+  /* Subtle scrollbar */
+  ::-webkit-scrollbar { width: 10px; height: 10px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb {
+    background: theme('colors.ink.200');
+    border-radius: 999px;
+    border: 2px solid transparent;
+    background-clip: padding-box;
+  }
+  ::-webkit-scrollbar-thumb:hover { background: theme('colors.brand.300'); background-clip: padding-box; border: 2px solid transparent; }
+}
+
+@layer components {
+  /* Card */
+  .card {
+    @apply bg-white border border-ink-200 rounded-xl shadow-soft overflow-hidden;
+  }
+  .card-glow:hover {
+    @apply shadow-glow;
+    transition: box-shadow .25s ease;
+  }
+  /* Skeleton shimmer */
+  .skeleton {
+    background-image: linear-gradient(
+      90deg,
+      theme('colors.ink.100') 0%,
+      theme('colors.ink.50') 50%,
+      theme('colors.ink.100') 100%
+    );
+    background-size: 800px 100%;
+    @apply animate-shimmer rounded;
+  }
+  /* Pill primitives */
+  .pill { @apply inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-semibold border; }
+  /* Code chunk */
+  .code-chunk {
+    @apply bg-ink-900 text-ink-100 rounded-md px-3 py-2 font-mono text-xs leading-relaxed
+           border border-ink-800 cursor-pointer transition-colors hover:bg-ink-800;
+  }
+}

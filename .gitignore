@@ -1,0 +1,60 @@
+# ChangePilot Studio · ignored paths
+# ──────────────────────────────────────────────────────────────────
+
+# Python runtime
+backend/.venv/
+backend/__pycache__/
+backend/**/__pycache__/
+backend/.pytest_cache/
+backend/*.egg-info/
+backend/atlas_tier3.egg-info/
+backend/atlas.db-journal
+backend/atlas.db-wal
+backend/atlas.db-shm
+
+# Secrets (sample stays committed)
+backend/.env
+!backend/.env.example
+
+# Node runtime
+frontend/node_modules/
+frontend/dist/
+frontend/vite.log
+frontend/vite.err
+frontend/*.tsbuildinfo
+
+# Runtime state (recreated on each run)
+Data/Prompts/*
+Data/KnowledgeBase/*
+Data/LearningHistory/*
+Data/ReviewResults/*
+!Data/Prompts/.gitkeep
+!Data/KnowledgeBase/.gitkeep
+!Data/LearningHistory/.gitkeep
+!Data/ReviewResults/.gitkeep
+
+# Background-task state from launcher
+.pids/
+uvicorn.log
+uvicorn.err
+# Root-level launcher logs
+backend.log
+backend.err.log
+frontend.log
+frontend.err.log
+
+# Runtime SQLite DB (regenerate with: python backend/scripts/seed_demo.py)
+backend/atlas.db
+
+# OS junk
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+*.swp
+*~
+
+# Portable Node toolchain (huge · keep out of git, ship via .tools download)
+# Comment the next two lines out if you DO want .tools/ committed.
+.tools/
