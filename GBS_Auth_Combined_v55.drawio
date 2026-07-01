@@ -1,0 +1,560 @@
+<mxfile host="Electron" pages="2">
+  <diagram id="asis" name="As-Is Architecture">
+    <mxGraphModel dx="5065" dy="3330" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="5000" pageHeight="2400" background="#F8FAFC" math="0" shadow="1">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="bg_top" parent="1" style="rounded=0;fillColor=#EFF6FF;strokeColor=none;opacity=60;" value="" vertex="1">
+          <mxGeometry height="1180" width="5000" as="geometry" />
+        </mxCell>
+        <mxCell id="bg_bot" parent="1" style="rounded=0;fillColor=#F0FDF4;strokeColor=none;opacity=60;" value="" vertex="1">
+          <mxGeometry height="1220" width="5000" y="1180" as="geometry" />
+        </mxCell>
+        <mxCell id="bg_div" parent="1" style="rounded=0;fillColor=#CBD5E1;strokeColor=none;" value="" vertex="1">
+          <mxGeometry height="4" width="5000" y="1178" as="geometry" />
+        </mxCell>
+        <mxCell id="titlebar" parent="1" style="rounded=0;fillColor=#1E3A5F;strokeColor=none;" value="" vertex="1">
+          <mxGeometry height="90" width="5000" as="geometry" />
+        </mxCell>
+        <mxCell id="titletxt" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;" value="&lt;font style=&#39;font-size:30px;color:#FFFFFF;font-weight:700;&#39;&gt;GBS AUTH — As-Is Architecture&lt;/font&gt;  &lt;font style=&#39;font-size:14px;color:#94A3B8;&#39;&gt;CDP On-Premises (Chandler)  ·  ETIMS Cloudera Kafka  ·  Kerberos Auth  ·  HDFS Parquet  +  Azure Data Catalog&lt;/font&gt;" vertex="1">
+          <mxGeometry height="90" width="4900" x="40" as="geometry" />
+        </mxCell>
+        <mxCell id="lbl_top" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;" value="&lt;font style=&#39;font-size:15px;font-weight:700;color:#1E3A8A;&#39;&gt;FLOW A  —  Chandler On-Premises (CDP Kafka + HDFS)&lt;/font&gt;" vertex="1">
+          <mxGeometry height="36" width="1200" x="40" y="96" as="geometry" />
+        </mxCell>
+        <mxCell id="lbl_bot" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;" value="&lt;font style=&#39;font-size:15px;font-weight:700;color:#15803D;&#39;&gt;FLOW B  —  Databricks RT Consumer (Azure Data Catalog)&lt;/font&gt;" vertex="1">
+          <mxGeometry height="36" width="1200" x="40" y="1192" as="geometry" />
+        </mxCell>
+        <mxCell id="etims" parent="1" style="shape=mxgraph.cisco.servers.standard_server;fillColor=#DBEAFE;strokeColor=#1D4ED8;strokeWidth=3;fontSize=14;verticalLabelPosition=bottom;labelPosition=center;verticalAlign=top;align=center;html=1;shadow=1;" value="&lt;b&gt;&lt;font style=&#39;font-size:20px;color:#1E3A8A;&#39;&gt;ETIMS&lt;br&gt;Publisher&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:13px;color:#475569;&#39;&gt;Source System&lt;br&gt;Auth Transaction Events&lt;/font&gt;" vertex="1">
+          <mxGeometry height="180" width="160" x="140" y="340" as="geometry" />
+        </mxCell>
+        <mxCell id="chandler_bg" parent="1" style="rounded=1;fillColor=#FFF7ED;strokeColor=#EA580C;strokeWidth=4;opacity=90;arcSize=5;" value="" vertex="1">
+          <mxGeometry height="860" width="820" x="520" y="160" as="geometry" />
+        </mxCell>
+        <mxCell id="chandler_title" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=top;" value="&lt;b&gt;&lt;font style=&#39;font-size:22px;color:#C2410C;&#39;&gt;ETIMS Cloudera Kafka&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:14px;color:#78350F;&#39;&gt;Chandler On-Premises Cluster  ·  Kerberos GSSAPI Auth&lt;/font&gt;" vertex="1">
+          <mxGeometry height="60" width="820" x="520" y="170" as="geometry" />
+        </mxCell>
+        <mxCell id="kafka_icon" parent="1" style="shape=mxgraph.kafka.kafka;fillColor=#EA580C;strokeColor=#C2410C;strokeWidth=2;shadow=1;" value="" vertex="1">
+          <mxGeometry height="80" width="80" x="870" y="180" as="geometry" />
+        </mxCell>
+        <mxCell id="ct0" parent="1" style="rounded=1;fillColor=#FFEDD5;strokeColor=#EA580C;strokeWidth=2.5;fontSize=14;verticalAlign=middle;align=center;arcSize=50;html=1;" value="&lt;font style=&#39;font-size:15px;font-weight:700;color:#C2410C;&#39;&gt;📨  hdc.auth_txn  ·  Partitions: 12&lt;/font&gt;" vertex="1">
+          <mxGeometry height="64" width="780" x="540" y="280" as="geometry" />
+        </mxCell>
+        <mxCell id="ct1" parent="1" style="rounded=1;fillColor=#FFEDD5;strokeColor=#EA580C;strokeWidth=2.5;fontSize=14;verticalAlign=middle;align=center;arcSize=50;html=1;" value="&lt;font style=&#39;font-size:15px;font-weight:700;color:#C2410C;&#39;&gt;📨  hdc.debitgw_txn  ·  Partitions: 12&lt;/font&gt;" vertex="1">
+          <mxGeometry height="64" width="780" x="540" y="364" as="geometry" />
+        </mxCell>
+        <mxCell id="ct2" parent="1" style="rounded=1;fillColor=#FFEDD5;strokeColor=#EA580C;strokeWidth=2.5;fontSize=14;verticalAlign=middle;align=center;arcSize=50;html=1;" value="&lt;font style=&#39;font-size:15px;font-weight:700;color:#C2410C;&#39;&gt;📨  buypass.auth_txn  ·  Partitions: 12&lt;/font&gt;" vertex="1">
+          <mxGeometry height="64" width="780" x="540" y="448" as="geometry" />
+        </mxCell>
+        <mxCell id="ct3" parent="1" style="rounded=1;fillColor=#FFEDD5;strokeColor=#EA580C;strokeWidth=2.5;fontSize=14;verticalAlign=middle;align=center;arcSize=50;html=1;" value="&lt;font style=&#39;font-size:15px;font-weight:700;color:#C2410C;&#39;&gt;📨  omaha.auth_txn  ·  Partitions: 8&lt;/font&gt;" vertex="1">
+          <mxGeometry height="64" width="780" x="540" y="532" as="geometry" />
+        </mxCell>
+        <mxCell id="ct4" parent="1" style="rounded=1;fillColor=#FFEDD5;strokeColor=#EA580C;strokeWidth=2.5;fontSize=14;verticalAlign=middle;align=center;arcSize=50;html=1;" value="&lt;font style=&#39;font-size:15px;font-weight:700;color:#C2410C;&#39;&gt;📨  ipg.auth_txn  ·  Partitions: 8&lt;/font&gt;" vertex="1">
+          <mxGeometry height="64" width="780" x="540" y="616" as="geometry" />
+        </mxCell>
+        <mxCell id="ct5" parent="1" style="rounded=1;fillColor=#FFEDD5;strokeColor=#EA580C;strokeWidth=2.5;fontSize=14;verticalAlign=middle;align=center;arcSize=50;html=1;" value="&lt;font style=&#39;font-size:15px;font-weight:700;color:#C2410C;&#39;&gt;📨  fsl.transaction  ·  Partitions: 16&lt;/font&gt;" vertex="1">
+          <mxGeometry height="64" width="780" x="540" y="700" as="geometry" />
+        </mxCell>
+        <mxCell id="ct6" parent="1" style="rounded=1;fillColor=#FFEDD5;strokeColor=#EA580C;strokeWidth=2.5;fontSize=14;verticalAlign=middle;align=center;arcSize=50;html=1;" value="&lt;font style=&#39;font-size:15px;font-weight:700;color:#C2410C;&#39;&gt;📨  fsl.registration  ·  Partitions: 8&lt;/font&gt;" vertex="1">
+          <mxGeometry height="64" width="780" x="540" y="784" as="geometry" />
+        </mxCell>
+        <mxCell id="ct_more" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;" value="&lt;font style=&#39;font-size:13px;color:#92400E;&#39;&gt;All 7 topics listed above&lt;/font&gt;" vertex="1">
+          <mxGeometry height="36" width="780" x="540" y="860" as="geometry" />
+        </mxCell>
+        <mxCell id="kerb" parent="1" style="shape=mxgraph.cisco.firewalls.firewall;fillColor=#FEF3C7;strokeColor=#D97706;strokeWidth=2.5;fontSize=12;verticalLabelPosition=bottom;labelPosition=center;verticalAlign=top;align=center;html=1;" value="&lt;b&gt;&lt;font style=&#39;font-size:14px;color:#92400E;&#39;&gt;🔐 Kerberos KDC&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:12px;color:#78350F;&#39;&gt;GSSAPI · Keytab · KDC Tickets&lt;/font&gt;" vertex="1">
+          <mxGeometry height="120" width="120" x="1240" y="180" as="geometry" />
+        </mxCell>
+        <mxCell id="cdp_consumer" parent="1" style="shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.emr;fillColor=#DCFCE7;strokeColor=#16A34A;strokeWidth=3;fontSize=13;verticalLabelPosition=bottom;labelPosition=center;verticalAlign=top;align=center;html=1;shadow=1;" value="&lt;b&gt;&lt;font style=&#39;font-size:18px;color:#15803D;&#39;&gt;Chandler RT&lt;br&gt;Consumer&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:13px;color:#166534;&#39;&gt;CDP Spark Streaming&lt;br&gt;7 Platform Apps&lt;br&gt;Kerberos Auth&lt;/font&gt;" vertex="1">
+          <mxGeometry height="180" width="180" x="1680" y="280" as="geometry" />
+        </mxCell>
+        <mxCell id="omaha_consumer" parent="1" style="shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.emr;fillColor=#CCFBF1;strokeColor=#0F766E;strokeWidth=3;fontSize=13;verticalLabelPosition=bottom;labelPosition=center;verticalAlign=top;align=center;html=1;shadow=1;" value="&lt;b&gt;&lt;font style=&#39;font-size:18px;color:#0F766E;&#39;&gt;Omaha RT&lt;br&gt;Consumer&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:13px;color:#115E59;&#39;&gt;CDP Spark Streaming&lt;br&gt;Omaha Platform&lt;/font&gt;" vertex="1">
+          <mxGeometry height="180" width="180" x="1680" y="620" as="geometry" />
+        </mxCell>
+        <mxCell id="hdfs" parent="1" style="shape=mxgraph.cisco.storage.disk_storage;fillColor=#EDE9FE;strokeColor=#7C3AED;strokeWidth=3;fontSize=13;verticalLabelPosition=bottom;labelPosition=center;verticalAlign=top;align=center;html=1;shadow=1;" value="&lt;b&gt;&lt;font style=&#39;font-size:18px;color:#6D28D9;&#39;&gt;Hadoop HDFS&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:13px;color:#5B21B6;&#39;&gt;On-Premises Storage&lt;br&gt;Format: Parquet&lt;br&gt;Partitioned by date/platform&lt;/font&gt;" vertex="1">
+          <mxGeometry height="180" width="180" x="2260" y="340" as="geometry" />
+        </mxCell>
+        <mxCell id="dsa0" parent="1" style="rounded=1;fillColor=#EFF6FF;strokeColor=#BFDBFE;strokeWidth=2.5;fontSize=13;verticalAlign=middle;align=center;arcSize=12;html=1;shadow=1;" value="&lt;b&gt;&lt;font style=&#39;font-size:16px;color:#1D4ED8;&#39;&gt;📊  FSBI&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:13px;color:#475569;&#39;&gt;Financial Services BI&lt;/font&gt;" vertex="1">
+          <mxGeometry height="100" width="380" x="2840" y="180" as="geometry" />
+        </mxCell>
+        <mxCell id="dsa1" parent="1" style="rounded=1;fillColor=#EFF6FF;strokeColor=#BFDBFE;strokeWidth=2.5;fontSize=13;verticalAlign=middle;align=center;arcSize=12;html=1;shadow=1;" value="&lt;b&gt;&lt;font style=&#39;font-size:16px;color:#1D4ED8;&#39;&gt;🔑  Single AUTH&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:13px;color:#475569;&#39;&gt;Auth Aggregation&lt;/font&gt;" vertex="1">
+          <mxGeometry height="100" width="380" x="2840" y="310" as="geometry" />
+        </mxCell>
+        <mxCell id="dsa2" parent="1" style="rounded=1;fillColor=#ECFEFF;strokeColor=#A5F3FC;strokeWidth=2.5;fontSize=13;verticalAlign=middle;align=center;arcSize=12;html=1;shadow=1;" value="&lt;b&gt;&lt;font style=&#39;font-size:16px;color:#0891B2;&#39;&gt;📈  Peer Benchmarking&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:13px;color:#475569;&#39;&gt;Group Analytics&lt;/font&gt;" vertex="1">
+          <mxGeometry height="100" width="380" x="2840" y="440" as="geometry" />
+        </mxCell>
+        <mxCell id="dsa3" parent="1" style="rounded=1;fillColor=#ECFEFF;strokeColor=#A5F3FC;strokeWidth=2.5;fontSize=13;verticalAlign=middle;align=center;arcSize=12;html=1;shadow=1;" value="&lt;b&gt;&lt;font style=&#39;font-size:16px;color:#0891B2;&#39;&gt;⚙️  AltMOPS&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:13px;color:#475569;&#39;&gt;Alt Operations&lt;/font&gt;" vertex="1">
+          <mxGeometry height="100" width="380" x="2840" y="570" as="geometry" />
+        </mxCell>
+        <mxCell id="dsa4" parent="1" style="rounded=1;fillColor=#F8FAFC;strokeColor=#CBD5E1;strokeWidth=2.5;fontSize=13;verticalAlign=middle;align=center;arcSize=12;html=1;shadow=1;" value="&lt;b&gt;&lt;font style=&#39;font-size:16px;color:#475569;&#39;&gt;➕  Other Consumers&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:13px;color:#475569;&#39;&gt;Multiple Apps&lt;/font&gt;" vertex="1">
+          <mxGeometry height="100" width="380" x="2840" y="700" as="geometry" />
+        </mxCell>
+        <mxCell id="dbx_asis" parent="1" style="shape=mxgraph.databricks.cluster;fillColor=#DCFCE7;strokeColor=#16A34A;strokeWidth=3;fontSize=13;verticalLabelPosition=bottom;labelPosition=center;verticalAlign=top;align=center;html=1;shadow=1;" value="&lt;b&gt;&lt;font style=&#39;font-size:18px;color:#15803D;&#39;&gt;Databricks RT&lt;br&gt;Consumer&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:13px;color:#166534;&#39;&gt;Spark Structured Streaming&lt;br&gt;Reads Chandler Kafka Topic&lt;br&gt;Kerberos Auth&lt;/font&gt;" vertex="1">
+          <mxGeometry height="180" width="180" x="1680" y="1300" as="geometry" />
+        </mxCell>
+        <mxCell id="azure_cat" parent="1" style="shape=mxgraph.azure.azure_catalog;fillColor=#DBEAFE;strokeColor=#1D4ED8;strokeWidth=3;fontSize=13;verticalLabelPosition=bottom;labelPosition=center;verticalAlign=top;align=center;html=1;shadow=1;" value="&lt;b&gt;&lt;font style=&#39;font-size:18px;color:#1D4ED8;&#39;&gt;Azure Data Catalog&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:13px;color:#1E40AF;&#39;&gt;Parquet Tables&lt;br&gt;Cloud Storage (Azure)&lt;br&gt;Managed by Databricks&lt;/font&gt;" vertex="1">
+          <mxGeometry height="180" width="180" x="2260" y="1280" as="geometry" />
+        </mxCell>
+        <mxCell id="dsb0" parent="1" style="rounded=1;fillColor=#EFF6FF;strokeColor=#BFDBFE;strokeWidth=2.5;fontSize=13;verticalAlign=middle;align=center;arcSize=12;html=1;shadow=1;" value="&lt;b&gt;&lt;font style=&#39;font-size:16px;color:#1D4ED8;&#39;&gt;📊  FSBI&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:13px;color:#475569;&#39;&gt;Reads Azure Parquet&lt;/font&gt;" vertex="1">
+          <mxGeometry height="100" width="380" x="2840" y="1180" as="geometry" />
+        </mxCell>
+        <mxCell id="dsb1" parent="1" style="rounded=1;fillColor=#EFF6FF;strokeColor=#BFDBFE;strokeWidth=2.5;fontSize=13;verticalAlign=middle;align=center;arcSize=12;html=1;shadow=1;" value="&lt;b&gt;&lt;font style=&#39;font-size:16px;color:#1D4ED8;&#39;&gt;🔑  Single AUTH&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:13px;color:#475569;&#39;&gt;Reads Azure Parquet&lt;/font&gt;" vertex="1">
+          <mxGeometry height="100" width="380" x="2840" y="1310" as="geometry" />
+        </mxCell>
+        <mxCell id="dsb2" parent="1" style="rounded=1;fillColor=#ECFEFF;strokeColor=#A5F3FC;strokeWidth=2.5;fontSize=13;verticalAlign=middle;align=center;arcSize=12;html=1;shadow=1;" value="&lt;b&gt;&lt;font style=&#39;font-size:16px;color:#0891B2;&#39;&gt;📈  Peer Benchmarking&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:13px;color:#475569;&#39;&gt;Reads Azure Parquet&lt;/font&gt;" vertex="1">
+          <mxGeometry height="100" width="380" x="2840" y="1440" as="geometry" />
+        </mxCell>
+        <mxCell id="dsb3" parent="1" style="rounded=1;fillColor=#ECFEFF;strokeColor=#A5F3FC;strokeWidth=2.5;fontSize=13;verticalAlign=middle;align=center;arcSize=12;html=1;shadow=1;" value="&lt;b&gt;&lt;font style=&#39;font-size:16px;color:#0891B2;&#39;&gt;⚙️  AltMOPS&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:13px;color:#475569;&#39;&gt;Reads Azure Parquet&lt;/font&gt;" vertex="1">
+          <mxGeometry height="100" width="380" x="2840" y="1570" as="geometry" />
+        </mxCell>
+        <mxCell id="e1" edge="1" parent="1" source="etims" style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=1;strokeWidth=4;endArrow=block;endFill=1;strokeColor=#EA580C;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontSize=14;" target="chandler_bg" value="&lt;b&gt;&lt;font style=&#39;font-size:14px;color:#EA580C;&#39;&gt;Publish events&lt;/font&gt;&lt;/b&gt;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e2" edge="1" parent="1" source="chandler_bg" style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=1;strokeWidth=4;endArrow=block;endFill=1;strokeColor=#16A34A;exitX=1;exitY=0.35;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontSize=14;" target="cdp_consumer" value="&lt;b&gt;&lt;font style=&#39;font-size:14px;color:#16A34A;&#39;&gt;Consume (Kerberos)&lt;/font&gt;&lt;/b&gt;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e2b" edge="1" parent="1" source="chandler_bg" style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=1;strokeWidth=4;endArrow=block;endFill=1;strokeColor=#0F766E;exitX=1;exitY=0.65;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontSize=14;" target="omaha_consumer" value="&lt;b&gt;&lt;font style=&#39;font-size:14px;color:#0F766E;&#39;&gt;Consume (Kerberos)&lt;/font&gt;&lt;/b&gt;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e3" edge="1" parent="1" source="cdp_consumer" style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=1;strokeWidth=4;endArrow=block;endFill=1;strokeColor=#7C3AED;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.3;entryDx=0;entryDy=0;fontSize=14;" target="hdfs" value="&lt;b&gt;&lt;font style=&#39;font-size:14px;color:#7C3AED;&#39;&gt;Write Parquet&lt;/font&gt;&lt;/b&gt;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e3b" edge="1" parent="1" source="omaha_consumer" style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=1;strokeWidth=4;endArrow=block;endFill=1;strokeColor=#7C3AED;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.7;entryDx=0;entryDy=0;" target="hdfs" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="eda0" edge="1" parent="1" source="hdfs" style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=1;strokeWidth=3;endArrow=open;endFill=1;strokeColor=#1D4ED8;" target="dsa0" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="eda1" edge="1" parent="1" source="hdfs" style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=1;strokeWidth=3;endArrow=open;endFill=1;strokeColor=#1D4ED8;" target="dsa1" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="eda2" edge="1" parent="1" source="hdfs" style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=1;strokeWidth=3;endArrow=open;endFill=1;strokeColor=#0891B2;" target="dsa2" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="eda3" edge="1" parent="1" source="hdfs" style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=1;strokeWidth=3;endArrow=open;endFill=1;strokeColor=#0891B2;" target="dsa3" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="eda4" edge="1" parent="1" source="hdfs" style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=1;strokeWidth=3;endArrow=open;endFill=1;strokeColor=#CBD5E1;" target="dsa4" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="eb1" edge="1" parent="1" source="chandler_bg" style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=1;strokeWidth=4;endArrow=block;endFill=1;strokeColor=#16A34A;dashed=1;dashPattern=8 5;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontSize=14;" target="dbx_asis" value="&lt;b&gt;&lt;font style=&#39;font-size:14px;color:#16A34A;&#39;&gt;Consume (Kerberos)&lt;/font&gt;&lt;/b&gt;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="930" y="1070" />
+              <mxPoint x="930" y="1390" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="eb2" edge="1" parent="1" source="dbx_asis" style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=1;strokeWidth=4;endArrow=block;endFill=1;strokeColor=#1D4ED8;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontSize=14;" target="azure_cat" value="&lt;b&gt;&lt;font style=&#39;font-size:14px;color:#1D4ED8;&#39;&gt;Write Parquet&lt;/font&gt;&lt;/b&gt;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edb0" edge="1" parent="1" source="azure_cat" style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=1;strokeWidth=3;endArrow=open;endFill=1;strokeColor=#1D4ED8;" target="dsb0" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edb1" edge="1" parent="1" source="azure_cat" style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=1;strokeWidth=3;endArrow=open;endFill=1;strokeColor=#1D4ED8;" target="dsb1" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edb2" edge="1" parent="1" source="azure_cat" style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=1;strokeWidth=3;endArrow=open;endFill=1;strokeColor=#0891B2;" target="dsb2" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edb3" edge="1" parent="1" source="azure_cat" style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=1;strokeWidth=3;endArrow=open;endFill=1;strokeColor=#0891B2;" target="dsb3" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="tobe_v5" name="To-Be Architecture">
+    <mxGraphModel dx="2200" dy="1400" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="5600" pageHeight="3000" background="#F8FAFC" math="0" shadow="1">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <!-- TITLE BAR -->
+        <mxCell id="titlebar" value="" style="rounded=0;fillColor=#0C2340;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry x="0" y="0" width="5600" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="titletxt" value="&lt;b&gt;&lt;font style=&#39;font-size:26px;color:#FFFFFF;&#39;&gt;GBS AUTH — To-Be Architecture&lt;/font&gt;&lt;/b&gt;  &lt;font style=&#39;font-size:13px;color:#7FC8F8;&#39;&gt;Single ETIMS  ·  AWS MSK Active-Active East ↕ West  ·  SASL_SSL/SCRAM-SHA-512  ·  Databricks Structured Streaming (EAST + WEST per platform)  ·  Delta Lake Unity Catalog — same unified table&lt;/font&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="40" y="0" width="5520" height="90" as="geometry" />
+        </mxCell>
+        <!-- ═══════════════════════════════════════════════════ -->
+        <!-- SECTION 1 BORDER: NORMAL OPERATION                  -->
+        <!-- ═══════════════════════════════════════════════════ -->
+        <mxCell id="sec1_bg" value="" style="rounded=1;fillColor=#F0FDF4;strokeColor=#16A34A;strokeWidth=5;opacity=50;arcSize=2;" vertex="1" parent="1">
+          <mxGeometry x="20" y="98" width="5560" height="680" as="geometry" />
+        </mxCell>
+        <mxCell id="sec1_lbl" value="&lt;b&gt;&lt;font style=&#39;font-size:17px;color:#14532D;&#39;&gt;✅  NORMAL OPERATION — Both MSK Regions ACTIVE&lt;/font&gt;&lt;/b&gt;" style="rounded=1;fillColor=#DCFCE7;strokeColor=#16A34A;strokeWidth=3;fontSize=16;verticalAlign=middle;align=left;arcSize=6;html=1;spacingLeft=16;" vertex="1" parent="1">
+          <mxGeometry x="20" y="98" width="760" height="44" as="geometry" />
+        </mxCell>
+        <!-- ── ETIMS (spans both rows) ── -->
+        <mxCell id="etims" value="&lt;b&gt;&lt;font style=&#39;font-size:18px;color:#991B1B;&#39;&gt;ETIMS&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;b&gt;&lt;font style=&#39;font-size:15px;color:#991B1B;&#39;&gt;Publisher&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;br&gt;&lt;font style=&#39;font-size:12px;color:#7F1D1D;&#39;&gt;Single Source System&lt;br&gt;Auth Transaction Events&lt;br&gt;&lt;br&gt;Publishes BOTH&lt;br&gt;East &amp; West topics&lt;/font&gt;" style="shape=mxgraph.cisco.servers.standard_server;fillColor=#FEF2F2;strokeColor=#DC2626;strokeWidth=3;fontSize=13;verticalLabelPosition=bottom;labelPosition=center;verticalAlign=top;align=center;html=1;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="100" y="240" width="160" height="180" as="geometry" />
+        </mxCell>
+        <!-- ── MSK EAST ── -->
+        <mxCell id="msk_east" value="&lt;b&gt;&lt;font style=&#39;font-size:16px;color:#1E3A8A;&#39;&gt;☁️  AWS MSK — us-east-1&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:12px;color:#1D4ED8;&#39;&gt;ACTIVE  ·  7 Topics  ·  Port 9096  ·  Multi-AZ  ·  SASL_SSL/SCRAM-SHA-512&lt;br&gt;hdc.auth_txn  /  hdc.debitgw_txn  /  buypass.auth_txn  /  omaha.auth_txn  /  ipg.auth_txn  /  fsl.transaction  /  fsl.registration&lt;/font&gt;" style="rounded=1;fillColor=#DBEAFE;strokeColor=#1D4ED8;strokeWidth=3;fontSize=13;verticalAlign=top;align=center;arcSize=5;html=1;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="500" y="148" width="760" height="140" as="geometry" />
+        </mxCell>
+        <mxCell id="kafka_e" value="" style="shape=mxgraph.kafka.kafka;fillColor=#1D4ED8;strokeColor=#1E3A8A;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="835" y="158" width="64" height="64" as="geometry" />
+        </mxCell>
+        <!-- ── MSK WEST ── -->
+        <mxCell id="msk_west" value="&lt;b&gt;&lt;font style=&#39;font-size:16px;color:#5B21B6;&#39;&gt;☁️  AWS MSK — us-west-2&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:12px;color:#7C3AED;&#39;&gt;ACTIVE  ·  7 Topics  ·  Port 9096  ·  Active-Active Replica  ·  SASL_SSL/SCRAM-SHA-512&lt;br&gt;hdc.auth_txn  /  hdc.debitgw_txn  /  buypass.auth_txn  /  omaha.auth_txn  /  ipg.auth_txn  /  fsl.transaction  /  fsl.registration&lt;/font&gt;" style="rounded=1;fillColor=#EDE9FE;strokeColor=#7C3AED;strokeWidth=3;fontSize=13;verticalAlign=top;align=center;arcSize=5;html=1;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="500" y="518" width="760" height="140" as="geometry" />
+        </mxCell>
+        <mxCell id="kafka_w" value="" style="shape=mxgraph.kafka.kafka;fillColor=#7C3AED;strokeColor=#5B21B6;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="835" y="528" width="64" height="64" as="geometry" />
+        </mxCell>
+        <!-- Active-Active sync (vertical between MSK clusters) -->
+        <mxCell id="aa_sync" value="&lt;b&gt;&lt;font style=&#39;font-size:11px;color:#92400E;&#39;&gt;↕ Active-Active&lt;br&gt;Replication&lt;/font&gt;&lt;/b&gt;" style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=1;strokeWidth=3;endArrow=block;endFill=1;startArrow=block;startFill=1;strokeColor=#F59E0B;dashed=1;dashPattern=8 4;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=12;" edge="1" parent="1" source="msk_east" target="msk_west">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <!-- ── SASL East ── -->
+        <mxCell id="sasl_east" value="&lt;b&gt;&lt;font style=&#39;font-size:14px;color:#92400E;&#39;&gt;🔐 SASL_SSL&lt;br&gt;SCRAM-SHA-512&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:11px;color:#78350F;&#39;&gt;AWS Secrets Manager&lt;br&gt;→ Databricks Secret Scope&lt;br&gt;TLS 1.2+  ·  Port 9096&lt;/font&gt;" style="rounded=1;fillColor=#FFFDE7;strokeColor=#D97706;strokeWidth=2.5;fontSize=12;verticalAlign=middle;align=center;arcSize=8;html=1;dashed=1;dashPattern=6 3;" vertex="1" parent="1">
+          <mxGeometry x="1420" y="158" width="280" height="130" as="geometry" />
+        </mxCell>
+        <!-- ── SASL West ── -->
+        <mxCell id="sasl_west" value="&lt;b&gt;&lt;font style=&#39;font-size:14px;color:#92400E;&#39;&gt;🔐 SASL_SSL&lt;br&gt;SCRAM-SHA-512&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:11px;color:#78350F;&#39;&gt;Same creds synced&lt;br&gt;East ↔ West&lt;br&gt;TLS 1.2+  ·  Port 9096&lt;/font&gt;" style="rounded=1;fillColor=#FFFDE7;strokeColor=#D97706;strokeWidth=2.5;fontSize=12;verticalAlign=middle;align=center;arcSize=8;html=1;dashed=1;dashPattern=6 3;" vertex="1" parent="1">
+          <mxGeometry x="1420" y="528" width="280" height="130" as="geometry" />
+        </mxCell>
+        <!-- ── DBX EAST consumer group ── -->
+        <mxCell id="dbx_east_bg" value="" style="rounded=1;fillColor=#DCFCE7;strokeColor=#16A34A;strokeWidth=3;opacity=90;arcSize=5;dashed=1;dashPattern=6 3;" vertex="1" parent="1">
+          <mxGeometry x="1860" y="138" width="760" height="260" as="geometry" />
+        </mxCell>
+        <mxCell id="dbx_east_hdr" value="&lt;b&gt;&lt;font style=&#39;font-size:15px;color:#14532D;&#39;&gt;🧱  Databricks — EAST Consumer (7 jobs)&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:11px;color:#166534;&#39;&gt;Reads MSK East  ·  Checkpoint /chk/east/  ·  Normal load ~50%&lt;/font&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="1860" y="146" width="760" height="56" as="geometry" />
+        </mxCell>
+        <mxCell id="dej0" value="&lt;font style=&#39;font-size:9px;color:#14532D;&#39;&gt;HDCAuth-E&lt;/font&gt;" style="shape=mxgraph.databricks.cluster;fillColor=#F0FDF4;strokeColor=#22C55E;strokeWidth=2;fontSize=9;verticalLabelPosition=bottom;labelPosition=center;verticalAlign=top;align=center;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1876" y="208" width="70" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="dej1" value="&lt;font style=&#39;font-size:9px;color:#14532D;&#39;&gt;DebitGW-E&lt;/font&gt;" style="shape=mxgraph.databricks.cluster;fillColor=#F0FDF4;strokeColor=#22C55E;strokeWidth=2;fontSize=9;verticalLabelPosition=bottom;labelPosition=center;verticalAlign=top;align=center;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1972" y="208" width="70" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="dej2" value="&lt;font style=&#39;font-size:9px;color:#14532D;&#39;&gt;BUYpass-E&lt;/font&gt;" style="shape=mxgraph.databricks.cluster;fillColor=#F0FDF4;strokeColor=#22C55E;strokeWidth=2;fontSize=9;verticalLabelPosition=bottom;labelPosition=center;verticalAlign=top;align=center;html=1;" vertex="1" parent="1">
+          <mxGeometry x="2068" y="208" width="70" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="dej3" value="&lt;font style=&#39;font-size:9px;color:#14532D;&#39;&gt;Omaha-E&lt;/font&gt;" style="shape=mxgraph.databricks.cluster;fillColor=#F0FDF4;strokeColor=#22C55E;strokeWidth=2;fontSize=9;verticalLabelPosition=bottom;labelPosition=center;verticalAlign=top;align=center;html=1;" vertex="1" parent="1">
+          <mxGeometry x="2164" y="208" width="70" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="dej4" value="&lt;font style=&#39;font-size:9px;color:#14532D;&#39;&gt;IPG-E&lt;/font&gt;" style="shape=mxgraph.databricks.cluster;fillColor=#F0FDF4;strokeColor=#22C55E;strokeWidth=2;fontSize=9;verticalLabelPosition=bottom;labelPosition=center;verticalAlign=top;align=center;html=1;" vertex="1" parent="1">
+          <mxGeometry x="2260" y="208" width="70" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="dej5" value="&lt;font style=&#39;font-size:9px;color:#14532D;&#39;&gt;FSLTxn-E&lt;/font&gt;" style="shape=mxgraph.databricks.cluster;fillColor=#F0FDF4;strokeColor=#22C55E;strokeWidth=2;fontSize=9;verticalLabelPosition=bottom;labelPosition=center;verticalAlign=top;align=center;html=1;" vertex="1" parent="1">
+          <mxGeometry x="2356" y="208" width="70" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="dej6" value="&lt;font style=&#39;font-size:9px;color:#14532D;&#39;&gt;FSLReg-E&lt;/font&gt;" style="shape=mxgraph.databricks.cluster;fillColor=#F0FDF4;strokeColor=#22C55E;strokeWidth=2;fontSize=9;verticalLabelPosition=bottom;labelPosition=center;verticalAlign=top;align=center;html=1;" vertex="1" parent="1">
+          <mxGeometry x="2452" y="208" width="70" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="dbx_e_note" value="&lt;font style=&#39;font-size:11px;color:#14532D;&#39;&gt;🔺 Writes to Delta Lake — same unified table (MERGE on primary key)&lt;/font&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="1860" y="346" width="760" height="30" as="geometry" />
+        </mxCell>
+        <!-- ── DBX WEST consumer group ── -->
+        <mxCell id="dbx_west_bg" value="" style="rounded=1;fillColor=#EDE9FE;strokeColor=#7C3AED;strokeWidth=3;opacity=90;arcSize=5;dashed=1;dashPattern=6 3;" vertex="1" parent="1">
+          <mxGeometry x="1860" y="508" width="760" height="260" as="geometry" />
+        </mxCell>
+        <mxCell id="dbx_west_hdr" value="&lt;b&gt;&lt;font style=&#39;font-size:15px;color:#4C1D95;&#39;&gt;🧱  Databricks — WEST Consumer (7 jobs)&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:11px;color:#5B21B6;&#39;&gt;Reads MSK West  ·  Checkpoint /chk/west/  ·  Normal load ~50%&lt;/font&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="1860" y="516" width="760" height="56" as="geometry" />
+        </mxCell>
+        <mxCell id="dwj0" value="&lt;font style=&#39;font-size:9px;color:#4C1D95;&#39;&gt;HDCAuth-W&lt;/font&gt;" style="shape=mxgraph.databricks.cluster;fillColor=#FAF5FF;strokeColor=#8B5CF6;strokeWidth=2;fontSize=9;verticalLabelPosition=bottom;labelPosition=center;verticalAlign=top;align=center;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1876" y="578" width="70" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="dwj1" value="&lt;font style=&#39;font-size:9px;color:#4C1D95;&#39;&gt;DebitGW-W&lt;/font&gt;" style="shape=mxgraph.databricks.cluster;fillColor=#FAF5FF;strokeColor=#8B5CF6;strokeWidth=2;fontSize=9;verticalLabelPosition=bottom;labelPosition=center;verticalAlign=top;align=center;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1972" y="578" width="70" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="dwj2" value="&lt;font style=&#39;font-size:9px;color:#4C1D95;&#39;&gt;BUYpass-W&lt;/font&gt;" style="shape=mxgraph.databricks.cluster;fillColor=#FAF5FF;strokeColor=#8B5CF6;strokeWidth=2;fontSize=9;verticalLabelPosition=bottom;labelPosition=center;verticalAlign=top;align=center;html=1;" vertex="1" parent="1">
+          <mxGeometry x="2068" y="578" width="70" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="dwj3" value="&lt;font style=&#39;font-size:9px;color:#4C1D95;&#39;&gt;Omaha-W&lt;/font&gt;" style="shape=mxgraph.databricks.cluster;fillColor=#FAF5FF;strokeColor=#8B5CF6;strokeWidth=2;fontSize=9;verticalLabelPosition=bottom;labelPosition=center;verticalAlign=top;align=center;html=1;" vertex="1" parent="1">
+          <mxGeometry x="2164" y="578" width="70" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="dwj4" value="&lt;font style=&#39;font-size:9px;color:#4C1D95;&#39;&gt;IPG-W&lt;/font&gt;" style="shape=mxgraph.databricks.cluster;fillColor=#FAF5FF;strokeColor=#8B5CF6;strokeWidth=2;fontSize=9;verticalLabelPosition=bottom;labelPosition=center;verticalAlign=top;align=center;html=1;" vertex="1" parent="1">
+          <mxGeometry x="2260" y="578" width="70" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="dwj5" value="&lt;font style=&#39;font-size:9px;color:#4C1D95;&#39;&gt;FSLTxn-W&lt;/font&gt;" style="shape=mxgraph.databricks.cluster;fillColor=#FAF5FF;strokeColor=#8B5CF6;strokeWidth=2;fontSize=9;verticalLabelPosition=bottom;labelPosition=center;verticalAlign=top;align=center;html=1;" vertex="1" parent="1">
+          <mxGeometry x="2356" y="578" width="70" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="dwj6" value="&lt;font style=&#39;font-size:9px;color:#4C1D95;&#39;&gt;FSLReg-W&lt;/font&gt;" style="shape=mxgraph.databricks.cluster;fillColor=#FAF5FF;strokeColor=#8B5CF6;strokeWidth=2;fontSize=9;verticalLabelPosition=bottom;labelPosition=center;verticalAlign=top;align=center;html=1;" vertex="1" parent="1">
+          <mxGeometry x="2452" y="578" width="70" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="dbx_w_note" value="&lt;font style=&#39;font-size:11px;color:#4C1D95;&#39;&gt;🔺 Writes to Delta Lake — SAME unified table (MERGE on primary key)&lt;/font&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="1860" y="716" width="760" height="30" as="geometry" />
+        </mxCell>
+        <!-- ── DELTA LAKE (normal) ── -->
+        <mxCell id="delta_n" value="" style="rounded=1;fillColor=#FFF7ED;strokeColor=#EA580C;strokeWidth=3;opacity=90;arcSize=4;" vertex="1" parent="1">
+          <mxGeometry x="2760" y="138" width="560" height="640" as="geometry" />
+        </mxCell>
+        <mxCell id="delta_n_title" value="&lt;b&gt;&lt;font style=&#39;font-size:15px;color:#7C2D12;&#39;&gt;🔺  Delta Lake — Unity Catalog&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:11px;color:#9A3412;&#39;&gt;Azure  ·  ACID  ·  Time Travel  ·  Z-Order&lt;/font&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="2760" y="146" width="560" height="52" as="geometry" />
+        </mxCell>
+        <mxCell id="same_tbl" value="&lt;b&gt;&lt;font style=&#39;font-size:13px;color:#7C2D12;&#39;&gt;🔁  EAST + WEST → SAME table&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:11px;color:#9A3412;&#39;&gt;MERGE on primary key  ·  No duplicates&lt;/font&gt;" style="rounded=1;fillColor=#FED7AA;strokeColor=#EA580C;strokeWidth=2;fontSize=12;verticalAlign=middle;align=center;arcSize=8;html=1;" vertex="1" parent="1">
+          <mxGeometry x="2776" y="202" width="528" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="dt0" value="🔺  hdc_auth_delta" style="rounded=1;fillColor=#FFF7ED;strokeColor=#EA580C;strokeWidth=1.5;fontSize=13;verticalAlign=middle;align=left;arcSize=8;html=1;spacingLeft=12;fontColor=#C2410C;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="2776" y="276" width="260" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="dt1" value="🔺  debitgw_txn_delta" style="rounded=1;fillColor=#FFF7ED;strokeColor=#EA580C;strokeWidth=1.5;fontSize=13;verticalAlign=middle;align=left;arcSize=8;html=1;spacingLeft=12;fontColor=#C2410C;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="2776" y="326" width="260" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="dt2" value="🔺  buypass_auth_delta" style="rounded=1;fillColor=#FFF7ED;strokeColor=#EA580C;strokeWidth=1.5;fontSize=13;verticalAlign=middle;align=left;arcSize=8;html=1;spacingLeft=12;fontColor=#C2410C;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="2776" y="376" width="260" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="dt3" value="🔺  omaha_auth_delta" style="rounded=1;fillColor=#FFF7ED;strokeColor=#EA580C;strokeWidth=1.5;fontSize=13;verticalAlign=middle;align=left;arcSize=8;html=1;spacingLeft=12;fontColor=#C2410C;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="2776" y="426" width="260" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="dt4" value="🔺  ipg_auth_delta" style="rounded=1;fillColor=#FFF7ED;strokeColor=#EA580C;strokeWidth=1.5;fontSize=13;verticalAlign=middle;align=left;arcSize=8;html=1;spacingLeft=12;fontColor=#C2410C;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="3046" y="276" width="260" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="dt5" value="🔺  fsl_txn_delta" style="rounded=1;fillColor=#FFF7ED;strokeColor=#EA580C;strokeWidth=1.5;fontSize=13;verticalAlign=middle;align=left;arcSize=8;html=1;spacingLeft=12;fontColor=#C2410C;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="3046" y="326" width="260" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="dt6" value="🔺  fsl_reg_delta" style="rounded=1;fillColor=#FFF7ED;strokeColor=#EA580C;strokeWidth=1.5;fontSize=13;verticalAlign=middle;align=left;arcSize=8;html=1;spacingLeft=12;fontColor=#C2410C;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="3046" y="376" width="260" height="40" as="geometry" />
+        </mxCell>
+        <!-- ── DOWNSTREAM (normal) ── -->
+        <mxCell id="ds_n" value="" style="rounded=1;fillColor=#F0F9FF;strokeColor=#0891B2;strokeWidth=2.5;opacity=80;arcSize=4;" vertex="1" parent="1">
+          <mxGeometry x="3440" y="138" width="480" height="640" as="geometry" />
+        </mxCell>
+        <mxCell id="ds_n_title" value="&lt;b&gt;&lt;font style=&#39;font-size:15px;color:#0C4A6E;&#39;&gt;📡  Downstream Consumers&lt;/font&gt;&lt;/b&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="3440" y="148" width="480" height="36" as="geometry" />
+        </mxCell>
+        <mxCell id="tbd0" value="&lt;b&gt;&lt;font style=&#39;font-size:14px;color:#1D4ED8;&#39;&gt;📊  FSBI&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:12px;color:#475569;&#39;&gt;Financial Services BI&lt;/font&gt;" style="rounded=1;fillColor=#EFF6FF;strokeColor=#BFDBFE;strokeWidth=2;fontSize=13;verticalAlign=middle;align=center;arcSize=10;html=1;" vertex="1" parent="1">
+          <mxGeometry x="3460" y="198" width="440" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="tbd1" value="&lt;b&gt;&lt;font style=&#39;font-size:14px;color:#1D4ED8;&#39;&gt;🔑  Single AUTH&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:12px;color:#475569;&#39;&gt;Auth Aggregation&lt;/font&gt;" style="rounded=1;fillColor=#EFF6FF;strokeColor=#BFDBFE;strokeWidth=2;fontSize=13;verticalAlign=middle;align=center;arcSize=10;html=1;" vertex="1" parent="1">
+          <mxGeometry x="3460" y="282" width="440" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="tbd2" value="&lt;b&gt;&lt;font style=&#39;font-size:14px;color:#0891B2;&#39;&gt;📈  Peer Benchmarking&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:12px;color:#475569;&#39;&gt;Group Analytics&lt;/font&gt;" style="rounded=1;fillColor=#ECFEFF;strokeColor=#A5F3FC;strokeWidth=2;fontSize=13;verticalAlign=middle;align=center;arcSize=10;html=1;" vertex="1" parent="1">
+          <mxGeometry x="3460" y="366" width="440" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="tbd3" value="&lt;b&gt;&lt;font style=&#39;font-size:14px;color:#0891B2;&#39;&gt;⚙️  AltMOPS&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:12px;color:#475569;&#39;&gt;Alt Operations&lt;/font&gt;" style="rounded=1;fillColor=#ECFEFF;strokeColor=#A5F3FC;strokeWidth=2;fontSize=13;verticalAlign=middle;align=center;arcSize=10;html=1;" vertex="1" parent="1">
+          <mxGeometry x="3460" y="450" width="440" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="tbd4" value="&lt;b&gt;&lt;font style=&#39;font-size:14px;color:#475569;&#39;&gt;➕  Other Consumers&lt;/font&gt;&lt;/b&gt;" style="rounded=1;fillColor=#F8FAFC;strokeColor=#CBD5E1;strokeWidth=2;fontSize=13;verticalAlign=middle;align=center;arcSize=10;html=1;" vertex="1" parent="1">
+          <mxGeometry x="3460" y="534" width="440" height="60" as="geometry" />
+        </mxCell>
+        <!-- ── NORMAL FLOW ARROWS (long, spaced, no overlap) ── -->
+        <mxCell id="n_e1" value="&lt;b&gt;&lt;font style=&#39;font-size:13px;color:#1D4ED8;&#39;&gt;Publish EAST topics&lt;/font&gt;&lt;/b&gt;" style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=1;strokeWidth=4;endArrow=block;endFill=1;exitX=1;exitY=0.35;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#1D4ED8;fontSize=13;" edge="1" parent="1" source="etims" target="msk_east">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="n_w1" value="&lt;b&gt;&lt;font style=&#39;font-size:13px;color:#7C3AED;&#39;&gt;Publish WEST topics&lt;/font&gt;&lt;/b&gt;" style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=1;strokeWidth=4;endArrow=block;endFill=1;exitX=1;exitY=0.65;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#7C3AED;fontSize=13;" edge="1" parent="1" source="etims" target="msk_west">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="380" y="360" />
+              <mxPoint x="380" y="588" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="n_e2" value="&lt;b&gt;&lt;font style=&#39;font-size:12px;color:#D97706;&#39;&gt;SASL_SSL Auth&lt;/font&gt;&lt;/b&gt;" style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=1;strokeWidth=3;endArrow=block;endFill=1;strokeColor=#D97706;dashed=1;dashPattern=6 3;fontSize=12;" edge="1" parent="1" source="msk_east" target="sasl_east">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="n_e3" value="&lt;b&gt;&lt;font style=&#39;font-size:13px;color:#16A34A;&#39;&gt;Consume (SCRAM-512)&lt;/font&gt;&lt;/b&gt;" style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=1;strokeWidth=4;endArrow=block;endFill=1;strokeColor=#16A34A;fontSize=13;" edge="1" parent="1" source="sasl_east" target="dbx_east_bg">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="n_w2" value="&lt;b&gt;&lt;font style=&#39;font-size:12px;color:#D97706;&#39;&gt;SASL_SSL Auth&lt;/font&gt;&lt;/b&gt;" style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=1;strokeWidth=3;endArrow=block;endFill=1;strokeColor=#D97706;dashed=1;dashPattern=6 3;fontSize=12;" edge="1" parent="1" source="msk_west" target="sasl_west">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="n_w3" value="&lt;b&gt;&lt;font style=&#39;font-size:13px;color:#7C3AED;&#39;&gt;Consume (SCRAM-512)&lt;/font&gt;&lt;/b&gt;" style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=1;strokeWidth=4;endArrow=block;endFill=1;strokeColor=#7C3AED;fontSize=13;" edge="1" parent="1" source="sasl_west" target="dbx_west_bg">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="n_e4" value="&lt;b&gt;&lt;font style=&#39;font-size:13px;color:#EA580C;&#39;&gt;🔺 Write Delta&lt;/font&gt;&lt;/b&gt;" style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=1;strokeWidth=4;endArrow=block;endFill=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.28;entryDx=0;entryDy=0;strokeColor=#EA580C;fontSize=13;" edge="1" parent="1" source="dbx_east_bg" target="delta_n">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="n_w4" value="&lt;b&gt;&lt;font style=&#39;font-size:13px;color:#EA580C;&#39;&gt;🔺 Write Delta (SAME table)&lt;/font&gt;&lt;/b&gt;" style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=1;strokeWidth=4;endArrow=block;endFill=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.72;entryDx=0;entryDy=0;strokeColor=#EA580C;dashed=1;dashPattern=5 3;fontSize=13;" edge="1" parent="1" source="dbx_west_bg" target="delta_n">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="n_d0" style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=1;strokeWidth=3;endArrow=open;endFill=1;strokeColor=#0891B2;" edge="1" parent="1" source="delta_n" target="tbd0">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="n_d1" style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=1;strokeWidth=3;endArrow=open;endFill=1;strokeColor=#0891B2;" edge="1" parent="1" source="delta_n" target="tbd1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="n_d2" style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=1;strokeWidth=3;endArrow=open;endFill=1;strokeColor=#0891B2;" edge="1" parent="1" source="delta_n" target="tbd2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="n_d3" style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=1;strokeWidth=3;endArrow=open;endFill=1;strokeColor=#0891B2;" edge="1" parent="1" source="delta_n" target="tbd3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <!-- ═══════════════════════════════════════════════════ -->
+        <!-- SECTION 2 BORDER: FAILOVER A — EAST MSK DOWN       -->
+        <!-- ═══════════════════════════════════════════════════ -->
+        <mxCell id="sec2_bg" value="" style="rounded=1;fillColor=#FFF1F2;strokeColor=#DC2626;strokeWidth=5;opacity=50;arcSize=2;" vertex="1" parent="1">
+          <mxGeometry x="20" y="830" width="5560" height="640" as="geometry" />
+        </mxCell>
+        <mxCell id="sec2_lbl" value="&lt;b&gt;&lt;font style=&#39;font-size:17px;color:#991B1B;&#39;&gt;🔴  FAILOVER SCENARIO A — EAST MSK DOWN  →  WEST Consumer handles 100% load&lt;/font&gt;&lt;/b&gt;" style="rounded=1;fillColor=#FEE2E2;strokeColor=#DC2626;strokeWidth=3;fontSize=16;verticalAlign=middle;align=left;arcSize=6;html=1;spacingLeft=16;" vertex="1" parent="1">
+          <mxGeometry x="20" y="830" width="1080" height="44" as="geometry" />
+        </mxCell>
+        <!-- ETIMS A -->
+        <mxCell id="etims_a" value="&lt;b&gt;&lt;font style=&#39;font-size:16px;color:#991B1B;&#39;&gt;ETIMS&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;b&gt;&lt;font style=&#39;font-size:13px;color:#991B1B;&#39;&gt;Publisher&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;br&gt;&lt;font style=&#39;font-size:11px;color:#7F1D1D;&#39;&gt;Reroutes ALL traffic&lt;br&gt;to WEST MSK only&lt;/font&gt;" style="shape=mxgraph.cisco.servers.standard_server;fillColor=#FEF2F2;strokeColor=#DC2626;strokeWidth=3;fontSize=12;verticalLabelPosition=bottom;labelPosition=center;verticalAlign=top;align=center;html=1;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="100" y="940" width="150" height="160" as="geometry" />
+        </mxCell>
+        <!-- MSK East DOWN A -->
+        <mxCell id="msk_e_dn_a" value="&lt;b&gt;&lt;font style=&#39;font-size:16px;color:#DC2626;&#39;&gt;❌  AWS MSK — us-east-1&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:13px;color:#DC2626;&#39;&gt;DOWN / UNAVAILABLE&lt;/font&gt;&lt;br&gt;&lt;font style=&#39;font-size:12px;color:#991B1B;&#39;&gt;No messages — consumers idle&lt;/font&gt;" style="rounded=1;fillColor=#FEE2E2;strokeColor=#EF4444;strokeWidth=3;fontSize=13;verticalAlign=middle;align=center;arcSize=5;html=1;dashed=1;dashPattern=8 5;" vertex="1" parent="1">
+          <mxGeometry x="500" y="870" width="640" height="120" as="geometry" />
+        </mxCell>
+        <!-- MSK West FULL A -->
+        <mxCell id="msk_w_full_a" value="&lt;b&gt;&lt;font style=&#39;font-size:16px;color:#5B21B6;&#39;&gt;☁️  AWS MSK — us-west-2&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:13px;color:#7C3AED;&#39;&gt;ACTIVE — handling 100% of ALL traffic&lt;/font&gt;&lt;br&gt;&lt;font style=&#39;font-size:12px;color:#5B21B6;&#39;&gt;EAST traffic auto-rerouted here via Active-Active failover&lt;/font&gt;" style="rounded=1;fillColor=#EDE9FE;strokeColor=#7C3AED;strokeWidth=4;fontSize=13;verticalAlign=middle;align=center;arcSize=5;html=1;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="500" y="1060" width="640" height="130" as="geometry" />
+        </mxCell>
+        <mxCell id="kafka_wa" value="" style="shape=mxgraph.kafka.kafka;fillColor=#7C3AED;strokeColor=#5B21B6;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="775" y="1070" width="56" height="56" as="geometry" />
+        </mxCell>
+        <!-- SASL West A -->
+        <mxCell id="sasl_w_a" value="&lt;b&gt;&lt;font style=&#39;font-size:13px;color:#92400E;&#39;&gt;🔐 SASL_SSL&lt;br&gt;SCRAM-SHA-512&lt;/font&gt;&lt;/b&gt;" style="rounded=1;fillColor=#FFFDE7;strokeColor=#D97706;strokeWidth=2.5;fontSize=12;verticalAlign=middle;align=center;arcSize=8;html=1;dashed=1;dashPattern=6 3;" vertex="1" parent="1">
+          <mxGeometry x="1300" y="1076" width="260" height="100" as="geometry" />
+        </mxCell>
+        <!-- DBX East IDLE A -->
+        <mxCell id="dbx_e_idle_a" value="&lt;b&gt;&lt;font style=&#39;font-size:14px;color:#94A3B8;&#39;&gt;🧱  Databricks EAST Consumer&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:13px;color:#94A3B8;&#39;&gt;⏸  IDLE — MSK East is down&lt;/font&gt;&lt;br&gt;&lt;font style=&#39;font-size:12px;color:#94A3B8;&#39;&gt;No new messages  ·  Checkpoint preserved&lt;/font&gt;" style="rounded=1;fillColor=#F1F5F9;strokeColor=#CBD5E1;strokeWidth=3;fontSize=13;verticalAlign=middle;align=center;arcSize=5;html=1;dashed=1;dashPattern=8 5;" vertex="1" parent="1">
+          <mxGeometry x="1740" y="860" width="560" height="120" as="geometry" />
+        </mxCell>
+        <!-- DBX West 100% A -->
+        <mxCell id="dbx_w_full_a" value="" style="rounded=1;fillColor=#EDE9FE;strokeColor=#7C3AED;strokeWidth=4;opacity=95;arcSize=5;" vertex="1" parent="1">
+          <mxGeometry x="1740" y="1020" width="760" height="280" as="geometry" />
+        </mxCell>
+        <mxCell id="dbx_w_full_a_hdr" value="&lt;b&gt;&lt;font style=&#39;font-size:15px;color:#4C1D95;&#39;&gt;🧱  Databricks WEST Consumer&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;b&gt;&lt;font style=&#39;font-size:14px;color:#7C3AED;&#39;&gt;🔥  100% LOAD — All 7 platform jobs active&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:12px;color:#5B21B6;&#39;&gt;Reads ALL traffic from WEST MSK  ·  No data loss  ·  Seamless failover&lt;/font&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="1740" y="1028" width="760" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="dwa0" value="HDCAuth-W" style="shape=mxgraph.databricks.cluster;fillColor=#FAF5FF;strokeColor=#8B5CF6;strokeWidth=2;fontSize=9;verticalLabelPosition=bottom;labelPosition=center;verticalAlign=top;align=center;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1756" y="1118" width="66" height="66" as="geometry" />
+        </mxCell>
+        <mxCell id="dwa1" value="DebitGW-W" style="shape=mxgraph.databricks.cluster;fillColor=#FAF5FF;strokeColor=#8B5CF6;strokeWidth=2;fontSize=9;verticalLabelPosition=bottom;labelPosition=center;verticalAlign=top;align=center;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1854" y="1118" width="66" height="66" as="geometry" />
+        </mxCell>
+        <mxCell id="dwa2" value="BUYpass-W" style="shape=mxgraph.databricks.cluster;fillColor=#FAF5FF;strokeColor=#8B5CF6;strokeWidth=2;fontSize=9;verticalLabelPosition=bottom;labelPosition=center;verticalAlign=top;align=center;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1952" y="1118" width="66" height="66" as="geometry" />
+        </mxCell>
+        <mxCell id="dwa3" value="Omaha-W" style="shape=mxgraph.databricks.cluster;fillColor=#FAF5FF;strokeColor=#8B5CF6;strokeWidth=2;fontSize=9;verticalLabelPosition=bottom;labelPosition=center;verticalAlign=top;align=center;html=1;" vertex="1" parent="1">
+          <mxGeometry x="2050" y="1118" width="66" height="66" as="geometry" />
+        </mxCell>
+        <mxCell id="dwa4" value="IPG-W" style="shape=mxgraph.databricks.cluster;fillColor=#FAF5FF;strokeColor=#8B5CF6;strokeWidth=2;fontSize=9;verticalLabelPosition=bottom;labelPosition=center;verticalAlign=top;align=center;html=1;" vertex="1" parent="1">
+          <mxGeometry x="2148" y="1118" width="66" height="66" as="geometry" />
+        </mxCell>
+        <mxCell id="dwa5" value="FSLTxn-W" style="shape=mxgraph.databricks.cluster;fillColor=#FAF5FF;strokeColor=#8B5CF6;strokeWidth=2;fontSize=9;verticalLabelPosition=bottom;labelPosition=center;verticalAlign=top;align=center;html=1;" vertex="1" parent="1">
+          <mxGeometry x="2246" y="1118" width="66" height="66" as="geometry" />
+        </mxCell>
+        <mxCell id="dwa6" value="FSLReg-W" style="shape=mxgraph.databricks.cluster;fillColor=#FAF5FF;strokeColor=#8B5CF6;strokeWidth=2;fontSize=9;verticalLabelPosition=bottom;labelPosition=center;verticalAlign=top;align=center;html=1;" vertex="1" parent="1">
+          <mxGeometry x="2344" y="1118" width="66" height="66" as="geometry" />
+        </mxCell>
+        <!-- Delta A -->
+        <mxCell id="delta_a" value="&lt;b&gt;&lt;font style=&#39;font-size:14px;color:#7C2D12;&#39;&gt;🔺  Delta Lake — Same Tables&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:12px;color:#9A3412;&#39;&gt;WEST consumer writes continue normally&lt;br&gt;Delta ACID guarantees — zero data loss&lt;/font&gt;" style="rounded=1;fillColor=#FFF7ED;strokeColor=#EA580C;strokeWidth=3;fontSize=13;verticalAlign=middle;align=center;arcSize=5;html=1;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="2700" y="1040" width="480" height="120" as="geometry" />
+        </mxCell>
+        <!-- DS A -->
+        <mxCell id="ds_a" value="&lt;b&gt;&lt;font style=&#39;font-size:14px;color:#0C4A6E;&#39;&gt;📡  Downstream Consumers&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:12px;color:#475569;&#39;&gt;FSBI  /  Single AUTH  /  Peer Benchmarking&lt;br&gt;AltMOPS  /  Others  ·  Reads uninterrupted&lt;/font&gt;" style="rounded=1;fillColor=#F0F9FF;strokeColor=#0891B2;strokeWidth=2.5;fontSize=13;verticalAlign=middle;align=center;arcSize=5;html=1;" vertex="1" parent="1">
+          <mxGeometry x="3360" y="1040" width="480" height="120" as="geometry" />
+        </mxCell>
+        <!-- SCENARIO A ARROWS -->
+        <mxCell id="a1" value="&lt;b&gt;&lt;font style=&#39;font-size:13px;color:#EF4444;&#39;&gt;BLOCKED ❌&lt;/font&gt;&lt;/b&gt;" style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=1;strokeWidth=3;endArrow=block;endFill=1;strokeColor=#EF4444;dashed=1;dashPattern=8 5;exitX=1;exitY=0.3;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontSize=13;" edge="1" parent="1" source="etims_a" target="msk_e_dn_a">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="a2" value="&lt;b&gt;&lt;font style=&#39;font-size:13px;color:#7C3AED;&#39;&gt;ALL traffic → WEST&lt;/font&gt;&lt;/b&gt;" style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=1;strokeWidth=5;endArrow=block;endFill=1;strokeColor=#7C3AED;exitX=1;exitY=0.7;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontSize=13;" edge="1" parent="1" source="etims_a" target="msk_w_full_a">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="380" y="1040" />
+              <mxPoint x="380" y="1125" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="a3" value="" style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=1;strokeWidth=3;endArrow=block;endFill=1;strokeColor=#D97706;dashed=1;dashPattern=6 3;" edge="1" parent="1" source="msk_w_full_a" target="sasl_w_a">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="a4" value="&lt;b&gt;&lt;font style=&#39;font-size:13px;color:#7C3AED;&#39;&gt;Consume 100% load&lt;/font&gt;&lt;/b&gt;" style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=1;strokeWidth=5;endArrow=block;endFill=1;strokeColor=#7C3AED;fontSize=13;" edge="1" parent="1" source="sasl_w_a" target="dbx_w_full_a">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="a5" value="&lt;b&gt;&lt;font style=&#39;font-size:13px;color:#EA580C;&#39;&gt;🔺 Write Delta&lt;/font&gt;&lt;/b&gt;" style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=1;strokeWidth=5;endArrow=block;endFill=1;strokeColor=#EA580C;fontSize=13;" edge="1" parent="1" source="dbx_w_full_a" target="delta_a">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="a6" value="&lt;b&gt;&lt;font style=&#39;font-size:13px;color:#0891B2;&#39;&gt;Read Delta&lt;/font&gt;&lt;/b&gt;" style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=1;strokeWidth=3;endArrow=open;endFill=1;strokeColor=#0891B2;fontSize=13;" edge="1" parent="1" source="delta_a" target="ds_a">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <!-- ═══════════════════════════════════════════════════ -->
+        <!-- SECTION 3 BORDER: FAILOVER B — WEST MSK DOWN       -->
+        <!-- ═══════════════════════════════════════════════════ -->
+        <mxCell id="sec3_bg" value="" style="rounded=1;fillColor=#EFF6FF;strokeColor=#1D4ED8;strokeWidth=5;opacity=50;arcSize=2;" vertex="1" parent="1">
+          <mxGeometry x="20" y="1530" width="5560" height="640" as="geometry" />
+        </mxCell>
+        <mxCell id="sec3_lbl" value="&lt;b&gt;&lt;font style=&#39;font-size:17px;color:#1E3A8A;&#39;&gt;🔴  FAILOVER SCENARIO B — WEST MSK DOWN  →  EAST Consumer handles 100% load&lt;/font&gt;&lt;/b&gt;" style="rounded=1;fillColor=#DBEAFE;strokeColor=#1D4ED8;strokeWidth=3;fontSize=16;verticalAlign=middle;align=left;arcSize=6;html=1;spacingLeft=16;" vertex="1" parent="1">
+          <mxGeometry x="20" y="1530" width="1080" height="44" as="geometry" />
+        </mxCell>
+        <!-- ETIMS B -->
+        <mxCell id="etims_b" value="&lt;b&gt;&lt;font style=&#39;font-size:16px;color:#991B1B;&#39;&gt;ETIMS&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;b&gt;&lt;font style=&#39;font-size:13px;color:#991B1B;&#39;&gt;Publisher&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;br&gt;&lt;font style=&#39;font-size:11px;color:#7F1D1D;&#39;&gt;Reroutes ALL traffic&lt;br&gt;to EAST MSK only&lt;/font&gt;" style="shape=mxgraph.cisco.servers.standard_server;fillColor=#FEF2F2;strokeColor=#DC2626;strokeWidth=3;fontSize=12;verticalLabelPosition=bottom;labelPosition=center;verticalAlign=top;align=center;html=1;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="100" y="1640" width="150" height="160" as="geometry" />
+        </mxCell>
+        <!-- MSK East FULL B -->
+        <mxCell id="msk_e_full_b" value="&lt;b&gt;&lt;font style=&#39;font-size:16px;color:#1E3A8A;&#39;&gt;☁️  AWS MSK — us-east-1&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:13px;color:#1D4ED8;&#39;&gt;ACTIVE — handling 100% of ALL traffic&lt;/font&gt;&lt;br&gt;&lt;font style=&#39;font-size:12px;color:#1E3A8A;&#39;&gt;WEST traffic auto-rerouted here via Active-Active failover&lt;/font&gt;" style="rounded=1;fillColor=#DBEAFE;strokeColor=#1D4ED8;strokeWidth=4;fontSize=13;verticalAlign=middle;align=center;arcSize=5;html=1;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="500" y="1570" width="640" height="130" as="geometry" />
+        </mxCell>
+        <mxCell id="kafka_eb" value="" style="shape=mxgraph.kafka.kafka;fillColor=#1D4ED8;strokeColor=#1E3A8A;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="775" y="1580" width="56" height="56" as="geometry" />
+        </mxCell>
+        <!-- MSK West DOWN B -->
+        <mxCell id="msk_w_dn_b" value="&lt;b&gt;&lt;font style=&#39;font-size:16px;color:#DC2626;&#39;&gt;❌  AWS MSK — us-west-2&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:13px;color:#DC2626;&#39;&gt;DOWN / UNAVAILABLE&lt;/font&gt;&lt;br&gt;&lt;font style=&#39;font-size:12px;color:#991B1B;&#39;&gt;No messages — consumers idle&lt;/font&gt;" style="rounded=1;fillColor=#FEE2E2;strokeColor=#EF4444;strokeWidth=3;fontSize=13;verticalAlign=middle;align=center;arcSize=5;html=1;dashed=1;dashPattern=8 5;" vertex="1" parent="1">
+          <mxGeometry x="500" y="1768" width="640" height="120" as="geometry" />
+        </mxCell>
+        <!-- SASL East B -->
+        <mxCell id="sasl_e_b" value="&lt;b&gt;&lt;font style=&#39;font-size:13px;color:#92400E;&#39;&gt;🔐 SASL_SSL&lt;br&gt;SCRAM-SHA-512&lt;/font&gt;&lt;/b&gt;" style="rounded=1;fillColor=#FFFDE7;strokeColor=#D97706;strokeWidth=2.5;fontSize=12;verticalAlign=middle;align=center;arcSize=8;html=1;dashed=1;dashPattern=6 3;" vertex="1" parent="1">
+          <mxGeometry x="1300" y="1586" width="260" height="100" as="geometry" />
+        </mxCell>
+        <!-- DBX East 100% B -->
+        <mxCell id="dbx_e_full_b" value="" style="rounded=1;fillColor=#DCFCE7;strokeColor=#16A34A;strokeWidth=4;opacity=95;arcSize=5;" vertex="1" parent="1">
+          <mxGeometry x="1740" y="1540" width="760" height="280" as="geometry" />
+        </mxCell>
+        <mxCell id="dbx_e_full_b_hdr" value="&lt;b&gt;&lt;font style=&#39;font-size:15px;color:#14532D;&#39;&gt;🧱  Databricks EAST Consumer&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;b&gt;&lt;font style=&#39;font-size:14px;color:#16A34A;&#39;&gt;🔥  100% LOAD — All 7 platform jobs active&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:12px;color:#166534;&#39;&gt;Reads ALL traffic from EAST MSK  ·  No data loss  ·  Seamless failover&lt;/font&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="1740" y="1548" width="760" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="dea0" value="HDCAuth-E" style="shape=mxgraph.databricks.cluster;fillColor=#F0FDF4;strokeColor=#22C55E;strokeWidth=2;fontSize=9;verticalLabelPosition=bottom;labelPosition=center;verticalAlign=top;align=center;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1756" y="1638" width="66" height="66" as="geometry" />
+        </mxCell>
+        <mxCell id="dea1" value="DebitGW-E" style="shape=mxgraph.databricks.cluster;fillColor=#F0FDF4;strokeColor=#22C55E;strokeWidth=2;fontSize=9;verticalLabelPosition=bottom;labelPosition=center;verticalAlign=top;align=center;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1854" y="1638" width="66" height="66" as="geometry" />
+        </mxCell>
+        <mxCell id="dea2" value="BUYpass-E" style="shape=mxgraph.databricks.cluster;fillColor=#F0FDF4;strokeColor=#22C55E;strokeWidth=2;fontSize=9;verticalLabelPosition=bottom;labelPosition=center;verticalAlign=top;align=center;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1952" y="1638" width="66" height="66" as="geometry" />
+        </mxCell>
+        <mxCell id="dea3" value="Omaha-E" style="shape=mxgraph.databricks.cluster;fillColor=#F0FDF4;strokeColor=#22C55E;strokeWidth=2;fontSize=9;verticalLabelPosition=bottom;labelPosition=center;verticalAlign=top;align=center;html=1;" vertex="1" parent="1">
+          <mxGeometry x="2050" y="1638" width="66" height="66" as="geometry" />
+        </mxCell>
+        <mxCell id="dea4" value="IPG-E" style="shape=mxgraph.databricks.cluster;fillColor=#F0FDF4;strokeColor=#22C55E;strokeWidth=2;fontSize=9;verticalLabelPosition=bottom;labelPosition=center;verticalAlign=top;align=center;html=1;" vertex="1" parent="1">
+          <mxGeometry x="2148" y="1638" width="66" height="66" as="geometry" />
+        </mxCell>
+        <mxCell id="dea5" value="FSLTxn-E" style="shape=mxgraph.databricks.cluster;fillColor=#F0FDF4;strokeColor=#22C55E;strokeWidth=2;fontSize=9;verticalLabelPosition=bottom;labelPosition=center;verticalAlign=top;align=center;html=1;" vertex="1" parent="1">
+          <mxGeometry x="2246" y="1638" width="66" height="66" as="geometry" />
+        </mxCell>
+        <mxCell id="dea6" value="FSLReg-E" style="shape=mxgraph.databricks.cluster;fillColor=#F0FDF4;strokeColor=#22C55E;strokeWidth=2;fontSize=9;verticalLabelPosition=bottom;labelPosition=center;verticalAlign=top;align=center;html=1;" vertex="1" parent="1">
+          <mxGeometry x="2344" y="1638" width="66" height="66" as="geometry" />
+        </mxCell>
+        <!-- DBX West IDLE B -->
+        <mxCell id="dbx_w_idle_b" value="&lt;b&gt;&lt;font style=&#39;font-size:14px;color:#94A3B8;&#39;&gt;🧱  Databricks WEST Consumer&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:13px;color:#94A3B8;&#39;&gt;⏸  IDLE — MSK West is down&lt;/font&gt;&lt;br&gt;&lt;font style=&#39;font-size:12px;color:#94A3B8;&#39;&gt;No new messages  ·  Checkpoint preserved&lt;/font&gt;" style="rounded=1;fillColor=#F1F5F9;strokeColor=#CBD5E1;strokeWidth=3;fontSize=13;verticalAlign=middle;align=center;arcSize=5;html=1;dashed=1;dashPattern=8 5;" vertex="1" parent="1">
+          <mxGeometry x="1740" y="1860" width="560" height="120" as="geometry" />
+        </mxCell>
+        <!-- Delta B -->
+        <mxCell id="delta_b" value="&lt;b&gt;&lt;font style=&#39;font-size:14px;color:#7C2D12;&#39;&gt;🔺  Delta Lake — Same Tables&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:12px;color:#9A3412;&#39;&gt;EAST consumer writes continue normally&lt;br&gt;Delta ACID guarantees — zero data loss&lt;/font&gt;" style="rounded=1;fillColor=#FFF7ED;strokeColor=#EA580C;strokeWidth=3;fontSize=13;verticalAlign=middle;align=center;arcSize=5;html=1;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="2700" y="1560" width="480" height="120" as="geometry" />
+        </mxCell>
+        <!-- DS B -->
+        <mxCell id="ds_b" value="&lt;b&gt;&lt;font style=&#39;font-size:14px;color:#0C4A6E;&#39;&gt;📡  Downstream Consumers&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:12px;color:#475569;&#39;&gt;FSBI  /  Single AUTH  /  Peer Benchmarking&lt;br&gt;AltMOPS  /  Others  ·  Reads uninterrupted&lt;/font&gt;" style="rounded=1;fillColor=#F0F9FF;strokeColor=#0891B2;strokeWidth=2.5;fontSize=13;verticalAlign=middle;align=center;arcSize=5;html=1;" vertex="1" parent="1">
+          <mxGeometry x="3360" y="1560" width="480" height="120" as="geometry" />
+        </mxCell>
+        <!-- SCENARIO B ARROWS -->
+        <mxCell id="b1" value="&lt;b&gt;&lt;font style=&#39;font-size:13px;color:#1D4ED8;&#39;&gt;ALL traffic → EAST&lt;/font&gt;&lt;/b&gt;" style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=1;strokeWidth=5;endArrow=block;endFill=1;strokeColor=#1D4ED8;exitX=1;exitY=0.3;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontSize=13;" edge="1" parent="1" source="etims_b" target="msk_e_full_b">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="b2" value="&lt;b&gt;&lt;font style=&#39;font-size:13px;color:#EF4444;&#39;&gt;BLOCKED ❌&lt;/font&gt;&lt;/b&gt;" style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=1;strokeWidth=3;endArrow=block;endFill=1;strokeColor=#EF4444;dashed=1;dashPattern=8 5;exitX=1;exitY=0.7;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontSize=13;" edge="1" parent="1" source="etims_b" target="msk_w_dn_b">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="380" y="1740" />
+              <mxPoint x="380" y="1828" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="b3" value="" style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=1;strokeWidth=3;endArrow=block;endFill=1;strokeColor=#D97706;dashed=1;dashPattern=6 3;" edge="1" parent="1" source="msk_e_full_b" target="sasl_e_b">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="b4" value="&lt;b&gt;&lt;font style=&#39;font-size:13px;color:#16A34A;&#39;&gt;Consume 100% load&lt;/font&gt;&lt;/b&gt;" style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=1;strokeWidth=5;endArrow=block;endFill=1;strokeColor=#16A34A;fontSize=13;" edge="1" parent="1" source="sasl_e_b" target="dbx_e_full_b">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="b5" value="&lt;b&gt;&lt;font style=&#39;font-size:13px;color:#EA580C;&#39;&gt;🔺 Write Delta&lt;/font&gt;&lt;/b&gt;" style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=1;strokeWidth=5;endArrow=block;endFill=1;strokeColor=#EA580C;fontSize=13;" edge="1" parent="1" source="dbx_e_full_b" target="delta_b">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="b6" value="&lt;b&gt;&lt;font style=&#39;font-size:13px;color:#0891B2;&#39;&gt;Read Delta&lt;/font&gt;&lt;/b&gt;" style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=1;strokeWidth=3;endArrow=open;endFill=1;strokeColor=#0891B2;fontSize=13;" edge="1" parent="1" source="delta_b" target="ds_b">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
