@@ -1,0 +1,1022 @@
+<mxfile host="Electron" pages="3">
+  <diagram id="asis" name="As-Is Architecture">
+    <mxGraphModel dx="2894" dy="1903" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="2800" pageHeight="900" background="#FFFFFF" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="bar" parent="1" style="rounded=0;fillColor=#1E3A5F;strokeColor=none;" value="" vertex="1">
+          <mxGeometry height="56" width="2800" as="geometry" />
+        </mxCell>
+        <mxCell id="t1" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;" value="&lt;b&gt;&lt;font style=&#39;font-size:20px;color:#FFFFFF;&#39;&gt;📋  GBS AUTH — AS-IS ARCHITECTURE&lt;/font&gt;&lt;/b&gt;" vertex="1">
+          <mxGeometry height="56" width="1600" x="20" as="geometry" />
+        </mxCell>
+        <mxCell id="t2" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=right;verticalAlign=middle;" value="&lt;font style=&#39;font-size:12px;color:#94A3B8;&#39;&gt;CDP On-Premises  ·  ETIMS Cloudera Kafka  ·  Kerberos Auth  ·  Hadoop HDFS Parquet  ·  DCS Team 2026&lt;/font&gt;" vertex="1">
+          <mxGeometry height="56" width="1560" x="1200" as="geometry" />
+        </mxCell>
+        <mxCell id="ch30" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF1F2;strokeColor=#FCA5A5;strokeWidth=2.5;fontSize=13;verticalAlign=middle;align=center;arcSize=50;" value="&lt;b&gt;&lt;font style=&#39;font-size:13px;color:#1E293B;&#39;&gt;🏢  SOURCE SYSTEMS&lt;/font&gt;&lt;/b&gt;" vertex="1">
+          <mxGeometry height="38" width="320" x="30" y="66" as="geometry" />
+        </mxCell>
+        <mxCell id="ch440" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF7ED;strokeColor=#FED7AA;strokeWidth=2.5;fontSize=13;verticalAlign=middle;align=center;arcSize=50;" value="&lt;b&gt;&lt;font style=&#39;font-size:13px;color:#1E293B;&#39;&gt;⚡  CLOUDERA KAFKA  (ETIMS)&lt;/font&gt;&lt;/b&gt;" vertex="1">
+          <mxGeometry height="38" width="400" x="440" y="66" as="geometry" />
+        </mxCell>
+        <mxCell id="ch930" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFBEB;strokeColor=#FDE68A;strokeWidth=2.5;fontSize=13;verticalAlign=middle;align=center;arcSize=50;" value="&lt;b&gt;&lt;font style=&#39;font-size:13px;color:#1E293B;&#39;&gt;🔐  KERBEROS KDC&lt;/font&gt;&lt;/b&gt;" vertex="1">
+          <mxGeometry height="38" width="300" x="930" y="66" as="geometry" />
+        </mxCell>
+        <mxCell id="ch1320" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F0FDF4;strokeColor=#86EFAC;strokeWidth=2.5;fontSize=13;verticalAlign=middle;align=center;arcSize=50;" value="&lt;b&gt;&lt;font style=&#39;font-size:13px;color:#1E293B;&#39;&gt;⚡  CDP SPARK STREAMING&lt;/font&gt;&lt;/b&gt;" vertex="1">
+          <mxGeometry height="38" width="440" x="1320" y="66" as="geometry" />
+        </mxCell>
+        <mxCell id="ch1850" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FAF5FF;strokeColor=#DDD6FE;strokeWidth=2.5;fontSize=13;verticalAlign=middle;align=center;arcSize=50;" value="&lt;b&gt;&lt;font style=&#39;font-size:13px;color:#1E293B;&#39;&gt;🗄️  HADOOP HDFS&lt;/font&gt;&lt;/b&gt;" vertex="1">
+          <mxGeometry height="38" width="360" x="1850" y="66" as="geometry" />
+        </mxCell>
+        <mxCell id="ch2300" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EFF6FF;strokeColor=#BFDBFE;strokeWidth=2.5;fontSize=13;verticalAlign=middle;align=center;arcSize=50;" value="&lt;b&gt;&lt;font style=&#39;font-size:13px;color:#1E293B;&#39;&gt;📡  DOWNSTREAM CONSUMERS&lt;/font&gt;&lt;/b&gt;" vertex="1">
+          <mxGeometry height="38" width="460" x="2300" y="66" as="geometry" />
+        </mxCell>
+        <mxCell id="sep420" edge="1" parent="1" style="endArrow=none;html=1;strokeColor=#E2E8F0;strokeWidth=1.5;dashed=1;dashPattern=4 4;" value="">
+          <mxGeometry height="840" relative="1" width="1" x="420" y="58" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="sep860" edge="1" parent="1" style="endArrow=none;html=1;strokeColor=#E2E8F0;strokeWidth=1.5;dashed=1;dashPattern=4 4;" value="">
+          <mxGeometry height="840" relative="1" width="1" x="860" y="58" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="sep1300" edge="1" parent="1" style="endArrow=none;html=1;strokeColor=#E2E8F0;strokeWidth=1.5;dashed=1;dashPattern=4 4;" value="">
+          <mxGeometry height="840" relative="1" width="1" x="1300" y="58" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="sep1740" edge="1" parent="1" style="endArrow=none;html=1;strokeColor=#E2E8F0;strokeWidth=1.5;dashed=1;dashPattern=4 4;" value="">
+          <mxGeometry height="840" relative="1" width="1" x="1740" y="58" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="sep2270" edge="1" parent="1" style="endArrow=none;html=1;strokeColor=#E2E8F0;strokeWidth=1.5;dashed=1;dashPattern=4 4;" value="">
+          <mxGeometry height="840" relative="1" width="1" x="2270" y="58" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="r0band" parent="1" style="rounded=0;fillColor=#FAFBFC;strokeColor=#E2E8F0;strokeWidth=1;" value="" vertex="1">
+          <mxGeometry height="92" width="2740" x="28" y="115" as="geometry" />
+        </mxCell>
+        <mxCell id="r0s" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF1F2;strokeColor=#DC2626;strokeWidth=2.5;fontSize=13;verticalAlign=middle;align=center;arcSize=12;" value="&lt;b&gt;&lt;font style=&#39;font-size:15px;color:#DC2626;&#39;&gt;🔴 HDC.AUTH_TXN&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:11px;color:#64748B;&#39;&gt;Auth Transactions&lt;/font&gt;" vertex="1">
+          <mxGeometry height="80" width="310" x="35" y="121" as="geometry" />
+        </mxCell>
+        <mxCell id="r0k" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF7ED;strokeColor=#F97316;strokeWidth=2;fontSize=12;verticalAlign=middle;align=center;arcSize=12;" value="&lt;b&gt;&lt;font style=&#39;font-size:14px;color:#C2410C;&#39;&gt;⚡ hdc.auth_txn&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:11px;color:#78716C;&#39;&gt;Kafka Topic  ·  Partitions: 12&lt;/font&gt;&lt;br&gt;&lt;font style=&#39;font-size:10px;color:#A8A29E;&#39;&gt;🔐 Kerberos GSSAPI Auth&lt;/font&gt;" vertex="1">
+          <mxGeometry height="80" width="390" x="445" y="121" as="geometry" />
+        </mxCell>
+        <mxCell id="r0kdc" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFBEB;strokeColor=#D97706;strokeWidth=2;fontSize=12;verticalAlign=middle;align=center;arcSize=12;dashed=1;dashPattern=6 3;" value="&lt;b&gt;&lt;font style=&#39;font-size:13px;color:#92400E;&#39;&gt;🎫 KDC Ticket&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:10px;color:#78716C;&#39;&gt;TGS Grant  ·  Keytab&lt;/font&gt;" vertex="1">
+          <mxGeometry height="80" width="290" x="935" y="121" as="geometry" />
+        </mxCell>
+        <mxCell id="r0sp" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F0FDF4;strokeColor=#22C55E;strokeWidth=2;fontSize=12;verticalAlign=middle;align=center;arcSize=12;" value="&lt;b&gt;&lt;font style=&#39;font-size:14px;color:#15803D;&#39;&gt;⚡ HDCAuthStreamApp&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:11px;color:#78716C;&#39;&gt;CDP Spark Streaming  ·  Platform Parser&lt;/font&gt;" vertex="1">
+          <mxGeometry height="80" width="430" x="1325" y="121" as="geometry" />
+        </mxCell>
+        <mxCell id="r0hd" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FAF5FF;strokeColor=#8B5CF6;strokeWidth=2;fontSize=12;verticalAlign=middle;align=center;arcSize=12;" value="&lt;b&gt;&lt;font style=&#39;font-size:14px;color:#6D28D9;&#39;&gt;🗄️ /hdc/auth_txn/&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:11px;color:#78716C;&#39;&gt;Parquet  ·  date-partitioned&lt;/font&gt;" vertex="1">
+          <mxGeometry height="80" width="350" x="1855" y="121" as="geometry" />
+        </mxCell>
+        <mxCell id="r0e1" edge="1" parent="1" source="r0s" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeWidth=2.5;endArrow=open;endFill=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;rounded=0;strokeColor=#DC2626;" target="r0k">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="r0e2" edge="1" parent="1" source="r0k" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeWidth=2.5;endArrow=open;endFill=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;rounded=0;strokeColor=#D97706;dashed=1;dashPattern=5 3;" target="r0kdc">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="r0e3" edge="1" parent="1" source="r0kdc" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeWidth=2.5;endArrow=open;endFill=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;rounded=0;strokeColor=#22C55E;" target="r0sp">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="r0e4" edge="1" parent="1" source="r0sp" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeWidth=2.5;endArrow=open;endFill=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;rounded=0;strokeColor=#8B5CF6;" target="r0hd">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="r1band" parent="1" style="rounded=0;fillColor=#F8F9FB;strokeColor=#E2E8F0;strokeWidth=1;" value="" vertex="1">
+          <mxGeometry height="92" width="2740" x="28" y="219" as="geometry" />
+        </mxCell>
+        <mxCell id="r1s" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF7ED;strokeColor=#EA580C;strokeWidth=2.5;fontSize=13;verticalAlign=middle;align=center;arcSize=12;" value="&lt;b&gt;&lt;font style=&#39;font-size:15px;color:#EA580C;&#39;&gt;🟠 DEBITGW_TXN&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:11px;color:#64748B;&#39;&gt;Debit Gateway&lt;/font&gt;" vertex="1">
+          <mxGeometry height="80" width="310" x="35" y="225" as="geometry" />
+        </mxCell>
+        <mxCell id="r1k" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF7ED;strokeColor=#F97316;strokeWidth=2;fontSize=12;verticalAlign=middle;align=center;arcSize=12;" value="&lt;b&gt;&lt;font style=&#39;font-size:14px;color:#C2410C;&#39;&gt;⚡ hdc.debitgw_txn&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:11px;color:#78716C;&#39;&gt;Kafka Topic  ·  Partitions: 12&lt;/font&gt;&lt;br&gt;&lt;font style=&#39;font-size:10px;color:#A8A29E;&#39;&gt;🔐 Kerberos GSSAPI Auth&lt;/font&gt;" vertex="1">
+          <mxGeometry height="80" width="390" x="445" y="225" as="geometry" />
+        </mxCell>
+        <mxCell id="r1kdc" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFBEB;strokeColor=#D97706;strokeWidth=2;fontSize=12;verticalAlign=middle;align=center;arcSize=12;dashed=1;dashPattern=6 3;" value="&lt;b&gt;&lt;font style=&#39;font-size:13px;color:#92400E;&#39;&gt;🎫 KDC Ticket&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:10px;color:#78716C;&#39;&gt;TGS Grant  ·  Keytab&lt;/font&gt;" vertex="1">
+          <mxGeometry height="80" width="290" x="935" y="225" as="geometry" />
+        </mxCell>
+        <mxCell id="r1sp" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F0FDF4;strokeColor=#22C55E;strokeWidth=2;fontSize=12;verticalAlign=middle;align=center;arcSize=12;" value="&lt;b&gt;&lt;font style=&#39;font-size:14px;color:#15803D;&#39;&gt;⚡ DebitGWStreamApp&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:11px;color:#78716C;&#39;&gt;CDP Spark Streaming  ·  Platform Parser&lt;/font&gt;" vertex="1">
+          <mxGeometry height="80" width="430" x="1325" y="225" as="geometry" />
+        </mxCell>
+        <mxCell id="r1hd" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FAF5FF;strokeColor=#8B5CF6;strokeWidth=2;fontSize=12;verticalAlign=middle;align=center;arcSize=12;" value="&lt;b&gt;&lt;font style=&#39;font-size:14px;color:#6D28D9;&#39;&gt;🗄️ /hdc/debitgw/&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:11px;color:#78716C;&#39;&gt;Parquet  ·  date-partitioned&lt;/font&gt;" vertex="1">
+          <mxGeometry height="80" width="350" x="1855" y="225" as="geometry" />
+        </mxCell>
+        <mxCell id="r1e1" edge="1" parent="1" source="r1s" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeWidth=2.5;endArrow=open;endFill=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;rounded=0;strokeColor=#EA580C;" target="r1k">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="r1e2" edge="1" parent="1" source="r1k" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeWidth=2.5;endArrow=open;endFill=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;rounded=0;strokeColor=#D97706;dashed=1;dashPattern=5 3;" target="r1kdc">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="r1e3" edge="1" parent="1" source="r1kdc" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeWidth=2.5;endArrow=open;endFill=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;rounded=0;strokeColor=#22C55E;" target="r1sp">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="r1e4" edge="1" parent="1" source="r1sp" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeWidth=2.5;endArrow=open;endFill=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;rounded=0;strokeColor=#8B5CF6;" target="r1hd">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="r2band" parent="1" style="rounded=0;fillColor=#FAFBFC;strokeColor=#E2E8F0;strokeWidth=1;" value="" vertex="1">
+          <mxGeometry height="92" width="2740" x="28" y="323" as="geometry" />
+        </mxCell>
+        <mxCell id="r2s" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FEFCE8;strokeColor=#CA8A04;strokeWidth=2.5;fontSize=13;verticalAlign=middle;align=center;arcSize=12;" value="&lt;b&gt;&lt;font style=&#39;font-size:15px;color:#CA8A04;&#39;&gt;🟡 BUYpass.AUTH_TXN&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:11px;color:#64748B;&#39;&gt;Payment Network&lt;/font&gt;" vertex="1">
+          <mxGeometry height="80" width="310" x="35" y="329" as="geometry" />
+        </mxCell>
+        <mxCell id="r2k" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF7ED;strokeColor=#F97316;strokeWidth=2;fontSize=12;verticalAlign=middle;align=center;arcSize=12;" value="&lt;b&gt;&lt;font style=&#39;font-size:14px;color:#C2410C;&#39;&gt;⚡ buypass.auth_txn&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:11px;color:#78716C;&#39;&gt;Kafka Topic  ·  Partitions: 12&lt;/font&gt;&lt;br&gt;&lt;font style=&#39;font-size:10px;color:#A8A29E;&#39;&gt;🔐 Kerberos GSSAPI Auth&lt;/font&gt;" vertex="1">
+          <mxGeometry height="80" width="390" x="445" y="329" as="geometry" />
+        </mxCell>
+        <mxCell id="r2kdc" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFBEB;strokeColor=#D97706;strokeWidth=2;fontSize=12;verticalAlign=middle;align=center;arcSize=12;dashed=1;dashPattern=6 3;" value="&lt;b&gt;&lt;font style=&#39;font-size:13px;color:#92400E;&#39;&gt;🎫 KDC Ticket&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:10px;color:#78716C;&#39;&gt;TGS Grant  ·  Keytab&lt;/font&gt;" vertex="1">
+          <mxGeometry height="80" width="290" x="935" y="329" as="geometry" />
+        </mxCell>
+        <mxCell id="r2sp" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F0FDF4;strokeColor=#22C55E;strokeWidth=2;fontSize=12;verticalAlign=middle;align=center;arcSize=12;" value="&lt;b&gt;&lt;font style=&#39;font-size:14px;color:#15803D;&#39;&gt;⚡ BUYpassStreamApp&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:11px;color:#78716C;&#39;&gt;CDP Spark Streaming  ·  Platform Parser&lt;/font&gt;" vertex="1">
+          <mxGeometry height="80" width="430" x="1325" y="329" as="geometry" />
+        </mxCell>
+        <mxCell id="r2hd" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FAF5FF;strokeColor=#8B5CF6;strokeWidth=2;fontSize=12;verticalAlign=middle;align=center;arcSize=12;" value="&lt;b&gt;&lt;font style=&#39;font-size:14px;color:#6D28D9;&#39;&gt;🗄️ /buypass/auth/&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:11px;color:#78716C;&#39;&gt;Parquet  ·  date-partitioned&lt;/font&gt;" vertex="1">
+          <mxGeometry height="80" width="350" x="1855" y="329" as="geometry" />
+        </mxCell>
+        <mxCell id="r2e1" edge="1" parent="1" source="r2s" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeWidth=2.5;endArrow=open;endFill=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;rounded=0;strokeColor=#CA8A04;" target="r2k">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="r2e2" edge="1" parent="1" source="r2k" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeWidth=2.5;endArrow=open;endFill=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;rounded=0;strokeColor=#D97706;dashed=1;dashPattern=5 3;" target="r2kdc">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="r2e3" edge="1" parent="1" source="r2kdc" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeWidth=2.5;endArrow=open;endFill=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;rounded=0;strokeColor=#22C55E;" target="r2sp">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="r2e4" edge="1" parent="1" source="r2sp" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeWidth=2.5;endArrow=open;endFill=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;rounded=0;strokeColor=#8B5CF6;" target="r2hd">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="r3band" parent="1" style="rounded=0;fillColor=#F8F9FB;strokeColor=#E2E8F0;strokeWidth=1;" value="" vertex="1">
+          <mxGeometry height="92" width="2740" x="28" y="427" as="geometry" />
+        </mxCell>
+        <mxCell id="r3s" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F0FDF4;strokeColor=#16A34A;strokeWidth=2.5;fontSize=13;verticalAlign=middle;align=center;arcSize=12;" value="&lt;b&gt;&lt;font style=&#39;font-size:15px;color:#16A34A;&#39;&gt;🟢 Omaha.AUTH_TXN&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:11px;color:#64748B;&#39;&gt;Omaha Processing&lt;/font&gt;" vertex="1">
+          <mxGeometry height="80" width="310" x="35" y="433" as="geometry" />
+        </mxCell>
+        <mxCell id="r3k" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF7ED;strokeColor=#F97316;strokeWidth=2;fontSize=12;verticalAlign=middle;align=center;arcSize=12;" value="&lt;b&gt;&lt;font style=&#39;font-size:14px;color:#C2410C;&#39;&gt;⚡ omaha.auth_txn&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:11px;color:#78716C;&#39;&gt;Kafka Topic  ·  Partitions: 8&lt;/font&gt;&lt;br&gt;&lt;font style=&#39;font-size:10px;color:#A8A29E;&#39;&gt;🔐 Kerberos GSSAPI Auth&lt;/font&gt;" vertex="1">
+          <mxGeometry height="80" width="390" x="445" y="433" as="geometry" />
+        </mxCell>
+        <mxCell id="r3kdc" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFBEB;strokeColor=#D97706;strokeWidth=2;fontSize=12;verticalAlign=middle;align=center;arcSize=12;dashed=1;dashPattern=6 3;" value="&lt;b&gt;&lt;font style=&#39;font-size:13px;color:#92400E;&#39;&gt;🎫 KDC Ticket&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:10px;color:#78716C;&#39;&gt;TGS Grant  ·  Keytab&lt;/font&gt;" vertex="1">
+          <mxGeometry height="80" width="290" x="935" y="433" as="geometry" />
+        </mxCell>
+        <mxCell id="r3sp" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F0FDF4;strokeColor=#22C55E;strokeWidth=2;fontSize=12;verticalAlign=middle;align=center;arcSize=12;" value="&lt;b&gt;&lt;font style=&#39;font-size:14px;color:#15803D;&#39;&gt;⚡ OmahaStreamApp&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:11px;color:#78716C;&#39;&gt;CDP Spark Streaming  ·  Platform Parser&lt;/font&gt;" vertex="1">
+          <mxGeometry height="80" width="430" x="1325" y="433" as="geometry" />
+        </mxCell>
+        <mxCell id="r3hd" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FAF5FF;strokeColor=#8B5CF6;strokeWidth=2;fontSize=12;verticalAlign=middle;align=center;arcSize=12;" value="&lt;b&gt;&lt;font style=&#39;font-size:14px;color:#6D28D9;&#39;&gt;🗄️ /omaha/auth/&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:11px;color:#78716C;&#39;&gt;Parquet  ·  date-partitioned&lt;/font&gt;" vertex="1">
+          <mxGeometry height="80" width="350" x="1855" y="433" as="geometry" />
+        </mxCell>
+        <mxCell id="r3e1" edge="1" parent="1" source="r3s" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeWidth=2.5;endArrow=open;endFill=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;rounded=0;strokeColor=#16A34A;" target="r3k">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="r3e2" edge="1" parent="1" source="r3k" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeWidth=2.5;endArrow=open;endFill=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;rounded=0;strokeColor=#D97706;dashed=1;dashPattern=5 3;" target="r3kdc">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="r3e3" edge="1" parent="1" source="r3kdc" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeWidth=2.5;endArrow=open;endFill=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;rounded=0;strokeColor=#22C55E;" target="r3sp">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="r3e4" edge="1" parent="1" source="r3sp" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeWidth=2.5;endArrow=open;endFill=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;rounded=0;strokeColor=#8B5CF6;" target="r3hd">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="r4band" parent="1" style="rounded=0;fillColor=#FAFBFC;strokeColor=#E2E8F0;strokeWidth=1;" value="" vertex="1">
+          <mxGeometry height="92" width="2740" x="28" y="531" as="geometry" />
+        </mxCell>
+        <mxCell id="r4s" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ECFEFF;strokeColor=#0891B2;strokeWidth=2.5;fontSize=13;verticalAlign=middle;align=center;arcSize=12;" value="&lt;b&gt;&lt;font style=&#39;font-size:15px;color:#0891B2;&#39;&gt;🔵 IPG.AUTH_TXN&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:11px;color:#64748B;&#39;&gt;IPG Payments&lt;/font&gt;" vertex="1">
+          <mxGeometry height="80" width="310" x="35" y="537" as="geometry" />
+        </mxCell>
+        <mxCell id="r4k" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF7ED;strokeColor=#F97316;strokeWidth=2;fontSize=12;verticalAlign=middle;align=center;arcSize=12;" value="&lt;b&gt;&lt;font style=&#39;font-size:14px;color:#C2410C;&#39;&gt;⚡ ipg.auth_txn&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:11px;color:#78716C;&#39;&gt;Kafka Topic  ·  Partitions: 8&lt;/font&gt;&lt;br&gt;&lt;font style=&#39;font-size:10px;color:#A8A29E;&#39;&gt;🔐 Kerberos GSSAPI Auth&lt;/font&gt;" vertex="1">
+          <mxGeometry height="80" width="390" x="445" y="537" as="geometry" />
+        </mxCell>
+        <mxCell id="r4kdc" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFBEB;strokeColor=#D97706;strokeWidth=2;fontSize=12;verticalAlign=middle;align=center;arcSize=12;dashed=1;dashPattern=6 3;" value="&lt;b&gt;&lt;font style=&#39;font-size:13px;color:#92400E;&#39;&gt;🎫 KDC Ticket&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:10px;color:#78716C;&#39;&gt;TGS Grant  ·  Keytab&lt;/font&gt;" vertex="1">
+          <mxGeometry height="80" width="290" x="935" y="537" as="geometry" />
+        </mxCell>
+        <mxCell id="r4sp" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F0FDF4;strokeColor=#22C55E;strokeWidth=2;fontSize=12;verticalAlign=middle;align=center;arcSize=12;" value="&lt;b&gt;&lt;font style=&#39;font-size:14px;color:#15803D;&#39;&gt;⚡ IPGStreamApp&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:11px;color:#78716C;&#39;&gt;CDP Spark Streaming  ·  Platform Parser&lt;/font&gt;" vertex="1">
+          <mxGeometry height="80" width="430" x="1325" y="537" as="geometry" />
+        </mxCell>
+        <mxCell id="r4hd" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FAF5FF;strokeColor=#8B5CF6;strokeWidth=2;fontSize=12;verticalAlign=middle;align=center;arcSize=12;" value="&lt;b&gt;&lt;font style=&#39;font-size:14px;color:#6D28D9;&#39;&gt;🗄️ /ipg/auth_txn/&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:11px;color:#78716C;&#39;&gt;Parquet  ·  date-partitioned&lt;/font&gt;" vertex="1">
+          <mxGeometry height="80" width="350" x="1855" y="537" as="geometry" />
+        </mxCell>
+        <mxCell id="r4e1" edge="1" parent="1" source="r4s" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeWidth=2.5;endArrow=open;endFill=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;rounded=0;strokeColor=#0891B2;" target="r4k">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="r4e2" edge="1" parent="1" source="r4k" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeWidth=2.5;endArrow=open;endFill=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;rounded=0;strokeColor=#D97706;dashed=1;dashPattern=5 3;" target="r4kdc">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="r4e3" edge="1" parent="1" source="r4kdc" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeWidth=2.5;endArrow=open;endFill=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;rounded=0;strokeColor=#22C55E;" target="r4sp">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="r4e4" edge="1" parent="1" source="r4sp" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeWidth=2.5;endArrow=open;endFill=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;rounded=0;strokeColor=#8B5CF6;" target="r4hd">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="r5band" parent="1" style="rounded=0;fillColor=#F8F9FB;strokeColor=#E2E8F0;strokeWidth=1;" value="" vertex="1">
+          <mxGeometry height="92" width="2740" x="28" y="635" as="geometry" />
+        </mxCell>
+        <mxCell id="r5s" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F5F3FF;strokeColor=#7C3AED;strokeWidth=2.5;fontSize=13;verticalAlign=middle;align=center;arcSize=12;" value="&lt;b&gt;&lt;font style=&#39;font-size:15px;color:#7C3AED;&#39;&gt;🟣 FSL.TRANSACTION&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:11px;color:#64748B;&#39;&gt;FSL Transactions&lt;/font&gt;" vertex="1">
+          <mxGeometry height="80" width="310" x="35" y="641" as="geometry" />
+        </mxCell>
+        <mxCell id="r5k" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF7ED;strokeColor=#F97316;strokeWidth=2;fontSize=12;verticalAlign=middle;align=center;arcSize=12;" value="&lt;b&gt;&lt;font style=&#39;font-size:14px;color:#C2410C;&#39;&gt;⚡ fsl.transaction&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:11px;color:#78716C;&#39;&gt;Kafka Topic  ·  Partitions: 16&lt;/font&gt;&lt;br&gt;&lt;font style=&#39;font-size:10px;color:#A8A29E;&#39;&gt;🔐 Kerberos GSSAPI Auth&lt;/font&gt;" vertex="1">
+          <mxGeometry height="80" width="390" x="445" y="641" as="geometry" />
+        </mxCell>
+        <mxCell id="r5kdc" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFBEB;strokeColor=#D97706;strokeWidth=2;fontSize=12;verticalAlign=middle;align=center;arcSize=12;dashed=1;dashPattern=6 3;" value="&lt;b&gt;&lt;font style=&#39;font-size:13px;color:#92400E;&#39;&gt;🎫 KDC Ticket&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:10px;color:#78716C;&#39;&gt;TGS Grant  ·  Keytab&lt;/font&gt;" vertex="1">
+          <mxGeometry height="80" width="290" x="935" y="641" as="geometry" />
+        </mxCell>
+        <mxCell id="r5sp" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F0FDF4;strokeColor=#22C55E;strokeWidth=2;fontSize=12;verticalAlign=middle;align=center;arcSize=12;" value="&lt;b&gt;&lt;font style=&#39;font-size:14px;color:#15803D;&#39;&gt;⚡ FSLTxnStreamApp&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:11px;color:#78716C;&#39;&gt;CDP Spark Streaming  ·  Platform Parser&lt;/font&gt;" vertex="1">
+          <mxGeometry height="80" width="430" x="1325" y="641" as="geometry" />
+        </mxCell>
+        <mxCell id="r5hd" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FAF5FF;strokeColor=#8B5CF6;strokeWidth=2;fontSize=12;verticalAlign=middle;align=center;arcSize=12;" value="&lt;b&gt;&lt;font style=&#39;font-size:14px;color:#6D28D9;&#39;&gt;🗄️ /fsl/txn/&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:11px;color:#78716C;&#39;&gt;Parquet  ·  date-partitioned&lt;/font&gt;" vertex="1">
+          <mxGeometry height="80" width="350" x="1855" y="641" as="geometry" />
+        </mxCell>
+        <mxCell id="r5e1" edge="1" parent="1" source="r5s" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeWidth=2.5;endArrow=open;endFill=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;rounded=0;strokeColor=#7C3AED;" target="r5k">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="r5e2" edge="1" parent="1" source="r5k" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeWidth=2.5;endArrow=open;endFill=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;rounded=0;strokeColor=#D97706;dashed=1;dashPattern=5 3;" target="r5kdc">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="r5e3" edge="1" parent="1" source="r5kdc" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeWidth=2.5;endArrow=open;endFill=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;rounded=0;strokeColor=#22C55E;" target="r5sp">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="r5e4" edge="1" parent="1" source="r5sp" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeWidth=2.5;endArrow=open;endFill=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;rounded=0;strokeColor=#8B5CF6;" target="r5hd">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="r6band" parent="1" style="rounded=0;fillColor=#FAFBFC;strokeColor=#E2E8F0;strokeWidth=1;" value="" vertex="1">
+          <mxGeometry height="92" width="2740" x="28" y="739" as="geometry" />
+        </mxCell>
+        <mxCell id="r6s" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FDF2F8;strokeColor=#BE185D;strokeWidth=2.5;fontSize=13;verticalAlign=middle;align=center;arcSize=12;" value="&lt;b&gt;&lt;font style=&#39;font-size:15px;color:#BE185D;&#39;&gt;🩷 FSL.REGISTRATION&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:11px;color:#64748B;&#39;&gt;FSL Registration&lt;/font&gt;" vertex="1">
+          <mxGeometry height="80" width="310" x="35" y="745" as="geometry" />
+        </mxCell>
+        <mxCell id="r6k" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF7ED;strokeColor=#F97316;strokeWidth=2;fontSize=12;verticalAlign=middle;align=center;arcSize=12;" value="&lt;b&gt;&lt;font style=&#39;font-size:14px;color:#C2410C;&#39;&gt;⚡ fsl.registration&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:11px;color:#78716C;&#39;&gt;Kafka Topic  ·  Partitions: 8&lt;/font&gt;&lt;br&gt;&lt;font style=&#39;font-size:10px;color:#A8A29E;&#39;&gt;🔐 Kerberos GSSAPI Auth&lt;/font&gt;" vertex="1">
+          <mxGeometry height="80" width="390" x="445" y="745" as="geometry" />
+        </mxCell>
+        <mxCell id="r6kdc" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFBEB;strokeColor=#D97706;strokeWidth=2;fontSize=12;verticalAlign=middle;align=center;arcSize=12;dashed=1;dashPattern=6 3;" value="&lt;b&gt;&lt;font style=&#39;font-size:13px;color:#92400E;&#39;&gt;🎫 KDC Ticket&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:10px;color:#78716C;&#39;&gt;TGS Grant  ·  Keytab&lt;/font&gt;" vertex="1">
+          <mxGeometry height="80" width="290" x="935" y="745" as="geometry" />
+        </mxCell>
+        <mxCell id="r6sp" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F0FDF4;strokeColor=#22C55E;strokeWidth=2;fontSize=12;verticalAlign=middle;align=center;arcSize=12;" value="&lt;b&gt;&lt;font style=&#39;font-size:14px;color:#15803D;&#39;&gt;⚡ FSLRegStreamApp&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:11px;color:#78716C;&#39;&gt;CDP Spark Streaming  ·  Platform Parser&lt;/font&gt;" vertex="1">
+          <mxGeometry height="80" width="430" x="1325" y="745" as="geometry" />
+        </mxCell>
+        <mxCell id="r6hd" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FAF5FF;strokeColor=#8B5CF6;strokeWidth=2;fontSize=12;verticalAlign=middle;align=center;arcSize=12;" value="&lt;b&gt;&lt;font style=&#39;font-size:14px;color:#6D28D9;&#39;&gt;🗄️ /fsl/reg/&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:11px;color:#78716C;&#39;&gt;Parquet  ·  date-partitioned&lt;/font&gt;" vertex="1">
+          <mxGeometry height="80" width="350" x="1855" y="745" as="geometry" />
+        </mxCell>
+        <mxCell id="r6e1" edge="1" parent="1" source="r6s" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeWidth=2.5;endArrow=open;endFill=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;rounded=0;strokeColor=#BE185D;" target="r6k">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="r6e2" edge="1" parent="1" source="r6k" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeWidth=2.5;endArrow=open;endFill=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;rounded=0;strokeColor=#D97706;dashed=1;dashPattern=5 3;" target="r6kdc">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="r6e3" edge="1" parent="1" source="r6kdc" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeWidth=2.5;endArrow=open;endFill=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;rounded=0;strokeColor=#22C55E;" target="r6sp">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="r6e4" edge="1" parent="1" source="r6sp" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeWidth=2.5;endArrow=open;endFill=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;rounded=0;strokeColor=#8B5CF6;" target="r6hd">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="ca0" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EFF6FF;strokeColor=#93C5FD;strokeWidth=2;fontSize=12;verticalAlign=middle;align=center;arcSize=10;" value="&lt;b&gt;&lt;font style=&#39;font-size:14px;color:#1D4ED8;&#39;&gt;📊  FSBI&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:11px;color:#64748B;&#39;&gt;Financial Services BI&lt;/font&gt;&lt;br&gt;&lt;font style=&#39;font-size:10px;color:#94A3B8;&#39;&gt;Reads HDFS Parquet&lt;/font&gt;" vertex="1">
+          <mxGeometry height="136" width="450" x="2306" y="119" as="geometry" />
+        </mxCell>
+        <mxCell id="ca1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EFF6FF;strokeColor=#93C5FD;strokeWidth=2;fontSize=12;verticalAlign=middle;align=center;arcSize=10;" value="&lt;b&gt;&lt;font style=&#39;font-size:14px;color:#1D4ED8;&#39;&gt;🔑  Single AUTH&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:11px;color:#64748B;&#39;&gt;Auth Aggregation&lt;/font&gt;&lt;br&gt;&lt;font style=&#39;font-size:10px;color:#94A3B8;&#39;&gt;Reads HDFS Parquet&lt;/font&gt;" vertex="1">
+          <mxGeometry height="136" width="450" x="2306" y="261" as="geometry" />
+        </mxCell>
+        <mxCell id="ca2" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EFF6FF;strokeColor=#93C5FD;strokeWidth=2;fontSize=12;verticalAlign=middle;align=center;arcSize=10;" value="&lt;b&gt;&lt;font style=&#39;font-size:14px;color:#1D4ED8;&#39;&gt;📈  Peer Benchmarking&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:11px;color:#64748B;&#39;&gt;Group Analytics&lt;/font&gt;&lt;br&gt;&lt;font style=&#39;font-size:10px;color:#94A3B8;&#39;&gt;Reads HDFS Parquet&lt;/font&gt;" vertex="1">
+          <mxGeometry height="136" width="450" x="2306" y="403" as="geometry" />
+        </mxCell>
+        <mxCell id="ca3" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ECFEFF;strokeColor=#67E8F9;strokeWidth=2;fontSize=12;verticalAlign=middle;align=center;arcSize=10;" value="&lt;b&gt;&lt;font style=&#39;font-size:14px;color:#0891B2;&#39;&gt;⚙️  AltMOPS&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:11px;color:#64748B;&#39;&gt;Alt Operations&lt;/font&gt;&lt;br&gt;&lt;font style=&#39;font-size:10px;color:#94A3B8;&#39;&gt;Reads HDFS Parquet&lt;/font&gt;" vertex="1">
+          <mxGeometry height="136" width="450" x="2306" y="545" as="geometry" />
+        </mxCell>
+        <mxCell id="ca4" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F8FAFC;strokeColor=#CBD5E1;strokeWidth=2;fontSize=12;verticalAlign=middle;align=center;arcSize=10;" value="&lt;b&gt;&lt;font style=&#39;font-size:14px;color:#475569;&#39;&gt;➕  Other Consumers&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:11px;color:#64748B;&#39;&gt;Multiple Downstream Apps&lt;/font&gt;&lt;br&gt;&lt;font style=&#39;font-size:10px;color:#94A3B8;&#39;&gt;Reads HDFS Parquet&lt;/font&gt;" vertex="1">
+          <mxGeometry height="136" width="450" x="2306" y="687" as="geometry" />
+        </mxCell>
+        <mxCell id="fanline" edge="1" parent="1" style="endArrow=none;html=1;strokeColor=#8B5CF6;strokeWidth=2;" value="">
+          <mxGeometry height="624" relative="1" width="1" x="2285" y="161" as="geometry">
+            <Array as="points">
+              <mxPoint x="2285" y="161" />
+              <mxPoint x="2285" y="785" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="fane0" edge="1" parent="1" source="r0hd" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#1D4ED8;strokeWidth=2;endArrow=open;endFill=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="ca0" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="2285" y="161" />
+              <mxPoint x="2285" y="187" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="fane1" edge="1" parent="1" source="r1hd" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#1D4ED8;strokeWidth=2;endArrow=open;endFill=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="ca1" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="2285" y="265" />
+              <mxPoint x="2285" y="329" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="fane2" edge="1" parent="1" source="r2hd" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#1D4ED8;strokeWidth=2;endArrow=open;endFill=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="ca2" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="2285" y="369" />
+              <mxPoint x="2285" y="471" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="fane3" edge="1" parent="1" source="r3hd" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#1D4ED8;strokeWidth=2;endArrow=open;endFill=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="ca3" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="2285" y="473" />
+              <mxPoint x="2285" y="613" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="fane4" edge="1" parent="1" source="r4hd" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#1D4ED8;strokeWidth=2;endArrow=open;endFill=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="ca4" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="2285" y="577" />
+              <mxPoint x="2285" y="755" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="legbg" parent="1" style="rounded=1;fillColor=#F8FAFC;strokeColor=#CBD5E1;strokeWidth=1.5;" value="" vertex="1">
+          <mxGeometry height="98" width="900" x="28" y="850" as="geometry" />
+        </mxCell>
+        <mxCell id="legtitle" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;" value="&lt;b&gt;&lt;font style=&#39;font-size:12px;color:#1E293B;&#39;&gt;LEGEND&lt;/font&gt;&lt;/b&gt;" vertex="1">
+          <mxGeometry height="20" width="100" x="38" y="856" as="geometry" />
+        </mxCell>
+        <mxCell id="li38876" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;" value="&lt;font style=&#39;font-size:11px;color:#DC2626;&#39;&gt;━  Platform color → Source to Kafka&lt;/font&gt;" vertex="1">
+          <mxGeometry height="16" width="410" x="38" y="876" as="geometry" />
+        </mxCell>
+        <mxCell id="li38894" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;" value="&lt;font style=&#39;font-size:11px;color:#D97706;&#39;&gt;━  Gold dashed →  Kerberos auth ticket (TGS)&lt;/font&gt;" vertex="1">
+          <mxGeometry height="16" width="410" x="38" y="894" as="geometry" />
+        </mxCell>
+        <mxCell id="li38912" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;" value="&lt;font style=&#39;font-size:11px;color:#22C55E;&#39;&gt;━  Green →  Kafka consumed by Spark&lt;/font&gt;" vertex="1">
+          <mxGeometry height="16" width="410" x="38" y="912" as="geometry" />
+        </mxCell>
+        <mxCell id="li38930" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;" value="&lt;font style=&#39;font-size:11px;color:#8B5CF6;&#39;&gt;━  Purple →  Write Parquet to HDFS&lt;/font&gt;" vertex="1">
+          <mxGeometry height="16" width="410" x="38" y="930" as="geometry" />
+        </mxCell>
+        <mxCell id="li460876" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;" value="&lt;font style=&#39;font-size:11px;color:#1D4ED8;&#39;&gt;━  Blue →  Fan-out to Downstream Consumers&lt;/font&gt;" vertex="1">
+          <mxGeometry height="16" width="410" x="460" y="876" as="geometry" />
+        </mxCell>
+        <mxCell id="li460894" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;" value="&lt;font style=&#39;font-size:11px;color:#F97316;&#39;&gt;━  Orange card  =  Kafka Topic&lt;/font&gt;" vertex="1">
+          <mxGeometry height="16" width="410" x="460" y="894" as="geometry" />
+        </mxCell>
+        <mxCell id="li460912" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;" value="&lt;font style=&#39;font-size:11px;color:#22C55E;&#39;&gt;━  Green card  =  Spark Streaming App&lt;/font&gt;" vertex="1">
+          <mxGeometry height="16" width="410" x="460" y="912" as="geometry" />
+        </mxCell>
+        <mxCell id="li460930" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;" value="&lt;font style=&#39;font-size:11px;color:#8B5CF6;&#39;&gt;━  Purple card  =  HDFS Storage&lt;/font&gt;" vertex="1">
+          <mxGeometry height="16" width="410" x="460" y="930" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="tobe" name="To-Be Architecture">
+    <mxGraphModel dx="1600" dy="600" grid="0" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="2800" pageHeight="1000" math="0" shadow="0" background="#FFFFFF">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="tb_bar" value="" style="rounded=0;fillColor=#0C2340;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry x="0" y="0" width="2800" height="56" as="geometry" />
+        </mxCell>
+        <mxCell id="tb_t1" value="&lt;b&gt;&lt;font style=&#39;font-size:20px;color:#FFFFFF;&#39;&gt;🚀  GBS AUTH — TO-BE ARCHITECTURE&lt;/font&gt;&lt;/b&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="20" y="0" width="1600" height="56" as="geometry" />
+        </mxCell>
+        <mxCell id="tb_t2" value="&lt;font style=&#39;font-size:12px;color:#7FC8F8;&#39;&gt;Databricks Structured Streaming  ·  AWS MSK Active-Active (East + West)  ·  SASL_SSL / SCRAM-SHA-512  ·  Delta Lake (Unity Catalog)  ·  DCS Team 2026&lt;/font&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=right;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="1000" y="0" width="1770" height="56" as="geometry" />
+        </mxCell>
+        <mxCell id="aa_badge" value="&lt;b&gt;&lt;font style=&#39;font-size:13px;color:#92400E;&#39;&gt;⟷  AWS MSK  Active-Active Setup&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:11px;color:#78716C;&#39;&gt;Same 7 topics replicated across  us-east-1  ↔  us-west-2  ·  Auto failover  ·  Zero data loss  ·  Port 9096 TLS&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFBEB;strokeColor=#F59E0B;strokeWidth=2.5;fontSize=12;verticalAlign=middle;align=center;arcSize=8;dashed=0;" vertex="1" parent="1">
+          <mxGeometry x="540" y="62" width="980" height="52" as="geometry" />
+        </mxCell>
+        <mxCell id="tbch30" value="&lt;b&gt;&lt;font style=&#39;font-size:13px;color:#1E293B;&#39;&gt;🏢  SOURCE SYSTEMS&lt;/font&gt;&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF1F2;strokeColor=#FCA5A5;strokeWidth=2.5;fontSize=13;verticalAlign=middle;align=center;arcSize=50;" vertex="1" parent="1">
+          <mxGeometry x="30" y="122" width="310" height="38" as="geometry" />
+        </mxCell>
+        <mxCell id="tbch430" value="&lt;b&gt;&lt;font style=&#39;font-size:13px;color:#1E293B;&#39;&gt;☁️  AWS MSK  (E+W Active-Active)&lt;/font&gt;&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EFF6FF;strokeColor=#93C5FD;strokeWidth=2.5;fontSize=13;verticalAlign=middle;align=center;arcSize=50;" vertex="1" parent="1">
+          <mxGeometry x="430" y="122" width="400" height="38" as="geometry" />
+        </mxCell>
+        <mxCell id="tbch920" value="&lt;b&gt;&lt;font style=&#39;font-size:13px;color:#1E293B;&#39;&gt;🔐  SASL_SSL + SCRAM-512&lt;/font&gt;&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFBEB;strokeColor=#FDE68A;strokeWidth=2.5;fontSize=13;verticalAlign=middle;align=center;arcSize=50;" vertex="1" parent="1">
+          <mxGeometry x="920" y="122" width="280" height="38" as="geometry" />
+        </mxCell>
+        <mxCell id="tbch1290" value="&lt;b&gt;&lt;font style=&#39;font-size:13px;color:#1E293B;&#39;&gt;⚡  DATABRICKS STRUCTURED STREAMING&lt;/font&gt;&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F0FDF4;strokeColor=#86EFAC;strokeWidth=2.5;fontSize=13;verticalAlign=middle;align=center;arcSize=50;" vertex="1" parent="1">
+          <mxGeometry x="1290" y="122" width="480" height="38" as="geometry" />
+        </mxCell>
+        <mxCell id="tbch1860" value="&lt;b&gt;&lt;font style=&#39;font-size:13px;color:#1E293B;&#39;&gt;🔺  DELTA LAKE  (Unity Catalog)&lt;/font&gt;&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF7ED;strokeColor=#FED7AA;strokeWidth=2.5;fontSize=13;verticalAlign=middle;align=center;arcSize=50;" vertex="1" parent="1">
+          <mxGeometry x="1860" y="122" width="340" height="38" as="geometry" />
+        </mxCell>
+        <mxCell id="tbch2290" value="&lt;b&gt;&lt;font style=&#39;font-size:13px;color:#1E293B;&#39;&gt;📡  DOWNSTREAM CONSUMERS&lt;/font&gt;&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EFF6FF;strokeColor=#BFDBFE;strokeWidth=2.5;fontSize=13;verticalAlign=middle;align=center;arcSize=50;" vertex="1" parent="1">
+          <mxGeometry x="2290" y="122" width="460" height="38" as="geometry" />
+        </mxCell>
+        <mxCell id="tbsep415" value="" style="endArrow=none;html=1;strokeColor=#E2E8F0;strokeWidth=1.5;dashed=1;dashPattern=4 4;" edge="1" parent="1">
+          <mxGeometry x="415" y="58" width="1" height="940" relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="tbsep905" value="" style="endArrow=none;html=1;strokeColor=#E2E8F0;strokeWidth=1.5;dashed=1;dashPattern=4 4;" edge="1" parent="1">
+          <mxGeometry x="905" y="58" width="1" height="940" relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="tbsep1275" value="" style="endArrow=none;html=1;strokeColor=#E2E8F0;strokeWidth=1.5;dashed=1;dashPattern=4 4;" edge="1" parent="1">
+          <mxGeometry x="1275" y="58" width="1" height="940" relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="tbsep1845" value="" style="endArrow=none;html=1;strokeColor=#E2E8F0;strokeWidth=1.5;dashed=1;dashPattern=4 4;" edge="1" parent="1">
+          <mxGeometry x="1845" y="58" width="1" height="940" relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="tbsep2275" value="" style="endArrow=none;html=1;strokeColor=#E2E8F0;strokeWidth=1.5;dashed=1;dashPattern=4 4;" edge="1" parent="1">
+          <mxGeometry x="2275" y="58" width="1" height="940" relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="tbb0" value="" style="rounded=0;fillColor=#FAFBFC;strokeColor=#E2E8F0;strokeWidth=1;" vertex="1" parent="1">
+          <mxGeometry x="28" y="169" width="2740" height="92" as="geometry" />
+        </mxCell>
+        <mxCell id="tbb1" value="" style="rounded=0;fillColor=#F8F9FB;strokeColor=#E2E8F0;strokeWidth=1;" vertex="1" parent="1">
+          <mxGeometry x="28" y="273" width="2740" height="92" as="geometry" />
+        </mxCell>
+        <mxCell id="tbb2" value="" style="rounded=0;fillColor=#FAFBFC;strokeColor=#E2E8F0;strokeWidth=1;" vertex="1" parent="1">
+          <mxGeometry x="28" y="377" width="2740" height="92" as="geometry" />
+        </mxCell>
+        <mxCell id="tbb3" value="" style="rounded=0;fillColor=#F8F9FB;strokeColor=#E2E8F0;strokeWidth=1;" vertex="1" parent="1">
+          <mxGeometry x="28" y="481" width="2740" height="92" as="geometry" />
+        </mxCell>
+        <mxCell id="tbb4" value="" style="rounded=0;fillColor=#FAFBFC;strokeColor=#E2E8F0;strokeWidth=1;" vertex="1" parent="1">
+          <mxGeometry x="28" y="585" width="2740" height="92" as="geometry" />
+        </mxCell>
+        <mxCell id="tbb5" value="" style="rounded=0;fillColor=#F8F9FB;strokeColor=#E2E8F0;strokeWidth=1;" vertex="1" parent="1">
+          <mxGeometry x="28" y="689" width="2740" height="92" as="geometry" />
+        </mxCell>
+        <mxCell id="tbb6" value="" style="rounded=0;fillColor=#FAFBFC;strokeColor=#E2E8F0;strokeWidth=1;" vertex="1" parent="1">
+          <mxGeometry x="28" y="793" width="2740" height="92" as="geometry" />
+        </mxCell>
+        <mxCell id="tb0s" value="&lt;b&gt;&lt;font style=&#39;font-size:15px;color:#DC2626;&#39;&gt;🔴 HDC.AUTH_TXN&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:11px;color:#64748B;&#39;&gt;Auth Transactions&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF1F2;strokeColor=#DC2626;strokeWidth=2.5;fontSize=13;verticalAlign=middle;align=center;arcSize=12;" vertex="1" parent="1">
+          <mxGeometry x="35" y="175" width="300" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="tb0msk" value="&lt;b&gt;&lt;font style=&#39;font-size:14px;color:#1D4ED8;&#39;&gt;⚡ hdc.auth_txn&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:11px;color:#64748B;&#39;&gt;MSK Topic  ·  East + West&lt;/font&gt;&lt;br&gt;&lt;font style=&#39;font-size:10px;color:#94A3B8;&#39;&gt;Port 9096 TLS  ·  SASL_SSL&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EFF6FF;strokeColor=#3B82F6;strokeWidth=2;fontSize=12;verticalAlign=middle;align=center;arcSize=12;" vertex="1" parent="1">
+          <mxGeometry x="435" y="175" width="390" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="tb0sasl" value="&lt;b&gt;&lt;font style=&#39;font-size:13px;color:#92400E;&#39;&gt;🔐 SCRAM-SHA-512&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:10px;color:#78716C;&#39;&gt;AWS Secrets Mgr → DBX Scope&lt;br&gt;TLS 1.2+  ·  No KDC needed&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFBEB;strokeColor=#D97706;strokeWidth=2;fontSize=12;verticalAlign=middle;align=center;arcSize=12;dashed=1;dashPattern=6 3;" vertex="1" parent="1">
+          <mxGeometry x="925" y="175" width="270" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="tb0dbx" value="&lt;b&gt;&lt;font style=&#39;font-size:14px;color:#15803D;&#39;&gt;⚡ HDCAuth&lt;br&gt;StreamDBX&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:11px;color:#64748B;&#39;&gt;Struct Streaming  ·  East &amp; West Jobs&lt;/font&gt;&lt;br&gt;&lt;font style=&#39;font-size:10px;color:#94A3B8;&#39;&gt;ProcessingTime  ·  DBFS Checkpoint&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F0FDF4;strokeColor=#22C55E;strokeWidth=2;fontSize=12;verticalAlign=middle;align=center;arcSize=12;" vertex="1" parent="1">
+          <mxGeometry x="1295" y="175" width="470" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="tb0dt" value="&lt;b&gt;&lt;font style=&#39;font-size:14px;color:#C2410C;&#39;&gt;🔺 hdc_auth_delta&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:11px;color:#64748B;&#39;&gt;Unity Catalog  ·  E+W partitioned&lt;/font&gt;&lt;br&gt;&lt;font style=&#39;font-size:10px;color:#94A3B8;&#39;&gt;ACID  ·  Time Travel  ·  Z-Order&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF7ED;strokeColor=#EA580C;strokeWidth=2;fontSize=12;verticalAlign=middle;align=center;arcSize=12;" vertex="1" parent="1">
+          <mxGeometry x="1865" y="175" width="330" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="tb0e1" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeWidth=2.5;endArrow=open;endFill=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;rounded=0;strokeColor=#DC2626;" edge="1" source="tb0s" target="tb0msk" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="tb0e2" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeWidth=2.5;endArrow=open;endFill=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;rounded=0;strokeColor=#D97706;dashed=1;dashPattern=5 3;" edge="1" source="tb0msk" target="tb0sasl" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="tb0e3" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeWidth=2.5;endArrow=open;endFill=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;rounded=0;strokeColor=#22C55E;" edge="1" source="tb0sasl" target="tb0dbx" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="tb0e4" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeWidth=2.5;endArrow=open;endFill=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;rounded=0;strokeColor=#EA580C;" edge="1" source="tb0dbx" target="tb0dt" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="tb1s" value="&lt;b&gt;&lt;font style=&#39;font-size:15px;color:#EA580C;&#39;&gt;🟠 DEBITGW_TXN&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:11px;color:#64748B;&#39;&gt;Debit Gateway&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF7ED;strokeColor=#EA580C;strokeWidth=2.5;fontSize=13;verticalAlign=middle;align=center;arcSize=12;" vertex="1" parent="1">
+          <mxGeometry x="35" y="279" width="300" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="tb1msk" value="&lt;b&gt;&lt;font style=&#39;font-size:14px;color:#1D4ED8;&#39;&gt;⚡ hdc.debitgw_txn&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:11px;color:#64748B;&#39;&gt;MSK Topic  ·  East + West&lt;/font&gt;&lt;br&gt;&lt;font style=&#39;font-size:10px;color:#94A3B8;&#39;&gt;Port 9096 TLS  ·  SASL_SSL&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EFF6FF;strokeColor=#3B82F6;strokeWidth=2;fontSize=12;verticalAlign=middle;align=center;arcSize=12;" vertex="1" parent="1">
+          <mxGeometry x="435" y="279" width="390" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="tb1sasl" value="&lt;b&gt;&lt;font style=&#39;font-size:13px;color:#92400E;&#39;&gt;🔐 SCRAM-SHA-512&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:10px;color:#78716C;&#39;&gt;AWS Secrets Mgr → DBX Scope&lt;br&gt;TLS 1.2+  ·  No KDC needed&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFBEB;strokeColor=#D97706;strokeWidth=2;fontSize=12;verticalAlign=middle;align=center;arcSize=12;dashed=1;dashPattern=6 3;" vertex="1" parent="1">
+          <mxGeometry x="925" y="279" width="270" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="tb1dbx" value="&lt;b&gt;&lt;font style=&#39;font-size:14px;color:#15803D;&#39;&gt;⚡ DebitGW&lt;br&gt;StreamDBX&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:11px;color:#64748B;&#39;&gt;Struct Streaming  ·  East &amp; West Jobs&lt;/font&gt;&lt;br&gt;&lt;font style=&#39;font-size:10px;color:#94A3B8;&#39;&gt;ProcessingTime  ·  DBFS Checkpoint&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F0FDF4;strokeColor=#22C55E;strokeWidth=2;fontSize=12;verticalAlign=middle;align=center;arcSize=12;" vertex="1" parent="1">
+          <mxGeometry x="1295" y="279" width="470" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="tb1dt" value="&lt;b&gt;&lt;font style=&#39;font-size:14px;color:#C2410C;&#39;&gt;🔺 debitgw_txn_delta&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:11px;color:#64748B;&#39;&gt;Unity Catalog  ·  E+W partitioned&lt;/font&gt;&lt;br&gt;&lt;font style=&#39;font-size:10px;color:#94A3B8;&#39;&gt;ACID  ·  Time Travel  ·  Z-Order&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF7ED;strokeColor=#EA580C;strokeWidth=2;fontSize=12;verticalAlign=middle;align=center;arcSize=12;" vertex="1" parent="1">
+          <mxGeometry x="1865" y="279" width="330" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="tb1e1" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeWidth=2.5;endArrow=open;endFill=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;rounded=0;strokeColor=#EA580C;" edge="1" source="tb1s" target="tb1msk" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="tb1e2" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeWidth=2.5;endArrow=open;endFill=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;rounded=0;strokeColor=#D97706;dashed=1;dashPattern=5 3;" edge="1" source="tb1msk" target="tb1sasl" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="tb1e3" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeWidth=2.5;endArrow=open;endFill=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;rounded=0;strokeColor=#22C55E;" edge="1" source="tb1sasl" target="tb1dbx" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="tb1e4" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeWidth=2.5;endArrow=open;endFill=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;rounded=0;strokeColor=#EA580C;" edge="1" source="tb1dbx" target="tb1dt" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="tb2s" value="&lt;b&gt;&lt;font style=&#39;font-size:15px;color:#CA8A04;&#39;&gt;🟡 BUYpass.AUTH_TXN&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:11px;color:#64748B;&#39;&gt;Payment Network&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FEFCE8;strokeColor=#CA8A04;strokeWidth=2.5;fontSize=13;verticalAlign=middle;align=center;arcSize=12;" vertex="1" parent="1">
+          <mxGeometry x="35" y="383" width="300" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="tb2msk" value="&lt;b&gt;&lt;font style=&#39;font-size:14px;color:#1D4ED8;&#39;&gt;⚡ buypass.auth_txn&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:11px;color:#64748B;&#39;&gt;MSK Topic  ·  East + West&lt;/font&gt;&lt;br&gt;&lt;font style=&#39;font-size:10px;color:#94A3B8;&#39;&gt;Port 9096 TLS  ·  SASL_SSL&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EFF6FF;strokeColor=#3B82F6;strokeWidth=2;fontSize=12;verticalAlign=middle;align=center;arcSize=12;" vertex="1" parent="1">
+          <mxGeometry x="435" y="383" width="390" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="tb2sasl" value="&lt;b&gt;&lt;font style=&#39;font-size:13px;color:#92400E;&#39;&gt;🔐 SCRAM-SHA-512&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:10px;color:#78716C;&#39;&gt;AWS Secrets Mgr → DBX Scope&lt;br&gt;TLS 1.2+  ·  No KDC needed&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFBEB;strokeColor=#D97706;strokeWidth=2;fontSize=12;verticalAlign=middle;align=center;arcSize=12;dashed=1;dashPattern=6 3;" vertex="1" parent="1">
+          <mxGeometry x="925" y="383" width="270" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="tb2dbx" value="&lt;b&gt;&lt;font style=&#39;font-size:14px;color:#15803D;&#39;&gt;⚡ BUYpass&lt;br&gt;StreamDBX&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:11px;color:#64748B;&#39;&gt;Struct Streaming  ·  East &amp; West Jobs&lt;/font&gt;&lt;br&gt;&lt;font style=&#39;font-size:10px;color:#94A3B8;&#39;&gt;ProcessingTime  ·  DBFS Checkpoint&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F0FDF4;strokeColor=#22C55E;strokeWidth=2;fontSize=12;verticalAlign=middle;align=center;arcSize=12;" vertex="1" parent="1">
+          <mxGeometry x="1295" y="383" width="470" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="tb2dt" value="&lt;b&gt;&lt;font style=&#39;font-size:14px;color:#C2410C;&#39;&gt;🔺 buypass_auth_delta&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:11px;color:#64748B;&#39;&gt;Unity Catalog  ·  E+W partitioned&lt;/font&gt;&lt;br&gt;&lt;font style=&#39;font-size:10px;color:#94A3B8;&#39;&gt;ACID  ·  Time Travel  ·  Z-Order&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF7ED;strokeColor=#EA580C;strokeWidth=2;fontSize=12;verticalAlign=middle;align=center;arcSize=12;" vertex="1" parent="1">
+          <mxGeometry x="1865" y="383" width="330" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="tb2e1" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeWidth=2.5;endArrow=open;endFill=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;rounded=0;strokeColor=#CA8A04;" edge="1" source="tb2s" target="tb2msk" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="tb2e2" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeWidth=2.5;endArrow=open;endFill=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;rounded=0;strokeColor=#D97706;dashed=1;dashPattern=5 3;" edge="1" source="tb2msk" target="tb2sasl" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="tb2e3" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeWidth=2.5;endArrow=open;endFill=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;rounded=0;strokeColor=#22C55E;" edge="1" source="tb2sasl" target="tb2dbx" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="tb2e4" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeWidth=2.5;endArrow=open;endFill=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;rounded=0;strokeColor=#EA580C;" edge="1" source="tb2dbx" target="tb2dt" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="tb3s" value="&lt;b&gt;&lt;font style=&#39;font-size:15px;color:#16A34A;&#39;&gt;🟢 Omaha.AUTH_TXN&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:11px;color:#64748B;&#39;&gt;Omaha Processing&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F0FDF4;strokeColor=#16A34A;strokeWidth=2.5;fontSize=13;verticalAlign=middle;align=center;arcSize=12;" vertex="1" parent="1">
+          <mxGeometry x="35" y="487" width="300" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="tb3msk" value="&lt;b&gt;&lt;font style=&#39;font-size:14px;color:#1D4ED8;&#39;&gt;⚡ omaha.auth_txn&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:11px;color:#64748B;&#39;&gt;MSK Topic  ·  East + West&lt;/font&gt;&lt;br&gt;&lt;font style=&#39;font-size:10px;color:#94A3B8;&#39;&gt;Port 9096 TLS  ·  SASL_SSL&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EFF6FF;strokeColor=#3B82F6;strokeWidth=2;fontSize=12;verticalAlign=middle;align=center;arcSize=12;" vertex="1" parent="1">
+          <mxGeometry x="435" y="487" width="390" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="tb3sasl" value="&lt;b&gt;&lt;font style=&#39;font-size:13px;color:#92400E;&#39;&gt;🔐 SCRAM-SHA-512&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:10px;color:#78716C;&#39;&gt;AWS Secrets Mgr → DBX Scope&lt;br&gt;TLS 1.2+  ·  No KDC needed&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFBEB;strokeColor=#D97706;strokeWidth=2;fontSize=12;verticalAlign=middle;align=center;arcSize=12;dashed=1;dashPattern=6 3;" vertex="1" parent="1">
+          <mxGeometry x="925" y="487" width="270" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="tb3dbx" value="&lt;b&gt;&lt;font style=&#39;font-size:14px;color:#15803D;&#39;&gt;⚡ Omaha&lt;br&gt;StreamDBX&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:11px;color:#64748B;&#39;&gt;Struct Streaming  ·  East &amp; West Jobs&lt;/font&gt;&lt;br&gt;&lt;font style=&#39;font-size:10px;color:#94A3B8;&#39;&gt;ProcessingTime  ·  DBFS Checkpoint&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F0FDF4;strokeColor=#22C55E;strokeWidth=2;fontSize=12;verticalAlign=middle;align=center;arcSize=12;" vertex="1" parent="1">
+          <mxGeometry x="1295" y="487" width="470" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="tb3dt" value="&lt;b&gt;&lt;font style=&#39;font-size:14px;color:#C2410C;&#39;&gt;🔺 omaha_auth_delta&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:11px;color:#64748B;&#39;&gt;Unity Catalog  ·  E+W partitioned&lt;/font&gt;&lt;br&gt;&lt;font style=&#39;font-size:10px;color:#94A3B8;&#39;&gt;ACID  ·  Time Travel  ·  Z-Order&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF7ED;strokeColor=#EA580C;strokeWidth=2;fontSize=12;verticalAlign=middle;align=center;arcSize=12;" vertex="1" parent="1">
+          <mxGeometry x="1865" y="487" width="330" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="tb3e1" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeWidth=2.5;endArrow=open;endFill=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;rounded=0;strokeColor=#16A34A;" edge="1" source="tb3s" target="tb3msk" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="tb3e2" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeWidth=2.5;endArrow=open;endFill=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;rounded=0;strokeColor=#D97706;dashed=1;dashPattern=5 3;" edge="1" source="tb3msk" target="tb3sasl" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="tb3e3" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeWidth=2.5;endArrow=open;endFill=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;rounded=0;strokeColor=#22C55E;" edge="1" source="tb3sasl" target="tb3dbx" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="tb3e4" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeWidth=2.5;endArrow=open;endFill=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;rounded=0;strokeColor=#EA580C;" edge="1" source="tb3dbx" target="tb3dt" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="tb4s" value="&lt;b&gt;&lt;font style=&#39;font-size:15px;color:#0891B2;&#39;&gt;🔵 IPG.AUTH_TXN&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:11px;color:#64748B;&#39;&gt;IPG Payments&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ECFEFF;strokeColor=#0891B2;strokeWidth=2.5;fontSize=13;verticalAlign=middle;align=center;arcSize=12;" vertex="1" parent="1">
+          <mxGeometry x="35" y="591" width="300" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="tb4msk" value="&lt;b&gt;&lt;font style=&#39;font-size:14px;color:#1D4ED8;&#39;&gt;⚡ ipg.auth_txn&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:11px;color:#64748B;&#39;&gt;MSK Topic  ·  East + West&lt;/font&gt;&lt;br&gt;&lt;font style=&#39;font-size:10px;color:#94A3B8;&#39;&gt;Port 9096 TLS  ·  SASL_SSL&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EFF6FF;strokeColor=#3B82F6;strokeWidth=2;fontSize=12;verticalAlign=middle;align=center;arcSize=12;" vertex="1" parent="1">
+          <mxGeometry x="435" y="591" width="390" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="tb4sasl" value="&lt;b&gt;&lt;font style=&#39;font-size:13px;color:#92400E;&#39;&gt;🔐 SCRAM-SHA-512&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:10px;color:#78716C;&#39;&gt;AWS Secrets Mgr → DBX Scope&lt;br&gt;TLS 1.2+  ·  No KDC needed&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFBEB;strokeColor=#D97706;strokeWidth=2;fontSize=12;verticalAlign=middle;align=center;arcSize=12;dashed=1;dashPattern=6 3;" vertex="1" parent="1">
+          <mxGeometry x="925" y="591" width="270" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="tb4dbx" value="&lt;b&gt;&lt;font style=&#39;font-size:14px;color:#15803D;&#39;&gt;⚡ IPG&lt;br&gt;StreamDBX&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:11px;color:#64748B;&#39;&gt;Struct Streaming  ·  East &amp; West Jobs&lt;/font&gt;&lt;br&gt;&lt;font style=&#39;font-size:10px;color:#94A3B8;&#39;&gt;ProcessingTime  ·  DBFS Checkpoint&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F0FDF4;strokeColor=#22C55E;strokeWidth=2;fontSize=12;verticalAlign=middle;align=center;arcSize=12;" vertex="1" parent="1">
+          <mxGeometry x="1295" y="591" width="470" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="tb4dt" value="&lt;b&gt;&lt;font style=&#39;font-size:14px;color:#C2410C;&#39;&gt;🔺 ipg_auth_delta&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:11px;color:#64748B;&#39;&gt;Unity Catalog  ·  E+W partitioned&lt;/font&gt;&lt;br&gt;&lt;font style=&#39;font-size:10px;color:#94A3B8;&#39;&gt;ACID  ·  Time Travel  ·  Z-Order&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF7ED;strokeColor=#EA580C;strokeWidth=2;fontSize=12;verticalAlign=middle;align=center;arcSize=12;" vertex="1" parent="1">
+          <mxGeometry x="1865" y="591" width="330" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="tb4e1" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeWidth=2.5;endArrow=open;endFill=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;rounded=0;strokeColor=#0891B2;" edge="1" source="tb4s" target="tb4msk" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="tb4e2" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeWidth=2.5;endArrow=open;endFill=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;rounded=0;strokeColor=#D97706;dashed=1;dashPattern=5 3;" edge="1" source="tb4msk" target="tb4sasl" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="tb4e3" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeWidth=2.5;endArrow=open;endFill=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;rounded=0;strokeColor=#22C55E;" edge="1" source="tb4sasl" target="tb4dbx" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="tb4e4" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeWidth=2.5;endArrow=open;endFill=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;rounded=0;strokeColor=#EA580C;" edge="1" source="tb4dbx" target="tb4dt" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="tb5s" value="&lt;b&gt;&lt;font style=&#39;font-size:15px;color:#7C3AED;&#39;&gt;🟣 FSL.TRANSACTION&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:11px;color:#64748B;&#39;&gt;FSL Transactions&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F5F3FF;strokeColor=#7C3AED;strokeWidth=2.5;fontSize=13;verticalAlign=middle;align=center;arcSize=12;" vertex="1" parent="1">
+          <mxGeometry x="35" y="695" width="300" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="tb5msk" value="&lt;b&gt;&lt;font style=&#39;font-size:14px;color:#1D4ED8;&#39;&gt;⚡ fsl.transaction&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:11px;color:#64748B;&#39;&gt;MSK Topic  ·  East + West&lt;/font&gt;&lt;br&gt;&lt;font style=&#39;font-size:10px;color:#94A3B8;&#39;&gt;Port 9096 TLS  ·  SASL_SSL&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EFF6FF;strokeColor=#3B82F6;strokeWidth=2;fontSize=12;verticalAlign=middle;align=center;arcSize=12;" vertex="1" parent="1">
+          <mxGeometry x="435" y="695" width="390" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="tb5sasl" value="&lt;b&gt;&lt;font style=&#39;font-size:13px;color:#92400E;&#39;&gt;🔐 SCRAM-SHA-512&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:10px;color:#78716C;&#39;&gt;AWS Secrets Mgr → DBX Scope&lt;br&gt;TLS 1.2+  ·  No KDC needed&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFBEB;strokeColor=#D97706;strokeWidth=2;fontSize=12;verticalAlign=middle;align=center;arcSize=12;dashed=1;dashPattern=6 3;" vertex="1" parent="1">
+          <mxGeometry x="925" y="695" width="270" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="tb5dbx" value="&lt;b&gt;&lt;font style=&#39;font-size:14px;color:#15803D;&#39;&gt;⚡ FSLTxn&lt;br&gt;StreamDBX&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:11px;color:#64748B;&#39;&gt;Struct Streaming  ·  East &amp; West Jobs&lt;/font&gt;&lt;br&gt;&lt;font style=&#39;font-size:10px;color:#94A3B8;&#39;&gt;ProcessingTime  ·  DBFS Checkpoint&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F0FDF4;strokeColor=#22C55E;strokeWidth=2;fontSize=12;verticalAlign=middle;align=center;arcSize=12;" vertex="1" parent="1">
+          <mxGeometry x="1295" y="695" width="470" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="tb5dt" value="&lt;b&gt;&lt;font style=&#39;font-size:14px;color:#C2410C;&#39;&gt;🔺 fsl_txn_delta&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:11px;color:#64748B;&#39;&gt;Unity Catalog  ·  E+W partitioned&lt;/font&gt;&lt;br&gt;&lt;font style=&#39;font-size:10px;color:#94A3B8;&#39;&gt;ACID  ·  Time Travel  ·  Z-Order&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF7ED;strokeColor=#EA580C;strokeWidth=2;fontSize=12;verticalAlign=middle;align=center;arcSize=12;" vertex="1" parent="1">
+          <mxGeometry x="1865" y="695" width="330" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="tb5e1" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeWidth=2.5;endArrow=open;endFill=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;rounded=0;strokeColor=#7C3AED;" edge="1" source="tb5s" target="tb5msk" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="tb5e2" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeWidth=2.5;endArrow=open;endFill=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;rounded=0;strokeColor=#D97706;dashed=1;dashPattern=5 3;" edge="1" source="tb5msk" target="tb5sasl" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="tb5e3" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeWidth=2.5;endArrow=open;endFill=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;rounded=0;strokeColor=#22C55E;" edge="1" source="tb5sasl" target="tb5dbx" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="tb5e4" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeWidth=2.5;endArrow=open;endFill=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;rounded=0;strokeColor=#EA580C;" edge="1" source="tb5dbx" target="tb5dt" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="tb6s" value="&lt;b&gt;&lt;font style=&#39;font-size:15px;color:#BE185D;&#39;&gt;🩷 FSL.REGISTRATION&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:11px;color:#64748B;&#39;&gt;FSL Registration&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FDF2F8;strokeColor=#BE185D;strokeWidth=2.5;fontSize=13;verticalAlign=middle;align=center;arcSize=12;" vertex="1" parent="1">
+          <mxGeometry x="35" y="799" width="300" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="tb6msk" value="&lt;b&gt;&lt;font style=&#39;font-size:14px;color:#1D4ED8;&#39;&gt;⚡ fsl.registration&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:11px;color:#64748B;&#39;&gt;MSK Topic  ·  East + West&lt;/font&gt;&lt;br&gt;&lt;font style=&#39;font-size:10px;color:#94A3B8;&#39;&gt;Port 9096 TLS  ·  SASL_SSL&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EFF6FF;strokeColor=#3B82F6;strokeWidth=2;fontSize=12;verticalAlign=middle;align=center;arcSize=12;" vertex="1" parent="1">
+          <mxGeometry x="435" y="799" width="390" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="tb6sasl" value="&lt;b&gt;&lt;font style=&#39;font-size:13px;color:#92400E;&#39;&gt;🔐 SCRAM-SHA-512&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:10px;color:#78716C;&#39;&gt;AWS Secrets Mgr → DBX Scope&lt;br&gt;TLS 1.2+  ·  No KDC needed&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFBEB;strokeColor=#D97706;strokeWidth=2;fontSize=12;verticalAlign=middle;align=center;arcSize=12;dashed=1;dashPattern=6 3;" vertex="1" parent="1">
+          <mxGeometry x="925" y="799" width="270" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="tb6dbx" value="&lt;b&gt;&lt;font style=&#39;font-size:14px;color:#15803D;&#39;&gt;⚡ FSLReg&lt;br&gt;StreamDBX&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:11px;color:#64748B;&#39;&gt;Struct Streaming  ·  East &amp; West Jobs&lt;/font&gt;&lt;br&gt;&lt;font style=&#39;font-size:10px;color:#94A3B8;&#39;&gt;ProcessingTime  ·  DBFS Checkpoint&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F0FDF4;strokeColor=#22C55E;strokeWidth=2;fontSize=12;verticalAlign=middle;align=center;arcSize=12;" vertex="1" parent="1">
+          <mxGeometry x="1295" y="799" width="470" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="tb6dt" value="&lt;b&gt;&lt;font style=&#39;font-size:14px;color:#C2410C;&#39;&gt;🔺 fsl_reg_delta&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:11px;color:#64748B;&#39;&gt;Unity Catalog  ·  E+W partitioned&lt;/font&gt;&lt;br&gt;&lt;font style=&#39;font-size:10px;color:#94A3B8;&#39;&gt;ACID  ·  Time Travel  ·  Z-Order&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF7ED;strokeColor=#EA580C;strokeWidth=2;fontSize=12;verticalAlign=middle;align=center;arcSize=12;" vertex="1" parent="1">
+          <mxGeometry x="1865" y="799" width="330" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="tb6e1" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeWidth=2.5;endArrow=open;endFill=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;rounded=0;strokeColor=#BE185D;" edge="1" source="tb6s" target="tb6msk" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="tb6e2" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeWidth=2.5;endArrow=open;endFill=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;rounded=0;strokeColor=#D97706;dashed=1;dashPattern=5 3;" edge="1" source="tb6msk" target="tb6sasl" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="tb6e3" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeWidth=2.5;endArrow=open;endFill=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;rounded=0;strokeColor=#22C55E;" edge="1" source="tb6sasl" target="tb6dbx" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="tb6e4" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeWidth=2.5;endArrow=open;endFill=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;rounded=0;strokeColor=#EA580C;" edge="1" source="tb6dbx" target="tb6dt" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="tbc0" value="&lt;b&gt;&lt;font style=&#39;font-size:14px;color:#1D4ED8;&#39;&gt;📊  FSBI&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:11px;color:#64748B;&#39;&gt;Financial Services BI&lt;/font&gt;&lt;br&gt;&lt;font style=&#39;font-size:10px;color:#94A3B8;&#39;&gt;Reads Delta  ·  Unity Catalog&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EFF6FF;strokeColor=#93C5FD;strokeWidth=2;fontSize=12;verticalAlign=middle;align=center;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="2296" y="173" width="460" height="136" as="geometry" />
+        </mxCell>
+        <mxCell id="tbfan0" value="" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#1D4ED8;strokeWidth=2;endArrow=open;endFill=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" source="tb0dt" target="tbc0" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="2275" y="215" />
+              <mxPoint x="2275" y="241" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="tbc1" value="&lt;b&gt;&lt;font style=&#39;font-size:14px;color:#1D4ED8;&#39;&gt;🔑  Single AUTH&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:11px;color:#64748B;&#39;&gt;Auth Aggregation&lt;/font&gt;&lt;br&gt;&lt;font style=&#39;font-size:10px;color:#94A3B8;&#39;&gt;Reads Delta  ·  Unity Catalog&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EFF6FF;strokeColor=#93C5FD;strokeWidth=2;fontSize=12;verticalAlign=middle;align=center;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="2296" y="315" width="460" height="136" as="geometry" />
+        </mxCell>
+        <mxCell id="tbfan1" value="" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#1D4ED8;strokeWidth=2;endArrow=open;endFill=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" source="tb1dt" target="tbc1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="2275" y="319" />
+              <mxPoint x="2275" y="383" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="tbc2" value="&lt;b&gt;&lt;font style=&#39;font-size:14px;color:#0891B2;&#39;&gt;📈  Peer Benchmarking&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:11px;color:#64748B;&#39;&gt;Group Analytics&lt;/font&gt;&lt;br&gt;&lt;font style=&#39;font-size:10px;color:#94A3B8;&#39;&gt;Reads Delta  ·  Unity Catalog&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ECFEFF;strokeColor=#67E8F9;strokeWidth=2;fontSize=12;verticalAlign=middle;align=center;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="2296" y="457" width="460" height="136" as="geometry" />
+        </mxCell>
+        <mxCell id="tbfan2" value="" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#0891B2;strokeWidth=2;endArrow=open;endFill=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" source="tb2dt" target="tbc2" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="2275" y="423" />
+              <mxPoint x="2275" y="525" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="tbc3" value="&lt;b&gt;&lt;font style=&#39;font-size:14px;color:#0891B2;&#39;&gt;⚙️  AltMOPS&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:11px;color:#64748B;&#39;&gt;Alt Operations&lt;/font&gt;&lt;br&gt;&lt;font style=&#39;font-size:10px;color:#94A3B8;&#39;&gt;Reads Delta  ·  Unity Catalog&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ECFEFF;strokeColor=#67E8F9;strokeWidth=2;fontSize=12;verticalAlign=middle;align=center;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="2296" y="599" width="460" height="136" as="geometry" />
+        </mxCell>
+        <mxCell id="tbfan3" value="" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#0891B2;strokeWidth=2;endArrow=open;endFill=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" source="tb3dt" target="tbc3" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="2275" y="527" />
+              <mxPoint x="2275" y="667" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="tbc4" value="&lt;b&gt;&lt;font style=&#39;font-size:14px;color:#475569;&#39;&gt;➕  Other Consumers&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:11px;color:#64748B;&#39;&gt;Multiple Apps&lt;/font&gt;&lt;br&gt;&lt;font style=&#39;font-size:10px;color:#94A3B8;&#39;&gt;Reads Delta  ·  Unity Catalog&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F8FAFC;strokeColor=#CBD5E1;strokeWidth=2;fontSize=12;verticalAlign=middle;align=center;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="2296" y="741" width="460" height="136" as="geometry" />
+        </mxCell>
+        <mxCell id="tbfan4" value="" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#475569;strokeWidth=2;endArrow=open;endFill=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" source="tb4dt" target="tbc4" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="2275" y="631" />
+              <mxPoint x="2275" y="809" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="obs" value="&lt;b&gt;&lt;font style=&#39;font-size:12px;color:#475569;&#39;&gt;📡  Observability Stack:  Databricks Ganglia  ·  Spark Streaming UI  ·  AWS CloudWatch MSK  ·  Consumer Lag Alerts  ·  Checkpoint Health  ·  SLA Dashboards&lt;/font&gt;&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F8FAFC;strokeColor=#CBD5E1;strokeWidth=2;fontSize=12;verticalAlign=middle;align=center;arcSize=6;" vertex="1" parent="1">
+          <mxGeometry x="28" y="906" width="2740" height="40" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="map" name="Migration Map">
+    <mxGraphModel dx="1600" dy="600" grid="0" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="2800" pageHeight="900" math="0" shadow="0" background="#FFFFFF">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="m_bar" value="" style="rounded=0;fillColor=#1E293B;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry x="0" y="0" width="2800" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="m_t" value="&lt;b&gt;&lt;font style=&#39;font-size:20px;color:#FFFFFF;&#39;&gt;🗺️  GBS AUTH — Platform Migration Mapping&lt;/font&gt;&lt;/b&gt;  &lt;font style=&#39;font-size:12px;color:#94A3B8;&#39;&gt;  7 Platforms  ·  Kerberos → SASL_SSL / SCRAM-512  ·  CDP Spark → Databricks  ·  HDFS Parquet → Delta Lake&lt;/font&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="20" y="0" width="2740" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="mch10" value="&lt;b&gt;&lt;font style=&#39;font-size:12px;color:#1E293B;&#39;&gt;🏢 PLATFORM&lt;/font&gt;&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF1F2;strokeColor=#FCA5A5;strokeWidth=2;fontSize=12;verticalAlign=middle;align=center;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="10" y="60" width="200" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="mch218" value="&lt;b&gt;&lt;font style=&#39;font-size:12px;color:#1E293B;&#39;&gt;⚡ AS-IS KAFKA TOPIC&lt;/font&gt;&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF7ED;strokeColor=#FED7AA;strokeWidth=2;fontSize=12;verticalAlign=middle;align=center;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="218" y="60" width="240" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="mch466" value="&lt;b&gt;&lt;font style=&#39;font-size:12px;color:#1E293B;&#39;&gt;⚡ AS-IS SPARK APP&lt;/font&gt;&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F0FDF4;strokeColor=#86EFAC;strokeWidth=2;fontSize=12;verticalAlign=middle;align=center;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="466" y="60" width="220" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="mch694" value="&lt;b&gt;&lt;font style=&#39;font-size:12px;color:#1E293B;&#39;&gt;🗄️ AS-IS OUTPUT&lt;/font&gt;&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FAF5FF;strokeColor=#DDD6FE;strokeWidth=2;fontSize=12;verticalAlign=middle;align=center;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="694" y="60" width="190" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="mch892" value="&lt;b&gt;&lt;font style=&#39;font-size:12px;color:#1E293B;&#39;&gt;→&lt;/font&gt;&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFBEB;strokeColor=#FDE68A;strokeWidth=2;fontSize=12;verticalAlign=middle;align=center;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="892" y="60" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="mch980" value="&lt;b&gt;&lt;font style=&#39;font-size:12px;color:#1E293B;&#39;&gt;☁️ MSK TOPIC  (E+W)&lt;/font&gt;&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EFF6FF;strokeColor=#93C5FD;strokeWidth=2;fontSize=12;verticalAlign=middle;align=center;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="980" y="60" width="240" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="mch1228" value="&lt;b&gt;&lt;font style=&#39;font-size:12px;color:#1E293B;&#39;&gt;⚡ DBX JOB  (E+W)&lt;/font&gt;&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F0FDF4;strokeColor=#86EFAC;strokeWidth=2;fontSize=12;verticalAlign=middle;align=center;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="1228" y="60" width="240" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="mch1476" value="&lt;b&gt;&lt;font style=&#39;font-size:12px;color:#1E293B;&#39;&gt;🔐 AUTH METHOD&lt;/font&gt;&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFBEB;strokeColor=#FDE68A;strokeWidth=2;fontSize=12;verticalAlign=middle;align=center;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="1476" y="60" width="190" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="mch1674" value="&lt;b&gt;&lt;font style=&#39;font-size:12px;color:#1E293B;&#39;&gt;🔺 DELTA TABLE&lt;/font&gt;&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF7ED;strokeColor=#FED7AA;strokeWidth=2;fontSize=12;verticalAlign=middle;align=center;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="1674" y="60" width="230" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="mch1912" value="&lt;b&gt;&lt;font style=&#39;font-size:12px;color:#1E293B;&#39;&gt;☁️ REGIONS&lt;/font&gt;&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EFF6FF;strokeColor=#BFDBFE;strokeWidth=2;fontSize=12;verticalAlign=middle;align=center;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="1912" y="60" width="160" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="mch2080" value="&lt;b&gt;&lt;font style=&#39;font-size:12px;color:#1E293B;&#39;&gt;✅ STATUS&lt;/font&gt;&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F0FDF4;strokeColor=#BBF7D0;strokeWidth=2;fontSize=12;verticalAlign=middle;align=center;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="2080" y="60" width="140" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="mch2228" value="&lt;b&gt;&lt;font style=&#39;font-size:12px;color:#1E293B;&#39;&gt;📡 DOWNSTREAM CONSUMERS&lt;/font&gt;&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EFF6FF;strokeColor=#BFDBFE;strokeWidth=2;fontSize=12;verticalAlign=middle;align=center;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="2228" y="60" width="550" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="mb0" value="" style="rounded=0;fillColor=#FAFBFC;strokeColor=#E2E8F0;strokeWidth=1;" vertex="1" parent="1">
+          <mxGeometry x="8" y="105" width="2780" height="84" as="geometry" />
+        </mxCell>
+        <mxCell id="mr0c10" value="&lt;b&gt;&lt;font style=&#39;font-size:12px;color:#DC2626;&#39;&gt;🔴 HDC.AUTH_TXN&lt;/font&gt;&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF1F2;strokeColor=#DC2626;strokeWidth=1.5;fontSize=11;verticalAlign=middle;align=center;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="14" y="110" width="192" height="74" as="geometry" />
+        </mxCell>
+        <mxCell id="mr0c218" value="&lt;font style=&#39;font-size:11px;color:#C2410C;&#39;&gt;&lt;b&gt;hdc.auth_txn&lt;/b&gt;&lt;/font&gt;&lt;br&gt;&lt;font style=&#39;font-size:9px;color:#94A3B8;&#39;&gt;🔐 Kerberos GSSAPI&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF7ED;strokeColor=#F97316;strokeWidth=1.5;fontSize=11;verticalAlign=middle;align=center;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="222" y="110" width="232" height="74" as="geometry" />
+        </mxCell>
+        <mxCell id="mr0c466" value="&lt;font style=&#39;font-size:11px;color:#15803D;&#39;&gt;&lt;b&gt;HDCAuthStreamApp&lt;/b&gt;&lt;/font&gt;&lt;br&gt;&lt;font style=&#39;font-size:9px;color:#94A3B8;&#39;&gt;CDP Spark · Parser&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F0FDF4;strokeColor=#22C55E;strokeWidth=1.5;fontSize=11;verticalAlign=middle;align=center;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="470" y="110" width="212" height="74" as="geometry" />
+        </mxCell>
+        <mxCell id="mr0c694" value="&lt;font style=&#39;font-size:11px;color:#6D28D9;&#39;&gt;&lt;b&gt;/hdc/auth_txn/&lt;/b&gt;&lt;/font&gt;&lt;br&gt;&lt;font style=&#39;font-size:9px;color:#94A3B8;&#39;&gt;HDFS Parquet&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FAF5FF;strokeColor=#8B5CF6;strokeWidth=1.5;fontSize=11;verticalAlign=middle;align=center;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="698" y="110" width="182" height="74" as="geometry" />
+        </mxCell>
+        <mxCell id="mr0c892" value="&lt;b&gt;&lt;font style=&#39;font-size:18px;color:#D97706;&#39;&gt;➡️&lt;/font&gt;&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFBEB;strokeColor=#F59E0B;strokeWidth=1.5;fontSize=11;verticalAlign=middle;align=center;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="896" y="110" width="72" height="74" as="geometry" />
+        </mxCell>
+        <mxCell id="mr0c980" value="&lt;font style=&#39;font-size:11px;color:#1D4ED8;&#39;&gt;&lt;b&gt;hdc.auth_txn&lt;/b&gt;&lt;/font&gt;&lt;br&gt;&lt;font style=&#39;font-size:9px;color:#94A3B8;&#39;&gt;☁️ E+W · :9096 TLS&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EFF6FF;strokeColor=#3B82F6;strokeWidth=1.5;fontSize=11;verticalAlign=middle;align=center;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="984" y="110" width="232" height="74" as="geometry" />
+        </mxCell>
+        <mxCell id="mr0c1228" value="&lt;font style=&#39;font-size:11px;color:#15803D;&#39;&gt;&lt;b&gt;HDCAuthStreamDBX&lt;/b&gt;&lt;/font&gt;&lt;br&gt;&lt;font style=&#39;font-size:9px;color:#94A3B8;&#39;&gt;Struct Stream E+W&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F0FDF4;strokeColor=#22C55E;strokeWidth=1.5;fontSize=11;verticalAlign=middle;align=center;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="1232" y="110" width="232" height="74" as="geometry" />
+        </mxCell>
+        <mxCell id="mr0c1476" value="&lt;b&gt;&lt;font style=&#39;font-size:11px;color:#92400E;&#39;&gt;🔐 SCRAM-SHA-512&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:9px;color:#94A3B8;&#39;&gt;Secrets Mgr&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFBEB;strokeColor=#D97706;strokeWidth=1.5;fontSize=11;verticalAlign=middle;align=center;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="1480" y="110" width="182" height="74" as="geometry" />
+        </mxCell>
+        <mxCell id="mr0c1674" value="&lt;b&gt;&lt;font style=&#39;font-size:11px;color:#C2410C;&#39;&gt;🔺 hdc_auth_delta&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:9px;color:#94A3B8;&#39;&gt;Unity Cat · E+W&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF7ED;strokeColor=#EA580C;strokeWidth=1.5;fontSize=11;verticalAlign=middle;align=center;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="1678" y="110" width="222" height="74" as="geometry" />
+        </mxCell>
+        <mxCell id="mr0c1912" value="&lt;font style=&#39;font-size:11px;color:#1D4ED8;&#39;&gt;&lt;b&gt;East+West&lt;/b&gt;&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EFF6FF;strokeColor=#3B82F6;strokeWidth=1.5;fontSize=11;verticalAlign=middle;align=center;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="1916" y="110" width="152" height="74" as="geometry" />
+        </mxCell>
+        <mxCell id="mr0c2080" value="&lt;b&gt;&lt;font style=&#39;font-size:12px;color:#15803D;&#39;&gt;✅ Done&lt;/font&gt;&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F0FDF4;strokeColor=#22C55E;strokeWidth=1.5;fontSize=11;verticalAlign=middle;align=center;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="2084" y="110" width="132" height="74" as="geometry" />
+        </mxCell>
+        <mxCell id="mr0c2228" value="&lt;font style=&#39;font-size:11px;color:#1D4ED8;&#39;&gt;FSBI, Single AUTH, Peer&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EFF6FF;strokeColor=#BFDBFE;strokeWidth=1.5;fontSize=11;verticalAlign=middle;align=center;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="2232" y="110" width="542" height="74" as="geometry" />
+        </mxCell>
+        <mxCell id="mb1" value="" style="rounded=0;fillColor=#F8F9FB;strokeColor=#E2E8F0;strokeWidth=1;" vertex="1" parent="1">
+          <mxGeometry x="8" y="192" width="2780" height="84" as="geometry" />
+        </mxCell>
+        <mxCell id="mr1c10" value="&lt;b&gt;&lt;font style=&#39;font-size:12px;color:#EA580C;&#39;&gt;🟠 DEBITGW_TXN&lt;/font&gt;&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF7ED;strokeColor=#EA580C;strokeWidth=1.5;fontSize=11;verticalAlign=middle;align=center;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="14" y="197" width="192" height="74" as="geometry" />
+        </mxCell>
+        <mxCell id="mr1c218" value="&lt;font style=&#39;font-size:11px;color:#C2410C;&#39;&gt;&lt;b&gt;hdc.debitgw_txn&lt;/b&gt;&lt;/font&gt;&lt;br&gt;&lt;font style=&#39;font-size:9px;color:#94A3B8;&#39;&gt;🔐 Kerberos GSSAPI&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF7ED;strokeColor=#F97316;strokeWidth=1.5;fontSize=11;verticalAlign=middle;align=center;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="222" y="197" width="232" height="74" as="geometry" />
+        </mxCell>
+        <mxCell id="mr1c466" value="&lt;font style=&#39;font-size:11px;color:#15803D;&#39;&gt;&lt;b&gt;DebitGWStreamApp&lt;/b&gt;&lt;/font&gt;&lt;br&gt;&lt;font style=&#39;font-size:9px;color:#94A3B8;&#39;&gt;CDP Spark · Parser&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F0FDF4;strokeColor=#22C55E;strokeWidth=1.5;fontSize=11;verticalAlign=middle;align=center;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="470" y="197" width="212" height="74" as="geometry" />
+        </mxCell>
+        <mxCell id="mr1c694" value="&lt;font style=&#39;font-size:11px;color:#6D28D9;&#39;&gt;&lt;b&gt;/hdc/debitgw/&lt;/b&gt;&lt;/font&gt;&lt;br&gt;&lt;font style=&#39;font-size:9px;color:#94A3B8;&#39;&gt;HDFS Parquet&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FAF5FF;strokeColor=#8B5CF6;strokeWidth=1.5;fontSize=11;verticalAlign=middle;align=center;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="698" y="197" width="182" height="74" as="geometry" />
+        </mxCell>
+        <mxCell id="mr1c892" value="&lt;b&gt;&lt;font style=&#39;font-size:18px;color:#D97706;&#39;&gt;➡️&lt;/font&gt;&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFBEB;strokeColor=#F59E0B;strokeWidth=1.5;fontSize=11;verticalAlign=middle;align=center;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="896" y="197" width="72" height="74" as="geometry" />
+        </mxCell>
+        <mxCell id="mr1c980" value="&lt;font style=&#39;font-size:11px;color:#1D4ED8;&#39;&gt;&lt;b&gt;hdc.debitgw_txn&lt;/b&gt;&lt;/font&gt;&lt;br&gt;&lt;font style=&#39;font-size:9px;color:#94A3B8;&#39;&gt;☁️ E+W · :9096 TLS&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EFF6FF;strokeColor=#3B82F6;strokeWidth=1.5;fontSize=11;verticalAlign=middle;align=center;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="984" y="197" width="232" height="74" as="geometry" />
+        </mxCell>
+        <mxCell id="mr1c1228" value="&lt;font style=&#39;font-size:11px;color:#15803D;&#39;&gt;&lt;b&gt;DebitGWStreamDBX&lt;/b&gt;&lt;/font&gt;&lt;br&gt;&lt;font style=&#39;font-size:9px;color:#94A3B8;&#39;&gt;Struct Stream E+W&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F0FDF4;strokeColor=#22C55E;strokeWidth=1.5;fontSize=11;verticalAlign=middle;align=center;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="1232" y="197" width="232" height="74" as="geometry" />
+        </mxCell>
+        <mxCell id="mr1c1476" value="&lt;b&gt;&lt;font style=&#39;font-size:11px;color:#92400E;&#39;&gt;🔐 SCRAM-SHA-512&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:9px;color:#94A3B8;&#39;&gt;Secrets Mgr&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFBEB;strokeColor=#D97706;strokeWidth=1.5;fontSize=11;verticalAlign=middle;align=center;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="1480" y="197" width="182" height="74" as="geometry" />
+        </mxCell>
+        <mxCell id="mr1c1674" value="&lt;b&gt;&lt;font style=&#39;font-size:11px;color:#C2410C;&#39;&gt;🔺 debitgw_txn_delta&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:9px;color:#94A3B8;&#39;&gt;Unity Cat · E+W&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF7ED;strokeColor=#EA580C;strokeWidth=1.5;fontSize=11;verticalAlign=middle;align=center;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="1678" y="197" width="222" height="74" as="geometry" />
+        </mxCell>
+        <mxCell id="mr1c1912" value="&lt;font style=&#39;font-size:11px;color:#1D4ED8;&#39;&gt;&lt;b&gt;East+West&lt;/b&gt;&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EFF6FF;strokeColor=#3B82F6;strokeWidth=1.5;fontSize=11;verticalAlign=middle;align=center;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="1916" y="197" width="152" height="74" as="geometry" />
+        </mxCell>
+        <mxCell id="mr1c2080" value="&lt;b&gt;&lt;font style=&#39;font-size:12px;color:#15803D;&#39;&gt;✅ Done&lt;/font&gt;&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F0FDF4;strokeColor=#22C55E;strokeWidth=1.5;fontSize=11;verticalAlign=middle;align=center;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="2084" y="197" width="132" height="74" as="geometry" />
+        </mxCell>
+        <mxCell id="mr1c2228" value="&lt;font style=&#39;font-size:11px;color:#1D4ED8;&#39;&gt;FSBI, AltMOPS&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EFF6FF;strokeColor=#BFDBFE;strokeWidth=1.5;fontSize=11;verticalAlign=middle;align=center;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="2232" y="197" width="542" height="74" as="geometry" />
+        </mxCell>
+        <mxCell id="mb2" value="" style="rounded=0;fillColor=#FAFBFC;strokeColor=#E2E8F0;strokeWidth=1;" vertex="1" parent="1">
+          <mxGeometry x="8" y="279" width="2780" height="84" as="geometry" />
+        </mxCell>
+        <mxCell id="mr2c10" value="&lt;b&gt;&lt;font style=&#39;font-size:12px;color:#CA8A04;&#39;&gt;🟡 BUYpass.AUTH_TXN&lt;/font&gt;&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FEFCE8;strokeColor=#CA8A04;strokeWidth=1.5;fontSize=11;verticalAlign=middle;align=center;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="14" y="284" width="192" height="74" as="geometry" />
+        </mxCell>
+        <mxCell id="mr2c218" value="&lt;font style=&#39;font-size:11px;color:#C2410C;&#39;&gt;&lt;b&gt;buypass.auth_txn&lt;/b&gt;&lt;/font&gt;&lt;br&gt;&lt;font style=&#39;font-size:9px;color:#94A3B8;&#39;&gt;🔐 Kerberos GSSAPI&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF7ED;strokeColor=#F97316;strokeWidth=1.5;fontSize=11;verticalAlign=middle;align=center;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="222" y="284" width="232" height="74" as="geometry" />
+        </mxCell>
+        <mxCell id="mr2c466" value="&lt;font style=&#39;font-size:11px;color:#15803D;&#39;&gt;&lt;b&gt;BUYpassStreamApp&lt;/b&gt;&lt;/font&gt;&lt;br&gt;&lt;font style=&#39;font-size:9px;color:#94A3B8;&#39;&gt;CDP Spark · Parser&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F0FDF4;strokeColor=#22C55E;strokeWidth=1.5;fontSize=11;verticalAlign=middle;align=center;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="470" y="284" width="212" height="74" as="geometry" />
+        </mxCell>
+        <mxCell id="mr2c694" value="&lt;font style=&#39;font-size:11px;color:#6D28D9;&#39;&gt;&lt;b&gt;/buypass/auth/&lt;/b&gt;&lt;/font&gt;&lt;br&gt;&lt;font style=&#39;font-size:9px;color:#94A3B8;&#39;&gt;HDFS Parquet&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FAF5FF;strokeColor=#8B5CF6;strokeWidth=1.5;fontSize=11;verticalAlign=middle;align=center;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="698" y="284" width="182" height="74" as="geometry" />
+        </mxCell>
+        <mxCell id="mr2c892" value="&lt;b&gt;&lt;font style=&#39;font-size:18px;color:#D97706;&#39;&gt;➡️&lt;/font&gt;&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFBEB;strokeColor=#F59E0B;strokeWidth=1.5;fontSize=11;verticalAlign=middle;align=center;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="896" y="284" width="72" height="74" as="geometry" />
+        </mxCell>
+        <mxCell id="mr2c980" value="&lt;font style=&#39;font-size:11px;color:#1D4ED8;&#39;&gt;&lt;b&gt;buypass.auth_txn&lt;/b&gt;&lt;/font&gt;&lt;br&gt;&lt;font style=&#39;font-size:9px;color:#94A3B8;&#39;&gt;☁️ E+W · :9096 TLS&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EFF6FF;strokeColor=#3B82F6;strokeWidth=1.5;fontSize=11;verticalAlign=middle;align=center;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="984" y="284" width="232" height="74" as="geometry" />
+        </mxCell>
+        <mxCell id="mr2c1228" value="&lt;font style=&#39;font-size:11px;color:#15803D;&#39;&gt;&lt;b&gt;BUYpassStreamDBX&lt;/b&gt;&lt;/font&gt;&lt;br&gt;&lt;font style=&#39;font-size:9px;color:#94A3B8;&#39;&gt;Struct Stream E+W&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F0FDF4;strokeColor=#22C55E;strokeWidth=1.5;fontSize=11;verticalAlign=middle;align=center;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="1232" y="284" width="232" height="74" as="geometry" />
+        </mxCell>
+        <mxCell id="mr2c1476" value="&lt;b&gt;&lt;font style=&#39;font-size:11px;color:#92400E;&#39;&gt;🔐 SCRAM-SHA-512&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:9px;color:#94A3B8;&#39;&gt;Secrets Mgr&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFBEB;strokeColor=#D97706;strokeWidth=1.5;fontSize=11;verticalAlign=middle;align=center;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="1480" y="284" width="182" height="74" as="geometry" />
+        </mxCell>
+        <mxCell id="mr2c1674" value="&lt;b&gt;&lt;font style=&#39;font-size:11px;color:#C2410C;&#39;&gt;🔺 buypass_auth_delta&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:9px;color:#94A3B8;&#39;&gt;Unity Cat · E+W&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF7ED;strokeColor=#EA580C;strokeWidth=1.5;fontSize=11;verticalAlign=middle;align=center;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="1678" y="284" width="222" height="74" as="geometry" />
+        </mxCell>
+        <mxCell id="mr2c1912" value="&lt;font style=&#39;font-size:11px;color:#1D4ED8;&#39;&gt;&lt;b&gt;East+West&lt;/b&gt;&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EFF6FF;strokeColor=#3B82F6;strokeWidth=1.5;fontSize=11;verticalAlign=middle;align=center;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="1916" y="284" width="152" height="74" as="geometry" />
+        </mxCell>
+        <mxCell id="mr2c2080" value="&lt;b&gt;&lt;font style=&#39;font-size:12px;color:#15803D;&#39;&gt;🔄 WIP&lt;/font&gt;&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F0FDF4;strokeColor=#22C55E;strokeWidth=1.5;fontSize=11;verticalAlign=middle;align=center;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="2084" y="284" width="132" height="74" as="geometry" />
+        </mxCell>
+        <mxCell id="mr2c2228" value="&lt;font style=&#39;font-size:11px;color:#1D4ED8;&#39;&gt;Peer Benchmarking&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EFF6FF;strokeColor=#BFDBFE;strokeWidth=1.5;fontSize=11;verticalAlign=middle;align=center;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="2232" y="284" width="542" height="74" as="geometry" />
+        </mxCell>
+        <mxCell id="mb3" value="" style="rounded=0;fillColor=#F8F9FB;strokeColor=#E2E8F0;strokeWidth=1;" vertex="1" parent="1">
+          <mxGeometry x="8" y="366" width="2780" height="84" as="geometry" />
+        </mxCell>
+        <mxCell id="mr3c10" value="&lt;b&gt;&lt;font style=&#39;font-size:12px;color:#16A34A;&#39;&gt;🟢 Omaha.AUTH_TXN&lt;/font&gt;&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F0FDF4;strokeColor=#16A34A;strokeWidth=1.5;fontSize=11;verticalAlign=middle;align=center;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="14" y="371" width="192" height="74" as="geometry" />
+        </mxCell>
+        <mxCell id="mr3c218" value="&lt;font style=&#39;font-size:11px;color:#C2410C;&#39;&gt;&lt;b&gt;omaha.auth_txn&lt;/b&gt;&lt;/font&gt;&lt;br&gt;&lt;font style=&#39;font-size:9px;color:#94A3B8;&#39;&gt;🔐 Kerberos GSSAPI&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF7ED;strokeColor=#F97316;strokeWidth=1.5;fontSize=11;verticalAlign=middle;align=center;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="222" y="371" width="232" height="74" as="geometry" />
+        </mxCell>
+        <mxCell id="mr3c466" value="&lt;font style=&#39;font-size:11px;color:#15803D;&#39;&gt;&lt;b&gt;OmahaStreamApp&lt;/b&gt;&lt;/font&gt;&lt;br&gt;&lt;font style=&#39;font-size:9px;color:#94A3B8;&#39;&gt;CDP Spark · Parser&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F0FDF4;strokeColor=#22C55E;strokeWidth=1.5;fontSize=11;verticalAlign=middle;align=center;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="470" y="371" width="212" height="74" as="geometry" />
+        </mxCell>
+        <mxCell id="mr3c694" value="&lt;font style=&#39;font-size:11px;color:#6D28D9;&#39;&gt;&lt;b&gt;/omaha/auth/&lt;/b&gt;&lt;/font&gt;&lt;br&gt;&lt;font style=&#39;font-size:9px;color:#94A3B8;&#39;&gt;HDFS Parquet&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FAF5FF;strokeColor=#8B5CF6;strokeWidth=1.5;fontSize=11;verticalAlign=middle;align=center;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="698" y="371" width="182" height="74" as="geometry" />
+        </mxCell>
+        <mxCell id="mr3c892" value="&lt;b&gt;&lt;font style=&#39;font-size:18px;color:#D97706;&#39;&gt;➡️&lt;/font&gt;&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFBEB;strokeColor=#F59E0B;strokeWidth=1.5;fontSize=11;verticalAlign=middle;align=center;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="896" y="371" width="72" height="74" as="geometry" />
+        </mxCell>
+        <mxCell id="mr3c980" value="&lt;font style=&#39;font-size:11px;color:#1D4ED8;&#39;&gt;&lt;b&gt;omaha.auth_txn&lt;/b&gt;&lt;/font&gt;&lt;br&gt;&lt;font style=&#39;font-size:9px;color:#94A3B8;&#39;&gt;☁️ E+W · :9096 TLS&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EFF6FF;strokeColor=#3B82F6;strokeWidth=1.5;fontSize=11;verticalAlign=middle;align=center;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="984" y="371" width="232" height="74" as="geometry" />
+        </mxCell>
+        <mxCell id="mr3c1228" value="&lt;font style=&#39;font-size:11px;color:#15803D;&#39;&gt;&lt;b&gt;OmahaStreamDBX&lt;/b&gt;&lt;/font&gt;&lt;br&gt;&lt;font style=&#39;font-size:9px;color:#94A3B8;&#39;&gt;Struct Stream E+W&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F0FDF4;strokeColor=#22C55E;strokeWidth=1.5;fontSize=11;verticalAlign=middle;align=center;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="1232" y="371" width="232" height="74" as="geometry" />
+        </mxCell>
+        <mxCell id="mr3c1476" value="&lt;b&gt;&lt;font style=&#39;font-size:11px;color:#92400E;&#39;&gt;🔐 SCRAM-SHA-512&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:9px;color:#94A3B8;&#39;&gt;Secrets Mgr&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFBEB;strokeColor=#D97706;strokeWidth=1.5;fontSize=11;verticalAlign=middle;align=center;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="1480" y="371" width="182" height="74" as="geometry" />
+        </mxCell>
+        <mxCell id="mr3c1674" value="&lt;b&gt;&lt;font style=&#39;font-size:11px;color:#C2410C;&#39;&gt;🔺 omaha_auth_delta&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:9px;color:#94A3B8;&#39;&gt;Unity Cat · E+W&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF7ED;strokeColor=#EA580C;strokeWidth=1.5;fontSize=11;verticalAlign=middle;align=center;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="1678" y="371" width="222" height="74" as="geometry" />
+        </mxCell>
+        <mxCell id="mr3c1912" value="&lt;font style=&#39;font-size:11px;color:#1D4ED8;&#39;&gt;&lt;b&gt;East+West&lt;/b&gt;&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EFF6FF;strokeColor=#3B82F6;strokeWidth=1.5;fontSize=11;verticalAlign=middle;align=center;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="1916" y="371" width="152" height="74" as="geometry" />
+        </mxCell>
+        <mxCell id="mr3c2080" value="&lt;b&gt;&lt;font style=&#39;font-size:12px;color:#15803D;&#39;&gt;🔄 WIP&lt;/font&gt;&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F0FDF4;strokeColor=#22C55E;strokeWidth=1.5;fontSize=11;verticalAlign=middle;align=center;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="2084" y="371" width="132" height="74" as="geometry" />
+        </mxCell>
+        <mxCell id="mr3c2228" value="&lt;font style=&#39;font-size:11px;color:#1D4ED8;&#39;&gt;AltMOPS, FSBI&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EFF6FF;strokeColor=#BFDBFE;strokeWidth=1.5;fontSize=11;verticalAlign=middle;align=center;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="2232" y="371" width="542" height="74" as="geometry" />
+        </mxCell>
+        <mxCell id="mb4" value="" style="rounded=0;fillColor=#FAFBFC;strokeColor=#E2E8F0;strokeWidth=1;" vertex="1" parent="1">
+          <mxGeometry x="8" y="453" width="2780" height="84" as="geometry" />
+        </mxCell>
+        <mxCell id="mr4c10" value="&lt;b&gt;&lt;font style=&#39;font-size:12px;color:#0891B2;&#39;&gt;🔵 IPG.AUTH_TXN&lt;/font&gt;&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ECFEFF;strokeColor=#0891B2;strokeWidth=1.5;fontSize=11;verticalAlign=middle;align=center;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="14" y="458" width="192" height="74" as="geometry" />
+        </mxCell>
+        <mxCell id="mr4c218" value="&lt;font style=&#39;font-size:11px;color:#C2410C;&#39;&gt;&lt;b&gt;ipg.auth_txn&lt;/b&gt;&lt;/font&gt;&lt;br&gt;&lt;font style=&#39;font-size:9px;color:#94A3B8;&#39;&gt;🔐 Kerberos GSSAPI&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF7ED;strokeColor=#F97316;strokeWidth=1.5;fontSize=11;verticalAlign=middle;align=center;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="222" y="458" width="232" height="74" as="geometry" />
+        </mxCell>
+        <mxCell id="mr4c466" value="&lt;font style=&#39;font-size:11px;color:#15803D;&#39;&gt;&lt;b&gt;IPGStreamApp&lt;/b&gt;&lt;/font&gt;&lt;br&gt;&lt;font style=&#39;font-size:9px;color:#94A3B8;&#39;&gt;CDP Spark · Parser&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F0FDF4;strokeColor=#22C55E;strokeWidth=1.5;fontSize=11;verticalAlign=middle;align=center;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="470" y="458" width="212" height="74" as="geometry" />
+        </mxCell>
+        <mxCell id="mr4c694" value="&lt;font style=&#39;font-size:11px;color:#6D28D9;&#39;&gt;&lt;b&gt;/ipg/auth_txn/&lt;/b&gt;&lt;/font&gt;&lt;br&gt;&lt;font style=&#39;font-size:9px;color:#94A3B8;&#39;&gt;HDFS Parquet&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FAF5FF;strokeColor=#8B5CF6;strokeWidth=1.5;fontSize=11;verticalAlign=middle;align=center;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="698" y="458" width="182" height="74" as="geometry" />
+        </mxCell>
+        <mxCell id="mr4c892" value="&lt;b&gt;&lt;font style=&#39;font-size:18px;color:#D97706;&#39;&gt;➡️&lt;/font&gt;&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFBEB;strokeColor=#F59E0B;strokeWidth=1.5;fontSize=11;verticalAlign=middle;align=center;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="896" y="458" width="72" height="74" as="geometry" />
+        </mxCell>
+        <mxCell id="mr4c980" value="&lt;font style=&#39;font-size:11px;color:#1D4ED8;&#39;&gt;&lt;b&gt;ipg.auth_txn&lt;/b&gt;&lt;/font&gt;&lt;br&gt;&lt;font style=&#39;font-size:9px;color:#94A3B8;&#39;&gt;☁️ E+W · :9096 TLS&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EFF6FF;strokeColor=#3B82F6;strokeWidth=1.5;fontSize=11;verticalAlign=middle;align=center;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="984" y="458" width="232" height="74" as="geometry" />
+        </mxCell>
+        <mxCell id="mr4c1228" value="&lt;font style=&#39;font-size:11px;color:#15803D;&#39;&gt;&lt;b&gt;IPGStreamDBX&lt;/b&gt;&lt;/font&gt;&lt;br&gt;&lt;font style=&#39;font-size:9px;color:#94A3B8;&#39;&gt;Struct Stream E+W&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F0FDF4;strokeColor=#22C55E;strokeWidth=1.5;fontSize=11;verticalAlign=middle;align=center;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="1232" y="458" width="232" height="74" as="geometry" />
+        </mxCell>
+        <mxCell id="mr4c1476" value="&lt;b&gt;&lt;font style=&#39;font-size:11px;color:#92400E;&#39;&gt;🔐 SCRAM-SHA-512&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:9px;color:#94A3B8;&#39;&gt;Secrets Mgr&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFBEB;strokeColor=#D97706;strokeWidth=1.5;fontSize=11;verticalAlign=middle;align=center;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="1480" y="458" width="182" height="74" as="geometry" />
+        </mxCell>
+        <mxCell id="mr4c1674" value="&lt;b&gt;&lt;font style=&#39;font-size:11px;color:#C2410C;&#39;&gt;🔺 ipg_auth_delta&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:9px;color:#94A3B8;&#39;&gt;Unity Cat · E+W&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF7ED;strokeColor=#EA580C;strokeWidth=1.5;fontSize=11;verticalAlign=middle;align=center;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="1678" y="458" width="222" height="74" as="geometry" />
+        </mxCell>
+        <mxCell id="mr4c1912" value="&lt;font style=&#39;font-size:11px;color:#1D4ED8;&#39;&gt;&lt;b&gt;East+West&lt;/b&gt;&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EFF6FF;strokeColor=#3B82F6;strokeWidth=1.5;fontSize=11;verticalAlign=middle;align=center;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="1916" y="458" width="152" height="74" as="geometry" />
+        </mxCell>
+        <mxCell id="mr4c2080" value="&lt;b&gt;&lt;font style=&#39;font-size:12px;color:#15803D;&#39;&gt;📋 Plan&lt;/font&gt;&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F0FDF4;strokeColor=#22C55E;strokeWidth=1.5;fontSize=11;verticalAlign=middle;align=center;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="2084" y="458" width="132" height="74" as="geometry" />
+        </mxCell>
+        <mxCell id="mr4c2228" value="&lt;font style=&#39;font-size:11px;color:#1D4ED8;&#39;&gt;FSBI, AltMOPS&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EFF6FF;strokeColor=#BFDBFE;strokeWidth=1.5;fontSize=11;verticalAlign=middle;align=center;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="2232" y="458" width="542" height="74" as="geometry" />
+        </mxCell>
+        <mxCell id="mb5" value="" style="rounded=0;fillColor=#F8F9FB;strokeColor=#E2E8F0;strokeWidth=1;" vertex="1" parent="1">
+          <mxGeometry x="8" y="540" width="2780" height="84" as="geometry" />
+        </mxCell>
+        <mxCell id="mr5c10" value="&lt;b&gt;&lt;font style=&#39;font-size:12px;color:#7C3AED;&#39;&gt;🟣 FSL.TRANSACTION&lt;/font&gt;&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F5F3FF;strokeColor=#7C3AED;strokeWidth=1.5;fontSize=11;verticalAlign=middle;align=center;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="14" y="545" width="192" height="74" as="geometry" />
+        </mxCell>
+        <mxCell id="mr5c218" value="&lt;font style=&#39;font-size:11px;color:#C2410C;&#39;&gt;&lt;b&gt;fsl.transaction&lt;/b&gt;&lt;/font&gt;&lt;br&gt;&lt;font style=&#39;font-size:9px;color:#94A3B8;&#39;&gt;🔐 Kerberos GSSAPI&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF7ED;strokeColor=#F97316;strokeWidth=1.5;fontSize=11;verticalAlign=middle;align=center;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="222" y="545" width="232" height="74" as="geometry" />
+        </mxCell>
+        <mxCell id="mr5c466" value="&lt;font style=&#39;font-size:11px;color:#15803D;&#39;&gt;&lt;b&gt;FSLTxnStreamApp&lt;/b&gt;&lt;/font&gt;&lt;br&gt;&lt;font style=&#39;font-size:9px;color:#94A3B8;&#39;&gt;CDP Spark · Parser&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F0FDF4;strokeColor=#22C55E;strokeWidth=1.5;fontSize=11;verticalAlign=middle;align=center;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="470" y="545" width="212" height="74" as="geometry" />
+        </mxCell>
+        <mxCell id="mr5c694" value="&lt;font style=&#39;font-size:11px;color:#6D28D9;&#39;&gt;&lt;b&gt;/fsl/txn/&lt;/b&gt;&lt;/font&gt;&lt;br&gt;&lt;font style=&#39;font-size:9px;color:#94A3B8;&#39;&gt;HDFS Parquet&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FAF5FF;strokeColor=#8B5CF6;strokeWidth=1.5;fontSize=11;verticalAlign=middle;align=center;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="698" y="545" width="182" height="74" as="geometry" />
+        </mxCell>
+        <mxCell id="mr5c892" value="&lt;b&gt;&lt;font style=&#39;font-size:18px;color:#D97706;&#39;&gt;➡️&lt;/font&gt;&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFBEB;strokeColor=#F59E0B;strokeWidth=1.5;fontSize=11;verticalAlign=middle;align=center;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="896" y="545" width="72" height="74" as="geometry" />
+        </mxCell>
+        <mxCell id="mr5c980" value="&lt;font style=&#39;font-size:11px;color:#1D4ED8;&#39;&gt;&lt;b&gt;fsl.transaction&lt;/b&gt;&lt;/font&gt;&lt;br&gt;&lt;font style=&#39;font-size:9px;color:#94A3B8;&#39;&gt;☁️ E+W · :9096 TLS&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EFF6FF;strokeColor=#3B82F6;strokeWidth=1.5;fontSize=11;verticalAlign=middle;align=center;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="984" y="545" width="232" height="74" as="geometry" />
+        </mxCell>
+        <mxCell id="mr5c1228" value="&lt;font style=&#39;font-size:11px;color:#15803D;&#39;&gt;&lt;b&gt;FSLTxnStreamDBX&lt;/b&gt;&lt;/font&gt;&lt;br&gt;&lt;font style=&#39;font-size:9px;color:#94A3B8;&#39;&gt;Struct Stream E+W&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F0FDF4;strokeColor=#22C55E;strokeWidth=1.5;fontSize=11;verticalAlign=middle;align=center;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="1232" y="545" width="232" height="74" as="geometry" />
+        </mxCell>
+        <mxCell id="mr5c1476" value="&lt;b&gt;&lt;font style=&#39;font-size:11px;color:#92400E;&#39;&gt;🔐 SCRAM-SHA-512&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:9px;color:#94A3B8;&#39;&gt;Secrets Mgr&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFBEB;strokeColor=#D97706;strokeWidth=1.5;fontSize=11;verticalAlign=middle;align=center;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="1480" y="545" width="182" height="74" as="geometry" />
+        </mxCell>
+        <mxCell id="mr5c1674" value="&lt;b&gt;&lt;font style=&#39;font-size:11px;color:#C2410C;&#39;&gt;🔺 fsl_txn_delta&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:9px;color:#94A3B8;&#39;&gt;Unity Cat · E+W&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF7ED;strokeColor=#EA580C;strokeWidth=1.5;fontSize=11;verticalAlign=middle;align=center;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="1678" y="545" width="222" height="74" as="geometry" />
+        </mxCell>
+        <mxCell id="mr5c1912" value="&lt;font style=&#39;font-size:11px;color:#1D4ED8;&#39;&gt;&lt;b&gt;East+West&lt;/b&gt;&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EFF6FF;strokeColor=#3B82F6;strokeWidth=1.5;fontSize=11;verticalAlign=middle;align=center;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="1916" y="545" width="152" height="74" as="geometry" />
+        </mxCell>
+        <mxCell id="mr5c2080" value="&lt;b&gt;&lt;font style=&#39;font-size:12px;color:#15803D;&#39;&gt;📋 Plan&lt;/font&gt;&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F0FDF4;strokeColor=#22C55E;strokeWidth=1.5;fontSize=11;verticalAlign=middle;align=center;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="2084" y="545" width="132" height="74" as="geometry" />
+        </mxCell>
+        <mxCell id="mr5c2228" value="&lt;font style=&#39;font-size:11px;color:#1D4ED8;&#39;&gt;Single AUTH&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EFF6FF;strokeColor=#BFDBFE;strokeWidth=1.5;fontSize=11;verticalAlign=middle;align=center;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="2232" y="545" width="542" height="74" as="geometry" />
+        </mxCell>
+        <mxCell id="mb6" value="" style="rounded=0;fillColor=#FAFBFC;strokeColor=#E2E8F0;strokeWidth=1;" vertex="1" parent="1">
+          <mxGeometry x="8" y="627" width="2780" height="84" as="geometry" />
+        </mxCell>
+        <mxCell id="mr6c10" value="&lt;b&gt;&lt;font style=&#39;font-size:12px;color:#BE185D;&#39;&gt;🩷 FSL.REGISTRATION&lt;/font&gt;&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FDF2F8;strokeColor=#BE185D;strokeWidth=1.5;fontSize=11;verticalAlign=middle;align=center;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="14" y="632" width="192" height="74" as="geometry" />
+        </mxCell>
+        <mxCell id="mr6c218" value="&lt;font style=&#39;font-size:11px;color:#C2410C;&#39;&gt;&lt;b&gt;fsl.registration&lt;/b&gt;&lt;/font&gt;&lt;br&gt;&lt;font style=&#39;font-size:9px;color:#94A3B8;&#39;&gt;🔐 Kerberos GSSAPI&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF7ED;strokeColor=#F97316;strokeWidth=1.5;fontSize=11;verticalAlign=middle;align=center;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="222" y="632" width="232" height="74" as="geometry" />
+        </mxCell>
+        <mxCell id="mr6c466" value="&lt;font style=&#39;font-size:11px;color:#15803D;&#39;&gt;&lt;b&gt;FSLRegStreamApp&lt;/b&gt;&lt;/font&gt;&lt;br&gt;&lt;font style=&#39;font-size:9px;color:#94A3B8;&#39;&gt;CDP Spark · Parser&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F0FDF4;strokeColor=#22C55E;strokeWidth=1.5;fontSize=11;verticalAlign=middle;align=center;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="470" y="632" width="212" height="74" as="geometry" />
+        </mxCell>
+        <mxCell id="mr6c694" value="&lt;font style=&#39;font-size:11px;color:#6D28D9;&#39;&gt;&lt;b&gt;/fsl/reg/&lt;/b&gt;&lt;/font&gt;&lt;br&gt;&lt;font style=&#39;font-size:9px;color:#94A3B8;&#39;&gt;HDFS Parquet&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FAF5FF;strokeColor=#8B5CF6;strokeWidth=1.5;fontSize=11;verticalAlign=middle;align=center;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="698" y="632" width="182" height="74" as="geometry" />
+        </mxCell>
+        <mxCell id="mr6c892" value="&lt;b&gt;&lt;font style=&#39;font-size:18px;color:#D97706;&#39;&gt;➡️&lt;/font&gt;&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFBEB;strokeColor=#F59E0B;strokeWidth=1.5;fontSize=11;verticalAlign=middle;align=center;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="896" y="632" width="72" height="74" as="geometry" />
+        </mxCell>
+        <mxCell id="mr6c980" value="&lt;font style=&#39;font-size:11px;color:#1D4ED8;&#39;&gt;&lt;b&gt;fsl.registration&lt;/b&gt;&lt;/font&gt;&lt;br&gt;&lt;font style=&#39;font-size:9px;color:#94A3B8;&#39;&gt;☁️ E+W · :9096 TLS&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EFF6FF;strokeColor=#3B82F6;strokeWidth=1.5;fontSize=11;verticalAlign=middle;align=center;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="984" y="632" width="232" height="74" as="geometry" />
+        </mxCell>
+        <mxCell id="mr6c1228" value="&lt;font style=&#39;font-size:11px;color:#15803D;&#39;&gt;&lt;b&gt;FSLRegStreamDBX&lt;/b&gt;&lt;/font&gt;&lt;br&gt;&lt;font style=&#39;font-size:9px;color:#94A3B8;&#39;&gt;Struct Stream E+W&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F0FDF4;strokeColor=#22C55E;strokeWidth=1.5;fontSize=11;verticalAlign=middle;align=center;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="1232" y="632" width="232" height="74" as="geometry" />
+        </mxCell>
+        <mxCell id="mr6c1476" value="&lt;b&gt;&lt;font style=&#39;font-size:11px;color:#92400E;&#39;&gt;🔐 SCRAM-SHA-512&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:9px;color:#94A3B8;&#39;&gt;Secrets Mgr&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFBEB;strokeColor=#D97706;strokeWidth=1.5;fontSize=11;verticalAlign=middle;align=center;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="1480" y="632" width="182" height="74" as="geometry" />
+        </mxCell>
+        <mxCell id="mr6c1674" value="&lt;b&gt;&lt;font style=&#39;font-size:11px;color:#C2410C;&#39;&gt;🔺 fsl_reg_delta&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:9px;color:#94A3B8;&#39;&gt;Unity Cat · E+W&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF7ED;strokeColor=#EA580C;strokeWidth=1.5;fontSize=11;verticalAlign=middle;align=center;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="1678" y="632" width="222" height="74" as="geometry" />
+        </mxCell>
+        <mxCell id="mr6c1912" value="&lt;font style=&#39;font-size:11px;color:#1D4ED8;&#39;&gt;&lt;b&gt;East+West&lt;/b&gt;&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EFF6FF;strokeColor=#3B82F6;strokeWidth=1.5;fontSize=11;verticalAlign=middle;align=center;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="1916" y="632" width="152" height="74" as="geometry" />
+        </mxCell>
+        <mxCell id="mr6c2080" value="&lt;b&gt;&lt;font style=&#39;font-size:12px;color:#15803D;&#39;&gt;📋 Plan&lt;/font&gt;&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F0FDF4;strokeColor=#22C55E;strokeWidth=1.5;fontSize=11;verticalAlign=middle;align=center;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="2084" y="632" width="132" height="74" as="geometry" />
+        </mxCell>
+        <mxCell id="mr6c2228" value="&lt;font style=&#39;font-size:11px;color:#1D4ED8;&#39;&gt;Peer Benchmark&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EFF6FF;strokeColor=#BFDBFE;strokeWidth=1.5;fontSize=11;verticalAlign=middle;align=center;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="2232" y="632" width="542" height="74" as="geometry" />
+        </mxCell>
+        <mxCell id="msum" value="&lt;b&gt;&lt;font style=&#39;font-size:13px;color:#1E293B;&#39;&gt;📊  SUMMARY:  7 Platforms  ·  7 Kerberos Topics  →  14 SASL_SSL Topics (East+West)  ·  7 CDP Apps  →  14 DBX Streaming Jobs (East+West)  ·  7 HDFS Parquet dirs  →  7 Delta Lake Tables (Unity Catalog)&lt;/font&gt;&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EFF6FF;strokeColor=#3B82F6;strokeWidth=2;fontSize=13;verticalAlign=middle;align=center;arcSize=6;" vertex="1" parent="1">
+          <mxGeometry x="10" y="727" width="2770" height="44" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
