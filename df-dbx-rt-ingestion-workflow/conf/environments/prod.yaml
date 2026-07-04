@@ -1,0 +1,14 @@
+# Environment overlay: prod
+overrides:
+  observability:
+    log_level: INFO
+    publishers:
+      - type: log
+      - type: http
+        options:
+          url: "https://monitoring.example.com/api/v1/streaming-metrics"
+          auth_header: "Bearer ${secret:dfx-monitoring/api-token}"
+  reliability:
+    retry:
+      max_attempts: 5
+      initial_backoff_seconds: 10

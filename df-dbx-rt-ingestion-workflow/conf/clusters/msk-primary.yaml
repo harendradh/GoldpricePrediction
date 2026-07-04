@@ -1,0 +1,16 @@
+# Kafka cluster definition: AWS MSK primary
+# Environment-specific values live under `environments:` and are merged
+# on top of the base fields for the active environment.
+name: msk-primary
+provider: msk
+bootstrap_servers: "b-1.msk-dev.example.amazonaws.com:9098,b-2.msk-dev.example.amazonaws.com:9098"
+auth:
+  type: msk_iam
+options:
+  kafka.request.timeout.ms: "60000"
+
+environments:
+  qa:
+    bootstrap_servers: "b-1.msk-qa.example.amazonaws.com:9098,b-2.msk-qa.example.amazonaws.com:9098"
+  prod:
+    bootstrap_servers: "b-1.msk-prod.example.amazonaws.com:9098,b-2.msk-prod.example.amazonaws.com:9098,b-3.msk-prod.example.amazonaws.com:9098"

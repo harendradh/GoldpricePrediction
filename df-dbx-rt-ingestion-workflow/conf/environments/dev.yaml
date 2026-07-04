@@ -1,0 +1,10 @@
+# Environment overlay: dev
+# Everything under `overrides:` is deep-merged onto each application spec.
+overrides:
+  observability:
+    log_level: DEBUG
+    publishers:
+      - type: log
+  reliability:
+    retry:
+      max_attempts: 2

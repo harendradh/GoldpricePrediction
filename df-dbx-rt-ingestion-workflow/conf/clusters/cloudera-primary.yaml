@@ -1,0 +1,19 @@
+# Kafka cluster definition: Cloudera on-prem primary (Kerberos)
+name: cloudera-primary
+provider: cloudera
+bootstrap_servers: "cdp-broker-1.corp.example.com:9093,cdp-broker-2.corp.example.com:9093"
+auth:
+  type: kerberos
+  options:
+    principal: "svc-dfx-ingest@CORP.EXAMPLE.COM"
+    keytab_location: "/dbfs/FileStore/keytabs/svc-dfx-ingest.keytab"
+    service_name: kafka
+    truststore_location: "/dbfs/FileStore/certs/cdp-truststore.jks"
+
+environments:
+  prod:
+    bootstrap_servers: "cdp-prod-1.corp.example.com:9093,cdp-prod-2.corp.example.com:9093"
+    auth:
+      options:
+        principal: "svc-dfx-ingest-prod@CORP.EXAMPLE.COM"
+        keytab_location: "/dbfs/FileStore/keytabs/svc-dfx-ingest-prod.keytab"

@@ -1,0 +1,44 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  quality-gates:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install
+        run: pip install -e ".[dev,http]"
+
+      - name: Lint (ruff)
+        run: ruff check src tests
+
+      - name: Type check (mypy)
+        run: mypy src
+
+      - name: Unit tests
+        run: pytest -m "not integration" --cov=dbx_rt_ingestion --cov-report=term-missing
+
+      - name: Validate job configs
+        env:
+          DFX_MONITORING__API_TOKEN: ci-placeholder
+        run: |
+          dfx job validate --config conf/jobs/gbs_auth/platform_a.yaml --env dev
+          dfx job validate --config conf/jobs/gbs_auth/gbs_auth_platform_b_orders.yaml --env dev
+
+      - name: Scaffolding is in sync with functional specs
+        run: |
+          dfx job add --spec specs/gbs_auth/platform_b_orders.md --skip-validate
+          git diff --exit-code -- conf/jobs resources tests/jobs
+
+      - name: Build wheel
+        run: pip install build && python -m build --wheel

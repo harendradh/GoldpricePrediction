@@ -1,0 +1,3 @@
+{% for f in topic.fields %}
+{{ f.name }} {{ f.type }}{{ "," if not loop.last }}
+{% endfor %}

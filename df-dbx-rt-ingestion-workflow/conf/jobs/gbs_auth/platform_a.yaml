@@ -1,0 +1,82 @@
+# Application spec: GBS Auth — Platform A account ingestion (reference app)
+# One deployment unit per platform; each topic below runs as its own pipeline.
+name: gbs-auth-platform-a
+domain: gbs-auth
+platform: platform_a
+version: 1.0.0
+description: Platform A account and transaction ingestion from AWS MSK.
+
+source:
+  type: kafka_msk
+  cluster: msk-primary
+  options:
+    startingOffsets: earliest
+    maxOffsetsPerTrigger: "500000"
+  topics:
+    - name: gbs-auth.platform-a.accounts.v1
+      parser:
+        type: platform_a.account
+      quality:
+        - name: account_id_present
+          type: not_null
+          column: account_id
+          action: dlq
+        - name: valid_account_type
+          type: allowed_values
+          column: account_type
+          options:
+            values: ["CH", "SV", "LN", "CC"]
+          action: dlq
+        - name: reasonable_balance
+          type: range
+          column: balance
+          options: { min: -1000000000, max: 1000000000 }
+          action: warn
+
+    - name: gbs-auth.platform-a.events.v1
+      schema:
+        subject: platform_a.events
+        version: latest
+        format: ddl
+      parser:
+        type: json
+      sink:
+        type: delta
+        table: main.gbs_auth.platform_a_events
+        mode: append
+
+sink:
+  type: delta
+  table: main.gbs_auth.platform_a_accounts
+  mode: merge
+  merge_keys: [account_id]
+  trigger:
+    processingTime: "30 seconds"
+
+schema_management:
+  repository: file
+  options:
+    base_path: /Volumes/main/gbs_auth/schemas
+
+checkpoint_root: /Volumes/main/gbs_auth/checkpoints/gbs-auth-platform-a
+
+reliability:
+  dlq:
+    enabled: true
+    table: main.gbs_auth.platform_a_dlq
+  retry:
+    max_attempts: 3
+    initial_backoff_seconds: 5
+  graceful_shutdown_marker: /Volumes/main/gbs_auth/control/gbs-auth-platform-a.stop
+
+observability:
+  audit_table: main.gbs_auth.dfx_audit
+  publishers:
+    - type: log
+
+feature_flags:
+  enable_reconciliation: false
+
+tags:
+  cost_center: "gbs-auth-migration"
+  support_team: "gbs-streaming-ops"

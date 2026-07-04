@@ -1,0 +1,63 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "dbx-rt-ingestion"
+version = "0.1.0"
+description = "df-dbx-rt-ingestion-workflow: enterprise-grade, spec-driven PySpark Structured Streaming ingestion framework for Databricks"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "Proprietary" }
+authors = [{ name = "Data Platform Engineering" }]
+dependencies = [
+    "pydantic>=2.5",
+    "PyYAML>=6.0",
+    "click>=8.1",
+    "Jinja2>=3.1",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.4",
+    "pytest-cov>=4.1",
+    "ruff>=0.4",
+    "mypy>=1.8",
+    "pyspark>=3.5.0",
+    "types-PyYAML",
+]
+http = ["requests>=2.31"]
+
+[project.scripts]
+dfx-ingest = "dbx_rt_ingestion.entrypoint:main"
+dfx = "dbx_rt_ingestion.cli.main:cli"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+"dbx_rt_ingestion.cli" = ["templates/*.j2"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+markers = [
+    "spark: tests that require a local SparkSession",
+    "integration: tests that require external systems (Kafka, Databricks)",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "N", "UP", "B", "SIM", "ANN"]
+# N812: `pyspark.sql.functions as F` is the PySpark idiom
+ignore = ["ANN401", "N812"]
+
+[tool.mypy]
+python_version = "3.10"
+mypy_path = "src"
+strict = true
+ignore_missing_imports = true
