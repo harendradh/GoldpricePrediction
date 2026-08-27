@@ -1,0 +1,414 @@
+<mxfile host="Electron" agent="Claude">
+  <diagram name="AuthNorm AS-IS vs TO-BE" id="authnorm-asis-tobe-v5">
+    <mxGraphModel dx="772" dy="666" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1500" pageHeight="880" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="title" parent="1" style="text;html=1;align=center;verticalAlign=middle;fontSize=17;fontStyle=1;fontColor=#0F172A;fontFamily=Helvetica;" value="AuthNorm Module Modernization — AS-IS vs TO-BE Architecture" vertex="1">
+          <mxGeometry height="26" width="1468" x="16" y="6" as="geometry" />
+        </mxCell>
+        <mxCell id="subtitle" parent="1" style="text;html=1;align=center;verticalAlign=middle;fontSize=9;fontColor=#64748B;fontStyle=2;fontFamily=Helvetica;" value="From four Kafka hops on Cloudera CDP to four per-platform Delta Live Tables pipelines writing one shared AuthNorm table on Databricks · hover any box for details" vertex="1">
+          <mxGeometry height="14" width="1468" x="16" y="32" as="geometry" />
+        </mxCell>
+        <mxCell id="asis_header" parent="1" style="rounded=1;arcSize=10;fillColor=#1E293B;gradientColor=#334155;strokeColor=none;fontColor=#FFFFFF;fontStyle=1;fontSize=12;fontFamily=Helvetica;align=left;spacingLeft=18;verticalAlign=middle;shadow=1;" value="🕐   AS-IS  —  Current State: Cloudera CDP On-Premises" vertex="1">
+          <mxGeometry height="30" width="1468" x="16" y="52" as="geometry" />
+        </mxCell>
+        <mxCell id="asis_accent" parent="1" style="rounded=0;fillColor=#EA580C;strokeColor=none;" value="" vertex="1">
+          <mxGeometry height="3" width="1468" x="16" y="82" as="geometry" />
+        </mxCell>
+        <mxCell id="a_col1" parent="1" style="rounded=1;arcSize=4;fillColor=#F1F5F9;strokeColor=#CBD5E1;strokeWidth=1;verticalAlign=top;align=center;fontSize=7.5;fontStyle=1;fontColor=#475569;spacingTop=5;fontFamily=Helvetica;dashed=1;" value="RAW KAFKA TOPICS (CDP)" vertex="1">
+          <mxGeometry height="230" width="280" x="32" y="90" as="geometry" />
+        </mxCell>
+        <mxCell id="a_col2" parent="1" style="rounded=1;arcSize=4;fillColor=#FFF7ED;strokeColor=#FDBA74;strokeWidth=1;verticalAlign=top;align=center;fontSize=7.5;fontStyle=1;fontColor=#9A3412;spacingTop=5;fontFamily=Helvetica;dashed=1;" value="PROCESSING (CDP SPARK)" vertex="1">
+          <mxGeometry height="230" width="250" x="342" y="90" as="geometry" />
+        </mxCell>
+        <mxCell id="a_col3" parent="1" style="rounded=1;arcSize=4;fillColor=#F1F5F9;strokeColor=#CBD5E1;strokeWidth=1;verticalAlign=top;align=center;fontSize=7.5;fontStyle=1;fontColor=#475569;spacingTop=5;fontFamily=Helvetica;dashed=1;" value="UNIFIED KAFKA TOPIC" vertex="1">
+          <mxGeometry height="230" width="250" x="622" y="90" as="geometry" />
+        </mxCell>
+        <mxCell id="a_col4" parent="1" style="rounded=1;arcSize=4;fillColor=#FFF7ED;strokeColor=#FDBA74;strokeWidth=1;verticalAlign=top;align=center;fontSize=7.5;fontStyle=1;fontColor=#9A3412;spacingTop=5;fontFamily=Helvetica;dashed=1;" value="PROCESSING (CDP SPARK)" vertex="1">
+          <mxGeometry height="230" width="250" x="902" y="90" as="geometry" />
+        </mxCell>
+        <mxCell id="a_col5" parent="1" style="rounded=1;arcSize=4;fillColor=#FAF5FF;strokeColor=#E9D5FF;strokeWidth=1;verticalAlign=top;align=center;fontSize=7.5;fontStyle=1;fontColor=#6B21A8;spacingTop=5;fontFamily=Helvetica;dashed=1;" value="STORAGE (ON-PREM + CLOUD)" vertex="1">
+          <mxGeometry height="230" width="280" x="1182" y="90" as="geometry" />
+        </mxCell>
+        <UserObject label="Buypass&#xa;Raw Kafka Topic" tooltip="Kafka topic on Cloudera CDP. Publishes raw Buypass platform events consumed by the AuthNorm Spark module." id="k1">
+          <mxCell parent="1" style="shape=hexagon;perimeter=hexagonPerimeter2;whiteSpace=wrap;html=1;fillColor=#0F172A;gradientColor=#334155;strokeColor=#FB923C;strokeWidth=2;fontColor=#FFFFFF;fontSize=9.5;fontStyle=1;fontFamily=Helvetica;shadow=1;align=left;spacingLeft=38;verticalAlign=middle;" vertex="1">
+            <mxGeometry height="42" width="240" x="52" y="100" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <mxCell id="k1i" parent="1" style="rounded=1;arcSize=30;fillColor=#FB923C;strokeColor=none;shadow=0;" value="" vertex="1">
+          <mxGeometry height="30" width="30" x="60" y="106" as="geometry" />
+        </mxCell>
+        <mxCell id="k1d1" parent="1" style="ellipse;fillColor=#0F172A;strokeColor=none;" value="" vertex="1">
+          <mxGeometry height="6" width="6" x="67" y="112" as="geometry" />
+        </mxCell>
+        <mxCell id="k1d2" parent="1" style="ellipse;fillColor=#0F172A;strokeColor=none;" value="" vertex="1">
+          <mxGeometry height="6" width="6" x="77" y="118" as="geometry" />
+        </mxCell>
+        <mxCell id="k1d3" parent="1" style="ellipse;fillColor=#0F172A;strokeColor=none;" value="" vertex="1">
+          <mxGeometry height="6" width="6" x="67" y="124" as="geometry" />
+        </mxCell>
+        <UserObject label="Omaha&#xa;Raw Kafka Topic" tooltip="Kafka topic on Cloudera CDP. Publishes raw Omaha platform events consumed by the AuthNorm Spark module." id="k2">
+          <mxCell parent="1" style="shape=hexagon;perimeter=hexagonPerimeter2;whiteSpace=wrap;html=1;fillColor=#0F172A;gradientColor=#334155;strokeColor=#FB923C;strokeWidth=2;fontColor=#FFFFFF;fontSize=9.5;fontStyle=1;fontFamily=Helvetica;shadow=1;align=left;spacingLeft=38;verticalAlign=middle;" vertex="1">
+            <mxGeometry height="42" width="240" x="52" y="152" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <mxCell id="k2i" parent="1" style="rounded=1;arcSize=30;fillColor=#FB923C;strokeColor=none;shadow=0;" value="" vertex="1">
+          <mxGeometry height="30" width="30" x="60" y="158" as="geometry" />
+        </mxCell>
+        <mxCell id="k2d1" parent="1" style="ellipse;fillColor=#0F172A;strokeColor=none;" value="" vertex="1">
+          <mxGeometry height="6" width="6" x="67" y="164" as="geometry" />
+        </mxCell>
+        <mxCell id="k2d2" parent="1" style="ellipse;fillColor=#0F172A;strokeColor=none;" value="" vertex="1">
+          <mxGeometry height="6" width="6" x="77" y="170" as="geometry" />
+        </mxCell>
+        <mxCell id="k2d3" parent="1" style="ellipse;fillColor=#0F172A;strokeColor=none;" value="" vertex="1">
+          <mxGeometry height="6" width="6" x="67" y="176" as="geometry" />
+        </mxCell>
+        <UserObject label="HDC&#xa;Raw Kafka Topic" tooltip="Kafka topic on Cloudera CDP. Publishes raw HDC platform events consumed by the AuthNorm Spark module." id="k3">
+          <mxCell parent="1" style="shape=hexagon;perimeter=hexagonPerimeter2;whiteSpace=wrap;html=1;fillColor=#0F172A;gradientColor=#334155;strokeColor=#FB923C;strokeWidth=2;fontColor=#FFFFFF;fontSize=9.5;fontStyle=1;fontFamily=Helvetica;shadow=1;align=left;spacingLeft=38;verticalAlign=middle;" vertex="1">
+            <mxGeometry height="42" width="240" x="52" y="204" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <mxCell id="k3i" parent="1" style="rounded=1;arcSize=30;fillColor=#FB923C;strokeColor=none;shadow=0;" value="" vertex="1">
+          <mxGeometry height="30" width="30" x="60" y="210" as="geometry" />
+        </mxCell>
+        <mxCell id="k3d1" parent="1" style="ellipse;fillColor=#0F172A;strokeColor=none;" value="" vertex="1">
+          <mxGeometry height="6" width="6" x="67" y="216" as="geometry" />
+        </mxCell>
+        <mxCell id="k3d2" parent="1" style="ellipse;fillColor=#0F172A;strokeColor=none;" value="" vertex="1">
+          <mxGeometry height="6" width="6" x="77" y="222" as="geometry" />
+        </mxCell>
+        <mxCell id="k3d3" parent="1" style="ellipse;fillColor=#0F172A;strokeColor=none;" value="" vertex="1">
+          <mxGeometry height="6" width="6" x="67" y="228" as="geometry" />
+        </mxCell>
+        <UserObject label="HDC Debit Gateway&#xa;Raw Kafka Topic" tooltip="Kafka topic on Cloudera CDP. Publishes raw HDC Debit Gateway platform events consumed by the AuthNorm Spark module." id="k4">
+          <mxCell parent="1" style="shape=hexagon;perimeter=hexagonPerimeter2;whiteSpace=wrap;html=1;fillColor=#0F172A;gradientColor=#334155;strokeColor=#FB923C;strokeWidth=2;fontColor=#FFFFFF;fontSize=9;fontStyle=1;fontFamily=Helvetica;shadow=1;align=left;spacingLeft=38;verticalAlign=middle;" vertex="1">
+            <mxGeometry height="42" width="240" x="52" y="256" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <mxCell id="k4i" parent="1" style="rounded=1;arcSize=30;fillColor=#FB923C;strokeColor=none;shadow=0;" value="" vertex="1">
+          <mxGeometry height="30" width="30" x="60" y="262" as="geometry" />
+        </mxCell>
+        <mxCell id="k4d1" parent="1" style="ellipse;fillColor=#0F172A;strokeColor=none;" value="" vertex="1">
+          <mxGeometry height="6" width="6" x="67" y="268" as="geometry" />
+        </mxCell>
+        <mxCell id="k4d2" parent="1" style="ellipse;fillColor=#0F172A;strokeColor=none;" value="" vertex="1">
+          <mxGeometry height="6" width="6" x="77" y="274" as="geometry" />
+        </mxCell>
+        <mxCell id="k4d3" parent="1" style="ellipse;fillColor=#0F172A;strokeColor=none;" value="" vertex="1">
+          <mxGeometry height="6" width="6" x="67" y="280" as="geometry" />
+        </mxCell>
+        <UserObject label="AuthNorm Java Module&#xa;(Spark Streaming)&#xa;Runs on CDP Cluster&#xa;&#xa;• Reads all 4 raw Kafka topics&#xa;• Transformation &amp; normalization&#xa;• Writes single unified topic" tooltip="Legacy Spark Streaming job. Single point of transformation logic for all 4 platforms — a monolith that must be kept running on the CDP cluster." id="module">
+          <mxCell parent="1" style="shape=process;whiteSpace=wrap;html=1;backgroundOutline=1;fillColor=#FFEDD5;gradientColor=#FDBA74;strokeColor=#EA580C;strokeWidth=2;fontColor=#7C2D12;fontSize=9;fontStyle=1;fontFamily=Helvetica;shadow=1;align=center;verticalAlign=middle;" vertex="1">
+            <mxGeometry height="190" width="210" x="362" y="110" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <mxCell id="module_i" parent="1" style="rounded=1;arcSize=30;fillColor=#EA580C;strokeColor=none;shadow=1;" value="" vertex="1">
+          <mxGeometry height="30" width="30" x="532" y="118" as="geometry" />
+        </mxCell>
+        <mxCell id="module_g" parent="1" style="triangle;direction=east;fillColor=#FFFFFF;strokeColor=none;" value="" vertex="1">
+          <mxGeometry height="16" width="12" x="541" y="125" as="geometry" />
+        </mxCell>
+        <UserObject label="AuthNorm-Normalized&#xa;All-Platforms Topic&#xa;(CDP Kafka Cluster)" tooltip="Single Kafka topic holding normalized events for all 4 platforms combined — the hand-off point to the downstream consumer." id="unified">
+          <mxCell parent="1" style="shape=hexagon;perimeter=hexagonPerimeter2;whiteSpace=wrap;html=1;fillColor=#0F172A;gradientColor=#334155;strokeColor=#FB923C;strokeWidth=2;fontColor=#FFFFFF;fontSize=9.5;fontStyle=1;fontFamily=Helvetica;shadow=1;align=left;spacingLeft=42;verticalAlign=middle;" vertex="1">
+            <mxGeometry height="80" width="210" x="642" y="165" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <mxCell id="unified_i" parent="1" style="rounded=1;arcSize=30;fillColor=#FB923C;strokeColor=none;shadow=0;" value="" vertex="1">
+          <mxGeometry height="30" width="30" x="650" y="190" as="geometry" />
+        </mxCell>
+        <mxCell id="ud1" parent="1" style="ellipse;fillColor=#0F172A;strokeColor=none;" value="" vertex="1">
+          <mxGeometry height="6" width="6" x="657" y="196" as="geometry" />
+        </mxCell>
+        <mxCell id="ud2" parent="1" style="ellipse;fillColor=#0F172A;strokeColor=none;" value="" vertex="1">
+          <mxGeometry height="6" width="6" x="667" y="202" as="geometry" />
+        </mxCell>
+        <mxCell id="ud3" parent="1" style="ellipse;fillColor=#0F172A;strokeColor=none;" value="" vertex="1">
+          <mxGeometry height="6" width="6" x="657" y="208" as="geometry" />
+        </mxCell>
+        <UserObject label="Spark Java Consumer&#xa;(CDP Cluster Only)&#xa;&#xa;• Reads unified topic&#xa;• Fans out to 2 sinks&#xa;• Legacy on-prem-bound job" tooltip="Second legacy Spark job. Only runs on the CDP cluster and fans the same data out to two separate storage sinks." id="consumer">
+          <mxCell parent="1" style="shape=process;whiteSpace=wrap;html=1;backgroundOutline=1;fillColor=#FFEDD5;gradientColor=#FDBA74;strokeColor=#EA580C;strokeWidth=2;fontColor=#7C2D12;fontSize=9;fontStyle=1;fontFamily=Helvetica;shadow=1;align=center;verticalAlign=middle;" vertex="1">
+            <mxGeometry height="190" width="210" x="922" y="110" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <mxCell id="consumer_i" parent="1" style="rounded=1;arcSize=30;fillColor=#EA580C;strokeColor=none;shadow=1;" value="" vertex="1">
+          <mxGeometry height="30" width="30" x="1092" y="118" as="geometry" />
+        </mxCell>
+        <mxCell id="consumer_g" parent="1" style="triangle;direction=east;fillColor=#FFFFFF;strokeColor=none;" value="" vertex="1">
+          <mxGeometry height="16" width="12" x="1101" y="125" as="geometry" />
+        </mxCell>
+        <UserObject label="Hive Tables&#xa;(On-Prem Warehouse)" tooltip="On-prem Hive warehouse. Serves on-prem BI and analytics consumers directly." id="hive">
+          <mxCell parent="1" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;fillColor=#F3E8FF;gradientColor=#D8B4FE;strokeColor=#9333EA;strokeWidth=2;fontColor=#581C87;fontSize=9;fontStyle=1;fontFamily=Helvetica;shadow=1;size=10;align=left;spacingLeft=40;verticalAlign=middle;" vertex="1">
+            <mxGeometry height="90" width="240" x="1202" y="100" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <mxCell id="hive_i" parent="1" style="rounded=1;arcSize=30;fillColor=#9333EA;strokeColor=none;shadow=1;" value="" vertex="1">
+          <mxGeometry height="30" width="30" x="1210" y="130" as="geometry" />
+        </mxCell>
+        <mxCell id="hive_g" parent="1" style="shape=cylinder3;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=none;size=6;" value="" vertex="1">
+          <mxGeometry height="18" width="14" x="1218" y="137" as="geometry" />
+        </mxCell>
+        <UserObject label="Parquet Tables&#xa;(Databricks)&#xa;⚠ fragile cross-cloud write" tooltip="Parquet tables written by the legacy consumer job reaching across from on-prem CDP into Databricks — the most fragile hop in this architecture." id="parquet">
+          <mxCell parent="1" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;fillColor=#FEE2E2;gradientColor=#FCA5A5;strokeColor=#DC2626;strokeWidth=2;dashed=1;fontColor=#7F1D1D;fontSize=8.5;fontStyle=1;fontFamily=Helvetica;shadow=1;size=10;align=left;spacingLeft=40;verticalAlign=middle;" vertex="1">
+            <mxGeometry height="90" width="240" x="1202" y="208" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <mxCell id="parquet_i" parent="1" style="rounded=1;arcSize=30;fillColor=#DC2626;strokeColor=none;shadow=1;" value="" vertex="1">
+          <mxGeometry height="30" width="30" x="1210" y="238" as="geometry" />
+        </mxCell>
+        <mxCell id="parquet_g" parent="1" style="shape=cylinder3;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=none;size=6;" value="" vertex="1">
+          <mxGeometry height="18" width="14" x="1218" y="245" as="geometry" />
+        </mxCell>
+        <mxCell id="e_k1" edge="1" parent="1" source="k1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#EA580C;strokeWidth=2.5;endArrow=block;exitX=1;exitY=0.5;entryX=0;entryY=0.15;" target="module">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_k2" edge="1" parent="1" source="k2" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#EA580C;strokeWidth=2.5;endArrow=block;exitX=1;exitY=0.5;entryX=0;entryY=0.38;" target="module">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_k3" edge="1" parent="1" source="k3" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#EA580C;strokeWidth=2.5;endArrow=block;exitX=1;exitY=0.5;entryX=0;entryY=0.62;" target="module">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_k4" edge="1" parent="1" source="k4" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#EA580C;strokeWidth=2.5;endArrow=block;exitX=1;exitY=0.5;entryX=0;entryY=0.85;" target="module">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_mod_u" edge="1" parent="1" source="module" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#334155;strokeWidth=3;endArrow=block;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" target="unified">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_u_c" edge="1" parent="1" source="unified" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#334155;strokeWidth=3;endArrow=block;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" target="consumer">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_c_hive" edge="1" parent="1" source="consumer" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#9333EA;strokeWidth=2.5;endArrow=block;exitX=1;exitY=0.3;entryX=0;entryY=0.5;" target="hive">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_c_parquet" edge="1" parent="1" source="consumer" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#DC2626;strokeWidth=2.5;dashed=1;endArrow=block;fontColor=#7F1D1D;fontSize=7.5;fontStyle=1;exitX=1;exitY=0.7;entryX=0;entryY=0.5;" target="parquet" value="cross-cloud">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="pain_ribbon" parent="1" style="rounded=1;arcSize=6;fillColor=#FEF2F2;strokeColor=#FCA5A5;strokeWidth=1.5;shadow=1;" value="" vertex="1">
+          <mxGeometry height="100" width="1468" x="16" y="330" as="geometry" />
+        </mxCell>
+        <mxCell id="pain_title" parent="1" style="text;html=1;align=left;verticalAlign=middle;fontSize=9.5;fontStyle=1;fontColor=#B91C1C;fontFamily=Helvetica;" value="⚠  KEY PAIN POINTS" vertex="1">
+          <mxGeometry height="14" width="300" x="36" y="336" as="geometry" />
+        </mxCell>
+        <mxCell id="pain1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#FCA5A5;fontColor=#7F1D1D;fontSize=7.5;align=left;spacingLeft=8;verticalAlign=middle;arcSize=15;" value="On-prem CDP + Kerberos dependency" vertex="1">
+          <mxGeometry height="34" width="460" x="36" y="354" as="geometry" />
+        </mxCell>
+        <mxCell id="pain2" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#FCA5A5;fontColor=#7F1D1D;fontSize=7.5;align=left;spacingLeft=8;verticalAlign=middle;arcSize=15;" value="Extra Kafka hop adds end-to-end latency" vertex="1">
+          <mxGeometry height="34" width="460" x="520" y="354" as="geometry" />
+        </mxCell>
+        <mxCell id="pain3" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#FCA5A5;fontColor=#7F1D1D;fontSize=7.5;align=left;spacingLeft=8;verticalAlign=middle;arcSize=15;" value="Dual writes (Hive + Parquet) risk data drift" vertex="1">
+          <mxGeometry height="34" width="460" x="1004" y="354" as="geometry" />
+        </mxCell>
+        <mxCell id="pain4" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#FCA5A5;fontColor=#7F1D1D;fontSize=7.5;align=left;spacingLeft=8;verticalAlign=middle;arcSize=15;" value="Cross-cloud write CDP → Databricks is fragile" vertex="1">
+          <mxGeometry height="34" width="460" x="36" y="394" as="geometry" />
+        </mxCell>
+        <mxCell id="pain5" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#FCA5A5;fontColor=#7F1D1D;fontSize=7.5;align=left;spacingLeft=8;verticalAlign=middle;arcSize=15;" value="CDP cluster capacity constraints limit scale" vertex="1">
+          <mxGeometry height="34" width="460" x="520" y="394" as="geometry" />
+        </mxCell>
+        <mxCell id="pain6" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#FCA5A5;fontColor=#7F1D1D;fontSize=7.5;align=left;spacingLeft=8;verticalAlign=middle;arcSize=15;" value="Two separate Spark jobs to operate &amp; monitor" vertex="1">
+          <mxGeometry height="34" width="460" x="1004" y="394" as="geometry" />
+        </mxCell>
+        <mxCell id="modarrow" parent="1" style="shape=singleArrow;direction=south;html=1;fillColor=#0F766E;gradientColor=#2DD4BF;strokeColor=#0F766E;fontColor=#FFFFFF;fontStyle=1;fontSize=8.5;shadow=1;arrowWidth=0.5;arrowSize=0.4;fontFamily=Helvetica;" value="MODERNIZE" vertex="1">
+          <mxGeometry height="32" width="80" x="710" y="436" as="geometry" />
+        </mxCell>
+        <mxCell id="tobe_header" parent="1" style="rounded=1;arcSize=10;fillColor=#0F766E;gradientColor=#14B8A6;strokeColor=none;fontColor=#FFFFFF;fontStyle=1;fontSize=12;fontFamily=Helvetica;align=left;spacingLeft=18;verticalAlign=middle;shadow=1;" value="🚀   TO-BE  —  Modernized State: Databricks Delta Live Tables" vertex="1">
+          <mxGeometry height="30" width="1468" x="16" y="474" as="geometry" />
+        </mxCell>
+        <mxCell id="tobe_accent" parent="1" style="rounded=0;fillColor=#0F766E;strokeColor=none;" value="" vertex="1">
+          <mxGeometry height="3" width="1468" x="16" y="504" as="geometry" />
+        </mxCell>
+        <mxCell id="b_col1" parent="1" style="rounded=1;arcSize=4;fillColor=#FFF5F3;strokeColor=#FFB4A8;strokeWidth=1;verticalAlign=top;align=center;fontSize=7.5;fontStyle=1;fontColor=#9A2A17;spacingTop=5;fontFamily=Helvetica;dashed=1;" value="RAW DELTA TABLES · UNITY CATALOG" vertex="1">
+          <mxGeometry height="230" width="336" x="32" y="512" as="geometry" />
+        </mxCell>
+        <mxCell id="b_col2" parent="1" style="rounded=1;arcSize=4;fillColor=#F0FDFA;strokeColor=#5EEAD4;strokeWidth=1;verticalAlign=top;align=center;fontSize=7.5;fontStyle=1;fontColor=#0F766E;spacingTop=5;fontFamily=Helvetica;dashed=1;" value="ONE DLT PIPELINE PER PLATFORM" vertex="1">
+          <mxGeometry height="230" width="336" x="398" y="512" as="geometry" />
+        </mxCell>
+        <mxCell id="b_col3" parent="1" style="rounded=1;arcSize=4;fillColor=#FFFBEB;strokeColor=#FDE68A;strokeWidth=1;verticalAlign=top;align=center;fontSize=7.5;fontStyle=1;fontColor=#92610A;spacingTop=5;fontFamily=Helvetica;dashed=1;" value="GOLD DELTA TABLE · UNITY CATALOG" vertex="1">
+          <mxGeometry height="230" width="336" x="764" y="512" as="geometry" />
+        </mxCell>
+        <mxCell id="b_col4" parent="1" style="rounded=1;arcSize=4;fillColor=#EFF6FF;strokeColor=#BFDBFE;strokeWidth=1;verticalAlign=top;align=center;fontSize=7.5;fontStyle=1;fontColor=#1E3A8A;spacingTop=5;fontFamily=Helvetica;dashed=1;" value="DOWNSTREAM CONSUMERS" vertex="1">
+          <mxGeometry height="230" width="336" x="1130" y="512" as="geometry" />
+        </mxCell>
+        <UserObject label="Buypass Raw Delta Table&#xa;✓ Already Migrated" tooltip="Delta table populated by the existing MSK → Databricks streaming pipeline for Buypass. No change needed here — this table already exists." id="d1">
+          <mxCell parent="1" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;fillColor=#FFE4DE;gradientColor=#FFB4A8;strokeColor=#FF3621;strokeWidth=2;fontColor=#7C1D0F;fontSize=8.5;fontStyle=1;fontFamily=Helvetica;shadow=1;size=9;align=left;spacingLeft=38;verticalAlign=middle;" vertex="1">
+            <mxGeometry height="42" width="296" x="52" y="522" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <mxCell id="d1i" parent="1" style="rounded=1;arcSize=30;fillColor=#FF3621;strokeColor=none;shadow=1;" value="" vertex="1">
+          <mxGeometry height="30" width="30" x="60" y="528" as="geometry" />
+        </mxCell>
+        <mxCell id="d1g" parent="1" style="triangle;direction=north;fillColor=#FFFFFF;strokeColor=none;" value="" vertex="1">
+          <mxGeometry height="16" width="12" x="68" y="534" as="geometry" />
+        </mxCell>
+        <UserObject label="Omaha Raw Delta Table&#xa;✓ Already Migrated" tooltip="Delta table populated by the existing MSK → Databricks streaming pipeline for Omaha. No change needed here — this table already exists." id="d2">
+          <mxCell parent="1" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;fillColor=#FFE4DE;gradientColor=#FFB4A8;strokeColor=#FF3621;strokeWidth=2;fontColor=#7C1D0F;fontSize=8.5;fontStyle=1;fontFamily=Helvetica;shadow=1;size=9;align=left;spacingLeft=38;verticalAlign=middle;" vertex="1">
+            <mxGeometry height="42" width="296" x="52" y="574" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <mxCell id="d2i" parent="1" style="rounded=1;arcSize=30;fillColor=#FF3621;strokeColor=none;shadow=1;" value="" vertex="1">
+          <mxGeometry height="30" width="30" x="60" y="580" as="geometry" />
+        </mxCell>
+        <mxCell id="d2g" parent="1" style="triangle;direction=north;fillColor=#FFFFFF;strokeColor=none;" value="" vertex="1">
+          <mxGeometry height="16" width="12" x="68" y="586" as="geometry" />
+        </mxCell>
+        <UserObject label="HDC Raw Delta Table&#xa;✓ Already Migrated" tooltip="Delta table populated by the existing MSK → Databricks streaming pipeline for HDC. No change needed here — this table already exists." id="d3">
+          <mxCell parent="1" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;fillColor=#FFE4DE;gradientColor=#FFB4A8;strokeColor=#FF3621;strokeWidth=2;fontColor=#7C1D0F;fontSize=8.5;fontStyle=1;fontFamily=Helvetica;shadow=1;size=9;align=left;spacingLeft=38;verticalAlign=middle;" vertex="1">
+            <mxGeometry height="42" width="296" x="52" y="626" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <mxCell id="d3i" parent="1" style="rounded=1;arcSize=30;fillColor=#FF3621;strokeColor=none;shadow=1;" value="" vertex="1">
+          <mxGeometry height="30" width="30" x="60" y="632" as="geometry" />
+        </mxCell>
+        <mxCell id="d3g" parent="1" style="triangle;direction=north;fillColor=#FFFFFF;strokeColor=none;" value="" vertex="1">
+          <mxGeometry height="16" width="12" x="68" y="638" as="geometry" />
+        </mxCell>
+        <UserObject label="HDC Debit Gateway Raw Delta&#xa;✓ Already Migrated" tooltip="Delta table populated by the existing MSK → Databricks streaming pipeline for HDC Debit Gateway. No change needed here — this table already exists." id="d4">
+          <mxCell parent="1" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;fillColor=#FFE4DE;gradientColor=#FFB4A8;strokeColor=#FF3621;strokeWidth=2;fontColor=#7C1D0F;fontSize=8;fontStyle=1;fontFamily=Helvetica;shadow=1;size=9;align=left;spacingLeft=38;verticalAlign=middle;" vertex="1">
+            <mxGeometry height="42" width="296" x="52" y="678" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <mxCell id="d4i" parent="1" style="rounded=1;arcSize=30;fillColor=#FF3621;strokeColor=none;shadow=1;" value="" vertex="1">
+          <mxGeometry height="30" width="30" x="60" y="684" as="geometry" />
+        </mxCell>
+        <mxCell id="d4g" parent="1" style="triangle;direction=north;fillColor=#FFFFFF;strokeColor=none;" value="" vertex="1">
+          <mxGeometry height="16" width="12" x="68" y="690" as="geometry" />
+        </mxCell>
+        <UserObject label="DLT Pipeline — Buypass" tooltip="Independent Delta Live Tables pipeline. Reads only the Buypass raw Delta table, applies the ported normalization logic + Expectations, writes to the shared gold table. Own schedule and scaling." id="dlt1">
+          <mxCell parent="1" style="shape=process;whiteSpace=wrap;html=1;backgroundOutline=1;fillColor=#CCFBF1;gradientColor=#5EEAD4;strokeColor=#0F766E;strokeWidth=2;fontColor=#134E4A;fontSize=9;fontStyle=1;fontFamily=Helvetica;shadow=1;align=left;spacingLeft=38;verticalAlign=middle;" vertex="1">
+            <mxGeometry height="42" width="296" x="418" y="522" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <mxCell id="dlt1i" parent="1" style="rounded=1;arcSize=30;fillColor=#0F766E;strokeColor=none;shadow=1;" value="" vertex="1">
+          <mxGeometry height="30" width="30" x="426" y="528" as="geometry" />
+        </mxCell>
+        <mxCell id="dlt1g" parent="1" style="triangle;direction=north;fillColor=#FFFFFF;strokeColor=none;" value="" vertex="1">
+          <mxGeometry height="16" width="12" x="434" y="534" as="geometry" />
+        </mxCell>
+        <UserObject label="DLT Pipeline — Omaha" tooltip="Independent Delta Live Tables pipeline. Reads only the Omaha raw Delta table, applies the ported normalization logic + Expectations, writes to the shared gold table. Own schedule and scaling." id="dlt2">
+          <mxCell parent="1" style="shape=process;whiteSpace=wrap;html=1;backgroundOutline=1;fillColor=#CCFBF1;gradientColor=#5EEAD4;strokeColor=#0F766E;strokeWidth=2;fontColor=#134E4A;fontSize=9;fontStyle=1;fontFamily=Helvetica;shadow=1;align=left;spacingLeft=38;verticalAlign=middle;" vertex="1">
+            <mxGeometry height="42" width="296" x="418" y="574" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <mxCell id="dlt2i" parent="1" style="rounded=1;arcSize=30;fillColor=#0F766E;strokeColor=none;shadow=1;" value="" vertex="1">
+          <mxGeometry height="30" width="30" x="426" y="580" as="geometry" />
+        </mxCell>
+        <mxCell id="dlt2g" parent="1" style="triangle;direction=north;fillColor=#FFFFFF;strokeColor=none;" value="" vertex="1">
+          <mxGeometry height="16" width="12" x="434" y="586" as="geometry" />
+        </mxCell>
+        <UserObject label="DLT Pipeline — HDC" tooltip="Independent Delta Live Tables pipeline. Reads only the HDC raw Delta table, applies the ported normalization logic + Expectations, writes to the shared gold table. Own schedule and scaling." id="dlt3">
+          <mxCell parent="1" style="shape=process;whiteSpace=wrap;html=1;backgroundOutline=1;fillColor=#CCFBF1;gradientColor=#5EEAD4;strokeColor=#0F766E;strokeWidth=2;fontColor=#134E4A;fontSize=9;fontStyle=1;fontFamily=Helvetica;shadow=1;align=left;spacingLeft=38;verticalAlign=middle;" vertex="1">
+            <mxGeometry height="42" width="296" x="418" y="626" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <mxCell id="dlt3i" parent="1" style="rounded=1;arcSize=30;fillColor=#0F766E;strokeColor=none;shadow=1;" value="" vertex="1">
+          <mxGeometry height="30" width="30" x="426" y="632" as="geometry" />
+        </mxCell>
+        <mxCell id="dlt3g" parent="1" style="triangle;direction=north;fillColor=#FFFFFF;strokeColor=none;" value="" vertex="1">
+          <mxGeometry height="16" width="12" x="434" y="638" as="geometry" />
+        </mxCell>
+        <UserObject label="DLT Pipeline — HDC Debit GW" tooltip="Independent Delta Live Tables pipeline. Reads only the HDC Debit Gateway raw Delta table, applies the ported normalization logic + Expectations, writes to the shared gold table. Own schedule and scaling." id="dlt4">
+          <mxCell parent="1" style="shape=process;whiteSpace=wrap;html=1;backgroundOutline=1;fillColor=#CCFBF1;gradientColor=#5EEAD4;strokeColor=#0F766E;strokeWidth=2;fontColor=#134E4A;fontSize=8.5;fontStyle=1;fontFamily=Helvetica;shadow=1;align=left;spacingLeft=38;verticalAlign=middle;" vertex="1">
+            <mxGeometry height="42" width="296" x="418" y="678" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <mxCell id="dlt4i" parent="1" style="rounded=1;arcSize=30;fillColor=#0F766E;strokeColor=none;shadow=1;" value="" vertex="1">
+          <mxGeometry height="30" width="30" x="426" y="684" as="geometry" />
+        </mxCell>
+        <mxCell id="dlt4g" parent="1" style="triangle;direction=north;fillColor=#FFFFFF;strokeColor=none;" value="" vertex="1">
+          <mxGeometry height="16" width="12" x="434" y="690" as="geometry" />
+        </mxCell>
+        <UserObject label="AuthNorm Delta Table&#xa;(Gold Layer) · Unity Catalog&#xa;Single Source of Truth&#xa;— written by all 4 pipelines —" tooltip="The one shared destination table. All 4 independent DLT pipelines write here — governed, versioned, and ACID-compliant via Unity Catalog." id="final">
+          <mxCell parent="1" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;fillColor=#FEF3C7;gradientColor=#FDE68A;strokeColor=#D97706;strokeWidth=2.5;fontColor=#78350F;fontSize=9.5;fontStyle=1;fontFamily=Helvetica;shadow=1;size=14;align=left;spacingLeft=44;verticalAlign=middle;" vertex="1">
+            <mxGeometry height="110" width="280" x="792" y="572" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <mxCell id="final_i" parent="1" style="rounded=1;arcSize=30;fillColor=#D97706;strokeColor=none;shadow=1;" value="" vertex="1">
+          <mxGeometry height="30" width="30" x="804" y="612" as="geometry" />
+        </mxCell>
+        <mxCell id="final_g" parent="1" style="triangle;direction=north;fillColor=#FFFFFF;strokeColor=none;" value="" vertex="1">
+          <mxGeometry height="16" width="12" x="812" y="618" as="geometry" />
+        </mxCell>
+        <UserObject label="Downstream Consumers&#xa;(Unchanged)&#xa;&#xa;FSBI • Single AUTH&#xa;Peer Benchmarking • AltMOPS" tooltip="Existing downstream consumers keep the same contract — they just read from a Delta table instead of the old Parquet/Hive outputs. No consumer-side changes required." id="downstream">
+          <mxCell parent="1" style="shape=cloud;whiteSpace=wrap;html=1;fillColor=#DBEAFE;gradientColor=#93C5FD;strokeColor=#2563EB;strokeWidth=2;dashed=1;fontColor=#1E3A8A;fontSize=8.5;fontStyle=1;fontFamily=Helvetica;shadow=1;" vertex="1">
+            <mxGeometry height="120" width="296" x="1150" y="567" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <mxCell id="downstream_i" parent="1" style="rounded=1;arcSize=30;fillColor=#2563EB;strokeColor=none;shadow=1;" value="" vertex="1">
+          <mxGeometry height="28" width="28" x="1406" y="577" as="geometry" />
+        </mxCell>
+        <mxCell id="downstream_g" parent="1" style="shape=cloud;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=none;" value="" vertex="1">
+          <mxGeometry height="12" width="16" x="1412" y="584" as="geometry" />
+        </mxCell>
+        <mxCell id="e_d1" edge="1" parent="1" source="d1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#FF3621;strokeWidth=2.5;endArrow=block;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" target="dlt1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_d2" edge="1" parent="1" source="d2" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#FF3621;strokeWidth=2.5;endArrow=block;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" target="dlt2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_d3" edge="1" parent="1" source="d3" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#FF3621;strokeWidth=2.5;endArrow=block;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" target="dlt3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_d4" edge="1" parent="1" source="d4" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#FF3621;strokeWidth=2.5;endArrow=block;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" target="dlt4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_dlt1_final" edge="1" parent="1" source="dlt1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#0F766E;strokeWidth=2.5;endArrow=block;exitX=1;exitY=0.5;entryX=0;entryY=0.15;" target="final">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_dlt2_final" edge="1" parent="1" source="dlt2" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#0F766E;strokeWidth=2.5;endArrow=block;exitX=1;exitY=0.5;entryX=0;entryY=0.38;" target="final">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_dlt3_final" edge="1" parent="1" source="dlt3" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#0F766E;strokeWidth=2.5;endArrow=block;exitX=1;exitY=0.5;entryX=0;entryY=0.62;" target="final">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_dlt4_final" edge="1" parent="1" source="dlt4" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#0F766E;strokeWidth=2.5;endArrow=block;exitX=1;exitY=0.5;entryX=0;entryY=0.85;" target="final">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_final_down" edge="1" parent="1" source="final" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#2563EB;strokeWidth=2.5;dashed=1;endArrow=block;fontColor=#1E3A8A;fontSize=7.5;fontStyle=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" target="downstream" value="unchanged">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="benefit_ribbon" parent="1" style="rounded=1;arcSize=6;fillColor=#F0FDF4;strokeColor=#86EFAC;strokeWidth=1.5;shadow=1;" value="" vertex="1">
+          <mxGeometry height="96" width="880" x="16" y="752" as="geometry" />
+        </mxCell>
+        <mxCell id="benefit_title" parent="1" style="text;html=1;align=left;verticalAlign=middle;fontSize=9.5;fontStyle=1;fontColor=#166534;fontFamily=Helvetica;" value="✓  BENEFITS" vertex="1">
+          <mxGeometry height="12" width="250" x="36" y="758" as="geometry" />
+        </mxCell>
+        <mxCell id="ben1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#86EFAC;fontColor=#14532D;fontSize=7;align=left;spacingLeft=8;verticalAlign=middle;arcSize=15;" value="No Kafka hop — direct Delta-to-Delta" vertex="1">
+          <mxGeometry height="34" width="270" x="36" y="774" as="geometry" />
+        </mxCell>
+        <mxCell id="ben2" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#86EFAC;fontColor=#14532D;fontSize=7;align=left;spacingLeft=8;verticalAlign=middle;arcSize=15;" value="4 independent pipelines isolate per-platform failures" vertex="1">
+          <mxGeometry height="34" width="270" x="321" y="774" as="geometry" />
+        </mxCell>
+        <mxCell id="ben3" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#86EFAC;fontColor=#14532D;fontSize=7;align=left;spacingLeft=8;verticalAlign=middle;arcSize=15;" value="All pipelines converge on one shared gold table" vertex="1">
+          <mxGeometry height="34" width="270" x="606" y="774" as="geometry" />
+        </mxCell>
+        <mxCell id="ben4" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#86EFAC;fontColor=#14532D;fontSize=7;align=left;spacingLeft=8;verticalAlign=middle;arcSize=15;" value="Removes on-prem CDP dependency" vertex="1">
+          <mxGeometry height="34" width="270" x="36" y="814" as="geometry" />
+        </mxCell>
+        <mxCell id="ben5" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#86EFAC;fontColor=#14532D;fontSize=7;align=left;spacingLeft=8;verticalAlign=middle;arcSize=15;" value="Unified governance via Unity Catalog" vertex="1">
+          <mxGeometry height="34" width="270" x="321" y="814" as="geometry" />
+        </mxCell>
+        <mxCell id="ben6" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#86EFAC;fontColor=#14532D;fontSize=7;align=left;spacingLeft=8;verticalAlign=middle;arcSize=15;" value="Serverless, auto-scaling compute per pipeline" vertex="1">
+          <mxGeometry height="34" width="270" x="606" y="814" as="geometry" />
+        </mxCell>
+        <mxCell id="removed_ribbon" parent="1" style="rounded=1;arcSize=6;fillColor=#FEF2F2;strokeColor=#FCA5A5;strokeWidth=1.5;shadow=1;" value="" vertex="1">
+          <mxGeometry height="96" width="568" x="916" y="752" as="geometry" />
+        </mxCell>
+        <mxCell id="removed_title" parent="1" style="text;html=1;align=left;verticalAlign=middle;fontSize=9.5;fontStyle=1;fontColor=#B91C1C;fontFamily=Helvetica;" value="✕  ELIMINATED IN TO-BE" vertex="1">
+          <mxGeometry height="12" width="300" x="936" y="758" as="geometry" />
+        </mxCell>
+        <mxCell id="rem1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#FCA5A5;fontColor=#7F1D1D;fontSize=7;align=left;spacingLeft=8;verticalAlign=middle;arcSize=15;" value="Unified Kafka topic (CDP)" vertex="1">
+          <mxGeometry height="34" width="260" x="936" y="774" as="geometry" />
+        </mxCell>
+        <mxCell id="rem2" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#FCA5A5;fontColor=#7F1D1D;fontSize=7;align=left;spacingLeft=8;verticalAlign=middle;arcSize=15;" value="Separate downstream Spark consumer" vertex="1">
+          <mxGeometry height="34" width="260" x="1204" y="774" as="geometry" />
+        </mxCell>
+        <mxCell id="rem3" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#FCA5A5;fontColor=#7F1D1D;fontSize=7;align=left;spacingLeft=8;verticalAlign=middle;arcSize=15;" value="On-prem Hive tables" vertex="1">
+          <mxGeometry height="34" width="260" x="936" y="814" as="geometry" />
+        </mxCell>
+        <mxCell id="rem4" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#FCA5A5;fontColor=#7F1D1D;fontSize=7;align=left;spacingLeft=8;verticalAlign=middle;arcSize=15;" value="Fragile cross-cloud Parquet write" vertex="1">
+          <mxGeometry height="34" width="260" x="1204" y="814" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
